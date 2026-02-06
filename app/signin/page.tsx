@@ -105,7 +105,7 @@ export default function SignInPage() {
                     className="group bg-white w-full flex items-center justify-center gap-3 h-13 md:h-15 px-4 rounded-xl shadow-lg cursor-pointer"
                 >
                     <Image src="/google.svg" width={22} height={22} alt="Google Logo"/>
-                    <span className="text-gray-700 font-medium md:text-lg md:leading-15.5 leading-13.5 tracking-tight opacity-80 font-(family-name:Roboto h-full">
+                    <span className="text-gray-700 font-medium md:text-lg md:leading-15.5 leading-13.5 tracking-tight opacity-80 font-noto-sans-thai h-full">
                         Continue with Google
                     </span>
                 </motion.button>
