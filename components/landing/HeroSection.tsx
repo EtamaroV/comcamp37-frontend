@@ -80,7 +80,7 @@ function HeroSection() {
                 <motion.div variants={itemVariants} className="text-center font-medium px-4 md:px-10 py-6 rounded-4xl -mt-6 md:-mt-3 mx-3
                     backdrop-blur-sm
 
-                bg-gradient-to-b from-black/30 to-black/20
+                bg-gradient-to-b from-black/60 to-black/40
                 border border-white/20
 
                 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_8px_10px_-6px_rgba(0,0,0,0.1),_inset_0_1px_0_0_rgba(0,0,0,0.5),_inset_0_0_20px_0_rgba(0,0,0,0.05)]
@@ -115,6 +115,17 @@ function HeroSection() {
                     <div className="bg-theme-primary-darken h-[60%] w-full"></div>
                     <div className="bg-gradient-to-b from-theme-primary-darken to-transparent h-[40%] w-full"></div>
                 </div>
+            </motion.div>
+
+            <motion.div variants={bgVariant} className="absolute w-full h-full flex md:hidden flex-col mt-10">
+                <Image
+                    className="object-top"
+                    src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Landing/CarouselBG.png`}
+                    alt=""
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    sizes="100vw"
+                />
             </motion.div>
         </div>
     )

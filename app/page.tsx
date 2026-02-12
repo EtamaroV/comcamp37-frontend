@@ -45,7 +45,7 @@ export default function Home() {
               <AboutSection/>
           </div>
           <div className="mt-50 md:hidden"></div>
-          <div id={"learning"} className="pt-25">
+          <div id={"learning"} className="pt-20">
               <LearningSection/>
           </div>
           <div className="pt-50 bg-theme-primary-darken md:hidden"></div>
@@ -60,7 +60,7 @@ export default function Home() {
           <div id={"timeline"} className="pt-15 md:pt-0">
               <TimelineSection/>
           </div>
-          <div id={"faq"}>
+          <div id={"faq"} className="pt-20">
               <FAQSection/>
           </div>
           <div className="py-30">

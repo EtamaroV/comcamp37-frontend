@@ -136,7 +136,7 @@ const FOLDER_DATA = [
     }
 ];
 
-const AUTO_PLAY_DURATION = 8000; // 4 วินาที
+const AUTO_PLAY_DURATION = 18000;
 
 const FolderSwitcher = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -174,7 +174,7 @@ const FolderSwitcher = () => {
 
     return (
         <div className="flex flex-row justify-evenly w-full bg-theme-primary-darken overflow-hidden z-10">
-            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:p-20 overflow-hidden max-w-[1600px] gap-y-3">
+            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:pt-5 md:p-20 overflow-hidden max-w-[1600px] gap-y-3">
             {/* === Left: Buttons === */}
             <div className="flex md:flex-col justify-evenly items-center flex-1 gap-6 z-12 order-2 md:order-1">
                 {FOLDER_DATA.map((item, index) => {
