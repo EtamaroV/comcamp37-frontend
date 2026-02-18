@@ -44,8 +44,8 @@ export default function Privacy() {
                       <li key={item.id} className="mb-1">
                           <a href={item.id} className="block group">
                               <div className="flex items-start gap-3 px-3 py-2 rounded-md hover:bg-slate-900/90 transition duration-100 ease-linear">
-                                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-white shrink-0 group-hover:bg-theme-secondary transition-all " />
-                                  <span className="group-hover:pl-1 transition-all">{item.label}</span>
+                                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-white shrink-0 group-hover:bg-[#fd6233] transition-all" />
+                                  <span className="group-hover:pl-[3px] transition-all">{item.label}</span>
                               </div>
                           </a>
                       </li>
