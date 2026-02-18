@@ -4,8 +4,8 @@ import Image from "next/image";
 import * as React from "react";
 
 const sponsors = [
-    { name: "บริษัท เอ็ม.วาย.พี. เอ็นจิเนียริง จำกัด", logo: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/sponsors/MYP Engineering.png`, height: "100px" },
-    { name: "บริษัท ทองไทยอีเล็คทริค จำกัด", logo: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/sponsors/Thong Thai Electric.png`, height: "100px" },
+    { name: "บริษัท เอ็ม.วาย.พี. เอ็นจิเนียริง จำกัด", logo: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/sponsors/MYP Engineering.png`, height: 100 },
+    { name: "บริษัท ทองไทยอีเล็คทริค จำกัด", logo: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/sponsors/Thong Thai Elaectric.png`, height: 100 },
 ]
 
 function SponsorSection() {
@@ -84,7 +84,7 @@ function SponsorSection() {
 
                 </div>
 
-                <div className="flex flex-wrap flex-row items-center gap-10">
+                <div className="flex flex-wrap flex-row items-center gap-10 md:mx-10">
                     { sponsors.map((sponsor) => (
                         <div key={sponsor.name} className="sm:px-12 sm:py-8 px-8 py-5 rounded-4xl sm:rounded-[3rem] shrink grow-1 basis-auto flex flex-row justify-center
 
@@ -99,7 +99,7 @@ function SponsorSection() {
                                 height={0}
                                 sizes="100vw"
                                 unoptimized
-                                className={`w-auto h-[${sponsor.height}] relative z-10 object-contain`}
+                                className={`w-auto h-[${sponsor.height}px] relative z-10 object-contain`}
                             />
                         </div>
                     ))}
