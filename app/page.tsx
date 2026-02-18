@@ -63,7 +63,7 @@ export default function Home() {
           <div id={"faq"} className="pt-20">
               <FAQSection/>
           </div>
-          <div className="py-30">
+          <div className="py-30 bg-theme-primary">
               <SponsorSection/>
           </div>
           <CookieModal/>
