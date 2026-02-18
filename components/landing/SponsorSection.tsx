@@ -58,7 +58,7 @@ function SponsorSection() {
 
             </div>
 
-            <div className="w-full max-w-[1600px] flex flex-col gap-y-20">
+            <div className="w-full max-w-[1600px] flex flex-col gap-y-10">
                 <div className="flex flex-row align-middle justify-center items-center gap-10">
                     <svg width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M500 2.5H0" stroke="url(#paint0_linear_590_593)" strokeWidth="5"/>
@@ -99,7 +99,8 @@ function SponsorSection() {
                                 height={0}
                                 sizes="100vw"
                                 unoptimized
-                                className={`w-auto h-[${sponsor.height}px] relative z-10 object-contain`}
+                                style={{ height: `${sponsor.height}px` }}
+                                className={`w-auto relative z-10 object-contain`}
                             />
                         </div>
                     ))}
