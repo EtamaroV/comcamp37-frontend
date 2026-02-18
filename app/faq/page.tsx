@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
     Accordion,
     AccordionContent,
@@ -10,6 +11,11 @@ import {Footer} from "@/components/ui/footer";
 import {FAQQuestions} from "@/components/faq/faq";
 
 export default function faqPage() {
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
       <>
       <div className="flex flex-col justify-center items-center">
