@@ -1,62 +1,58 @@
 "use client";
 
-export default function Register() {
+import {Footer} from "@/components/ui/footer";
+
+export default function Privacy() {
     return (
       <>
       <div className='w-full h-full bg-[#1F456E] text-white scroll-smooth'>
         {/* <div className='bg-[#212738] flex justify-center font-bold py-8 sticky top-0 z-1'>banner</div> */}
-        <div className='flex justify-center '>
-            <div className='w-full flex flex-col items-center justify-center font-bold text-5xl pt-26 pb-3 bg-gradient-to-b from-[#1F456E] to-[#151E3D]'>
+        <div className='flex justify-center'>
+            <div className='font-zootopia text-center w-full flex flex-col items-center justify-center font-bold text-5xl px-15 pt-26 pb-3 bg-gradient-to-b from-[#1F456E] to-[#151E3D]'>
             Privacy Policy <br />
-            <span className='text-sm mt-5 opacity-40 justify-start'>Last updated: 26/01/2026</span>
+            <span className='text-center font-bai_jamjuree text-sm mt-5 opacity-40'>Last updated: 26/01/2026</span>
             </div>
         </div>
         <div className="top-0 left-0 w-full overflow-hidden leading-[0]">
-        <svg 
-          data-name="Layer 1" 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none"
-          className="relative block h-[172px] w-[calc(300%+1.3px)]"
-        >
-          <path 
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
-            className="fill-[#151E3D]"
-          />
-        </svg>
+            <div className="w-full -mt-[10vh] h-[20vh] bg-[#151E3D] [clip-path:ellipse(80%_100%_at_50%_0%)] mb-10">
+            </div>
         </div>
-        
-        {/* #212738 */}
+
         <div className='flex justify-around'>
-          <nav className=' font-bold min-w-70 max-h-80 overflow-y-auto pt-0 text-lg bg-[#151E3D] m-10 mt-0 mr-10 -pt-0 rounded-md self-start
-          sticky top-24 w-1/4 max-h-[calc(60vh-5rem)] hidden md:block
-  
-  [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-[#151E3D]
-  [&::-webkit-scrollbar-thumb]:bg-gray-500
-  [&::-webkit-scrollbar-thumb]:rounded-full
+          <nav className=' font-bold min-w-70 max-h-80 pt-0 text-lg bg-[#151E3D] m-10 mt-0 mr-10 rounded-2xl self-start
+          sticky top-24 w-1/4 hidden md:flex flex-col
   '>
-              <p className="flex justify-center bg-[#151E3D] p-5 px-20 top-0 w-full m-0 ">Navigation</p>
+              <p className="sticky flex justify-center bg-[#151E3D] p-5 px-20 top-0 w-full m-0 border-b border-white/10 rounded-t-2xl">Navigation</p>
               <br />
-              <ul className='pl-10 pr-10 [&_li]:mb-2 text-sm/6 [&_li]:hover:bg-[#0b1021] [&_li]:h-12 [&_li]:rounded-md [&_li]:mb-1 list-disc list-outside  [&_li]:transition [&_li]:duration-100 [&_li]:ease-linear'>
-                  <a href="#p1"><li>นโยบายความเป็นส่วนตัว</li></a>
-                  <a href="#p2"><li>การเก็บรวบรวมข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p3"><li>ประเภทข้อมูลส่วนบุคคลที่เก็บรวบรวม</li></a>
-                  <a href="#p4"><li>ผู้เยาว์</li></a>
-                  <a href="#p5"><li>วิธีการเก็บรักษาข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p6"><li>การประมวลผลข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p7"><li>การเปิดเผยข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p8"><li>ระยะเวลาจัดเก็บข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p9"><li>สิทธิของเจ้าของข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p10"><li>คุกกี้ที่เราใช้งาน</li></a>
-                  <a href="#p11"><li>การรักษาความมั่นคงและความปลอดภัยของข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p12"><li>การแจ้งเหตุละเมิดข้อมูลส่วนบุคคล</li></a>
-                  <a href="#p13"><li>รายละเอียดการติดต่อ</li></a>
-                  
+              <ul className='overflow-y-auto px-4 pb-4 text-sm/6'>
+                  {[
+                      { id: "#p1", label: "นโยบายความเป็นส่วนตัว" },
+                      { id: "#p2", label: "การเก็บรวบรวมข้อมูลส่วนบุคคล" },
+                      { id: "#p3", label: "ประเภทข้อมูลส่วนบุคคลที่เก็บรวบรวม" },
+                      { id: "#p4", label: "ผู้เยาว์" },
+                      { id: "#p5", label: "วิธีการเก็บรักษาข้อมูลส่วนบุคคล" },
+                      { id: "#p6", label: "การประมวลผลข้อมูลส่วนบุคคล" },
+                      { id: "#p7", label: "การเปิดเผยข้อมูลส่วนบุคคล" },
+                      { id: "#p8", label: "ระยะเวลาจัดเก็บข้อมูลส่วนบุคคล" },
+                      { id: "#p9", label: "สิทธิของเจ้าของข้อมูลส่วนบุคคล" },
+                      { id: "#p10", label: "คุกกี้ที่เราใช้งาน" },
+                      { id: "#p11", label: "การรักษาความมั่นคงปลอดภัย" },
+                      { id: "#p12", label: "การแจ้งเหตุละเมิดข้อมูลส่วนบุคคล" },
+                      { id: "#p13", label: "รายละเอียดการติดต่อ" },
+                  ].map((item) => (
+                      <li key={item.id} className="mb-1">
+                          <a href={item.id} className="block group">
+                              <div className="flex items-start gap-3 px-3 py-2 rounded-md hover:bg-slate-900/90 transition duration-100 ease-linear">
+                                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-white shrink-0 group-hover:bg-[#fd6233] transition-all" />
+                                  <span className="group-hover:pl-[3px] transition-all">{item.label}</span>
+                              </div>
+                          </a>
+                      </li>
+                  ))}
               </ul>
           </nav>
           <div className='[&_section]:scroll-mt-24 [&_span]:text-xl/12 [&_span]:font-bold [&_span]:-ml-6 [&_span]:inline-block [&_span]:indent-0
-           [&_ul]:list-disc [&_ul]:list-outside [&_ul]:ml-4 [&_ul]:ml-16 [&_p]:ml-2 pl-8 pr-12 text-base/8 pb-10 [&_p:not(.ignores)]:indent-8'>
+           [&_ul]:list-disc [&_ul]:list-outside [&_ul]:ml-4 [&_ul]:ml-16 [&_p]:ml-2 px-12 text-base/8 pb-10 [&_p:not(.ignores)]:indent-8'>
             <section id="p1">
               <span>1. นโยบายความเป็นส่วนตัว</span><br />
                 <p>โครงการฝึกอบรมเชิงปฏิบัติการคอมพิวเตอร์ ครั้งที่ 37 ให้ความสําคัญกับการคุ้มครองข้อมูลส่วนบุคคลของคุณ
@@ -160,6 +156,7 @@ export default function Register() {
           </div>
         </div>
       </div>
+          <Footer/>
     </>
     );
 }

@@ -20,7 +20,7 @@ function RegisterPageInner() {
     return (
         <main className="flex-1 w-full max-w-[960px] mx-auto py-6 md:px-6 md:py-10">
             <div className="mb-6 flex flex-col gap-2 px-4 md:px-0">
-                <h1 className="text-white tracking-tight text-3xl font-bold leading-tight">Registration</h1>
+                <h1 className="text-white tracking-tight text-3xl font-bold leading-tight">ทะเบียนประวัติ</h1>
                 <p className="text-slate-300 text-sm font-normal">Step {step}: {getStepName(step)}</p>
             </div>
 
@@ -38,13 +38,6 @@ function RegisterPageInner() {
             </div>
 
             <RegisterContent />
-
-            <div className="mt-50 bg-slate-900 rounded-3xl p-6">
-                <span className="font-bold text-xl">Form Debugger</span>
-                <pre className="bg-slate-800/60 p-2 rounded-lg mt-4 h-100 overflow-auto">
-                    {JSON.stringify(allData, null, 2)}
-                </pre>
-            </div>
         </main>
     );
 }

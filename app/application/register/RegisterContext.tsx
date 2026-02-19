@@ -3,8 +3,9 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { useRouter } from 'next/navigation'
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormDataSchema, FormData } from "./schema";
+import { Step1Schema, Step2Schema, Step3Schema, FormData } from "./schema";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -43,10 +44,59 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner"
 import {SchoolInput} from "@/components/ui/schoolInput";
+import { toast } from "sonner"
 
 import {th} from "date-fns/locale";
 import { format } from "date-fns"
+import {useStudent, StudentInfo} from "@/contexts/StudentContext";
+import {faApple, faLinux, faMicrosoft, faWindows} from "@fortawesome/free-brands-svg-icons";
+import {useUser} from "@/contexts/UserContext";
+
+export interface RegisterFormValues {
+    name_prefix: string;
+    name_first: string;
+    name_last: string;
+    name_nick: string;
+    info_dob: Date | undefined;
+    info_gender: "male" | "female";
+    info_religion: string;
+    info_phone: string;
+    info_address: string;
+    info_email?: string;
+
+    academic_level: string;
+    academic_school: string;
+    academic_program: string;
+    academic_program_other: string;
+
+    grade_gpax: string;
+    grade_math: string;
+    grade_sci: string;
+    grade_eng: string;
+
+    guardian_name: string;
+    guardian_relationship: string;
+    guardian_phone: string;
+
+    health_medicalRights: string;
+    health_chronicDiseases: string;
+    health_more: string;
+    health_drugAllergies: string;
+    health_dietaryRestrictions: string;
+    health_bloodType: "A" | "B" | "AB" | "O";
+
+    availability_haveAttended: "true" | "false";
+    availability_laptop: "true" | "false";
+    availability_attendAllDays: "true" | "false";
+    availability_tablet: "true" | "false";
+    availability_mouse: "true" | "false";
+    availability_travelPlan: string;
+    availability_laptopOS: string;
+    availability_laptopOS_other: string;
+    apparel_size: string;
+}
 
 export const RegisterCtx = createContext<any>(null);
 
@@ -54,20 +104,124 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     const [step, setStep] = useState(1);
     const [allData, setAllData] = useState<Partial<FormData>>({});
     const [isLoaded, setIsLoaded] = useState(false);
+    const { studentInfo } = useStudent();
 
     useEffect(() => {
-        const savedData = localStorage.getItem("comcamp37_reg_input");
-        if (savedData) {
-            try {
-                const parsed = JSON.parse(savedData);
-                if (parsed.allData) setAllData(parsed.allData);
-                if (parsed.step) setStep(parsed.step);
-            } catch (e) {
-                console.error("Error loading local storage", e);
+        const safeDecode = (value: any) => {
+            if (!value || typeof value !== 'string') return value || "";
+            try { return decodeURIComponent(value); } catch (e) { return value; }
+        };
+
+        const mapDbToForm = (info: StudentInfo): Partial<RegisterFormValues> => {
+            const dbPlan = safeDecode(info.std_info_education_plan);
+
+            const standardPrograms = [
+                "วิทยาศาสตร์-คณิตศาสตร์",
+                "คณิตศาสตร์-คอมพิวเตอร์",
+                "วิทยาศาสตร์-คอมพิวเตอร์",
+                "คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)",
+                "ปวช. สาขาคอมพิวเตอร์ธุรกิจ",
+                "ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)",
+                "ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์"
+            ];
+
+            let academicProgram = "";
+            let academicProgramOther = "";
+
+            if (standardPrograms.includes(dbPlan)) {
+                academicProgram = dbPlan;
+            } else if (dbPlan) {
+                academicProgram = "อื่นๆ";
+                academicProgramOther = dbPlan;
             }
-        }
-        setIsLoaded(true);
-    }, []);
+
+            const fullChronicString = safeDecode(info.std_info_chronic_disease);
+            let chronicDisease = fullChronicString;
+            let chronicMore = "";
+            const separator = ' รายละเอียดเพิ่มเติม "';
+
+            if (fullChronicString.includes(separator)) {
+                const parts = fullChronicString.split(separator);
+                chronicDisease = parts[0];
+                if (parts.length > 1) chronicMore = parts[1].replace(/"$/, '');
+            }
+
+            let laptopOS = safeDecode(info.std_info_laptop_os);
+            let laptopOSOther = "";
+
+            if (laptopOS.startsWith("Linux")) {
+                laptopOSOther = laptopOS.replace("Linux (", "").replace(")", "");
+                laptopOS = "Linux";
+            } else if (laptopOS.startsWith("อื่นๆ:")) {
+                laptopOSOther = laptopOS.replace("อื่นๆ: ", "");
+                laptopOS = "อื่นๆ";
+            }
+
+            return {
+                name_prefix: safeDecode(info.std_info_prefix),
+                name_first: safeDecode(info.std_info_first_name),
+                name_last: safeDecode(info.std_info_last_name),
+                name_nick: safeDecode(info.std_info_nick_name),
+                info_dob: info.std_info_birthdate ? new Date(info.std_info_birthdate) : undefined,
+                info_gender: safeDecode(info.std_info_gender) as "male" | "female",
+                info_religion: safeDecode(info.std_info_religion),
+                info_phone: safeDecode(info.std_info_phone_number),
+                info_address: safeDecode(info.std_info_address),
+
+                academic_level: safeDecode(info.std_info_education_level),
+                academic_school: safeDecode(info.std_info_education_institute),
+
+                academic_program: academicProgram,
+                academic_program_other: academicProgramOther,
+
+                grade_gpax: info.std_info_grade_gpax,
+                grade_math: info.std_info_grade_math,
+                grade_sci: info.std_info_grade_sci,
+                grade_eng: info.std_info_grade_eng,
+
+                guardian_name: safeDecode(info.std_info_parent_fullname),
+                guardian_relationship: safeDecode(info.std_info_parent_relation),
+                guardian_phone: safeDecode(info.std_info_parent_phone_number),
+
+                health_medicalRights: safeDecode(info.std_info_medical_insurance),
+                health_chronicDiseases: chronicDisease,
+                health_more: chronicMore,
+                health_drugAllergies: safeDecode(info.std_info_drug_allergy),
+                health_dietaryRestrictions: safeDecode(info.std_info_food_allergy),
+                health_bloodType: safeDecode(info.std_info_blood_group),
+
+                availability_haveAttended: String(info.std_info_have_participated) as "true" | "false",
+                availability_laptop: String(info.std_info_have_laptop) as "true" | "false",
+                availability_attendAllDays: String(info.std_info_can_participate_every_day) as "true" | "false",
+                availability_tablet: String(info.std_info_have_tablet) as "true" | "false",
+                availability_mouse: String(info.std_info_have_mouse) as "true" | "false",
+
+                availability_travelPlan: safeDecode(info.std_info_travel_plan),
+                availability_laptopOS: laptopOS,
+                availability_laptopOS_other: laptopOSOther,
+                apparel_size: safeDecode(info.std_info_shirt_size),
+            };
+        };
+
+        const loadData = () => {
+            if (studentInfo && studentInfo.std_info_first_name) {
+                setAllData(prev => ({ ...prev, ...mapDbToForm(studentInfo) }));
+            } else {
+                const savedData = localStorage.getItem("comcamp37_reg_input");
+                if (savedData) {
+                    try {
+                        const parsed = JSON.parse(savedData);
+                        if (parsed.allData) setAllData(parsed.allData);
+                        if (parsed.step) setStep(parsed.step);
+                    } catch (e) { console.error(e); }
+                }
+            }
+            setIsLoaded(true);
+        };
+
+        loadData();
+
+    }, [studentInfo]);
 
     useEffect(() => {
         if (isLoaded) {
@@ -87,7 +241,6 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-// ตัวเนื้อหาฟอร์ม (ถอด Provider ออกจากที่นี่)
 export default function RegisterContent() {
     const { step } = useContext(RegisterCtx);
     return (
@@ -95,29 +248,27 @@ export default function RegisterContent() {
             {step === 1 && <Step1 />}
             {step === 2 && <Step2 />}
             {step === 3 && <Step3 />}
-            {step === 4 && <Step4 />}
         </>
     );
 }
 
-// --- หน้าประกอบย่อย (Internal Components) ---
-
 function Step1() {
     const { next, setAllData, allData } = useContext(RegisterCtx)
+    const { user } = useUser();
     const router = useRouter()
 
-    const form = useForm({
+    const form = useForm<RegisterFormValues>({
+        resolver: zodResolver(Step1Schema) as any,
         defaultValues: {
             name_prefix: allData?.name_prefix || "",
             name_first: allData?.name_first || "",
             name_last: allData?.name_last || "",
             name_nick: allData?.name_nick || "",
 
-            info_dob: allData?.info_dob || "",
+            info_dob: allData?.info_dob || undefined,
             info_gender: allData?.info_gender || "",
             info_religion: allData?.info_religion || "",
             info_phone: allData?.info_phone || "",
-            info_email: allData?.info_email || "",
             info_address: allData?.info_address || "",
 
             academic_level: allData?.academic_level || "",
@@ -125,11 +276,17 @@ function Step1() {
             academic_program_other: allData?.academic_program_other || "",
             academic_school: allData?.academic_school || "",
 
+            grade_gpax: allData?.grade_gpax || "",
+            grade_math: allData?.grade_math || "",
+            grade_sci: allData?.grade_sci || "",
+            grade_eng: allData?.grade_eng || "",
+
             health_bloodType: allData?.health_bloodType || "",
             health_medicalRights: allData?.health_medicalRights || "",
             health_chronicDiseases: allData?.health_chronicDiseases || "",
             health_drugAllergies: allData?.health_drugAllergies || "",
             health_dietaryRestrictions: allData?.health_dietaryRestrictions || "",
+            health_more: allData?.health_more || "",
 
             guardian_name: allData?.guardian_name || "",
             guardian_relationship: allData?.guardian_relationship || "",
@@ -139,17 +296,12 @@ function Step1() {
             availability_attendAllDays: allData?.availability_attendAllDays || "",
             availability_laptop: allData?.availability_laptop || "",
             availability_laptopOS: allData?.availability_laptopOS || "",
+            availability_laptopOS_other: allData?.availability_laptopOS_other || "",
             availability_tablet: allData?.availability_tablet || "",
             availability_mouse: allData?.availability_mouse || "",
             availability_travelPlan: allData?.availability_travelPlan || "",
 
             apparel_size: allData?.apparel_size || "",
-
-            file_facePhoto: allData?.file_facePhoto || "",
-            file_idCardCopy: allData?.file_idCardCopy || "",
-            file_parentPermission: allData?.file_parentPermission || "",
-            file_transcript: allData?.file_transcript || "",
-            file_studentStatus: allData?.file_studentStatus || ""
         },
     })
 
@@ -333,7 +485,7 @@ function Step1() {
                                                     className="group flex items-center space-x-3 space-y-0 px-4 py-3.5 rounded-xl border has-[:checked]:border-blue-300 has-[:checked]:bg-blue-300/5 transition-all cursor-pointer hover:bg-input/30"
                                                 >
                                                     <FormControl>
-                                                        <RadioGroupItem value="ชาย" id="gender-male" />
+                                                        <RadioGroupItem value="male" id="gender-male" />
                                                     </FormControl>
                                                     <span className="flex-1 relative items-center text-sm transition-colors">
                                                       <span>ชาย</span>
@@ -352,7 +504,7 @@ function Step1() {
                                                     className="group flex items-center space-x-3 space-y-0 px-4 py-3.5 rounded-xl border has-[:checked]:border-pink-300 has-[:checked]:bg-pink-300/5 transition-all cursor-pointer hover:bg-slate-800/30"
                                                 >
                                                     <FormControl>
-                                                        <RadioGroupItem value="หญิง" id="gender-female" />
+                                                        <RadioGroupItem value="female" id="gender-female" />
                                                     </FormControl>
                                                     <span className="flex-1 relative items-center text-sm transition-colors">
                                                         <span>หญิง</span>
@@ -438,8 +590,16 @@ function Step1() {
                                     <FormLabel>อีเมล</FormLabel>
                                     <FormControl>
                                         <div className="relative">
-                                            <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faEnvelope} />
-                                            <Input className="py-6 px-4 pr-10 rounded-xl" placeholder="example@email.com" {...field} />
+                                            <FontAwesomeIcon
+                                                className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                                icon={faEnvelope}
+                                            />
+                                            {/* เปลี่ยนเป็น div แต่ใช้ Class เดิมที่คุณให้มาทั้งหมด */}
+                                            <div
+                                                className="border-input flex items-center min-w-0 border bg-muted/20 text-base shadow-xs transition-[color,box-shadow] md:text-sm py-3.5 px-4 pr-10 rounded-xl text-muted-foreground cursor-not-allowed"
+                                            >
+                                                {user?.email || "Loading..."}
+                                            </div>
                                         </div>
                                     </FormControl>
                                     <FormMessage />
@@ -495,19 +655,20 @@ function Step1() {
 
 function Step2() {
     const {prev, next, setAllData, allData} = useContext(RegisterCtx);
+    const { user } = useUser();
 
-    const form = useForm({
+    const form = useForm<RegisterFormValues>({
+        resolver: zodResolver(Step2Schema) as any,
         defaultValues: {
             name_prefix: allData?.name_prefix || "",
             name_first: allData?.name_first || "",
             name_last: allData?.name_last || "",
             name_nick: allData?.name_nick || "",
 
-            info_dob: allData?.info_dob || "",
+            info_dob: allData?.info_dob || undefined,
             info_gender: allData?.info_gender || "",
             info_religion: allData?.info_religion || "",
             info_phone: allData?.info_phone || "",
-            info_email: allData?.info_email || "",
             info_address: allData?.info_address || "",
 
             academic_level: allData?.academic_level || "",
@@ -515,11 +676,17 @@ function Step2() {
             academic_program_other: allData?.academic_program_other || "",
             academic_school: allData?.academic_school || "",
 
+            grade_gpax: allData?.grade_gpax || "",
+            grade_math: allData?.grade_math || "",
+            grade_sci: allData?.grade_sci || "",
+            grade_eng: allData?.grade_eng || "",
+
             health_bloodType: allData?.health_bloodType || "",
             health_medicalRights: allData?.health_medicalRights || "",
             health_chronicDiseases: allData?.health_chronicDiseases || "",
             health_drugAllergies: allData?.health_drugAllergies || "",
             health_dietaryRestrictions: allData?.health_dietaryRestrictions || "",
+            health_more: allData?.health_more || "",
 
             guardian_name: allData?.guardian_name || "",
             guardian_relationship: allData?.guardian_relationship || "",
@@ -529,17 +696,12 @@ function Step2() {
             availability_attendAllDays: allData?.availability_attendAllDays || "",
             availability_laptop: allData?.availability_laptop || "",
             availability_laptopOS: allData?.availability_laptopOS || "",
+            availability_laptopOS_other: allData?.availability_laptopOS_other || "",
             availability_tablet: allData?.availability_tablet || "",
             availability_mouse: allData?.availability_mouse || "",
             availability_travelPlan: allData?.availability_travelPlan || "",
 
             apparel_size: allData?.apparel_size || "",
-
-            file_facePhoto: allData?.file_facePhoto || "",
-            file_idCardCopy: allData?.file_idCardCopy || "",
-            file_parentPermission: allData?.file_parentPermission || "",
-            file_transcript: allData?.file_transcript || "",
-            file_studentStatus: allData?.file_studentStatus || ""
         },
     })
 
@@ -559,6 +721,20 @@ function Step2() {
         const currentValues = form.getValues();
         setAllData((prevData: any) => ({ ...prevData, ...currentValues }));
         prev();
+    };
+
+    const formatGPAX = (value: string) => {
+        if (!value) return "";
+        // Remove all non-digits
+        const digits = value.replace(/\D/g, "");
+
+        // If only 1 digit: add the dot immediately (e.g., "4" -> "4.")
+        if (digits.length === 1) return `${digits}.`;
+
+        // If 2 or more digits: format as X.XX (e.g., "35" -> "3.5", "350" -> "3.50")
+        // We slice to 3 digits total to keep the GPAX scale correct
+        const cappedDigits = digits.slice(0, 3);
+        return `${cappedDigits.slice(0, 1)}.${cappedDigits.slice(1)}`;
     };
 
     return (
@@ -675,6 +851,181 @@ function Step2() {
                             )}
                         />
                     </div>
+
+                    <div className="items-center gap-3 mt-10">
+                        <h2 className="col-span-1 text-lg font-bold text-white">ผลการเรียน</h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3">
+                        {/* GPAX */}
+                        <FormField
+                            control={form.control}
+                            name="grade_gpax"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormLabel>ผลการเรียนเฉลี่ยสะสม (GPAX)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="py-6 pl-4 pr-10 rounded-xl"
+                                            placeholder="0.00"
+                                            inputMode="decimal"
+                                            {...field}
+                                            onChange={(e) => {
+                                                const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
+                                                const digits = e.target.value.replace(/\D/g, "");
+
+                                                if (isDeleting && digits.length <= 1) {
+                                                    field.onChange(digits);
+                                                    return;
+                                                }
+
+                                                let formatted = "";
+                                                if (digits.length === 1) {
+                                                    formatted = `${digits}.`;
+                                                } else if (digits.length > 1) {
+                                                    const capped = digits.slice(0, 3);
+                                                    formatted = `${capped[0]}.${capped.slice(1)}`;
+                                                }
+
+                                                if (parseFloat(formatted) > 4.00) {
+                                                    field.onChange("4.00");
+                                                } else {
+                                                    field.onChange(formatted || digits);
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="grade_math"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormLabel>คณิตศาสตร์</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="py-6 pl-4 pr-10 rounded-xl"
+                                            placeholder="0.00"
+                                            inputMode="decimal"
+                                            {...field}
+                                            onChange={(e) => {
+                                                const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
+                                                const digits = e.target.value.replace(/\D/g, "");
+
+                                                if (isDeleting && digits.length <= 1) {
+                                                    field.onChange(digits);
+                                                    return;
+                                                }
+
+                                                let formatted = "";
+                                                if (digits.length === 1) {
+                                                    formatted = `${digits}.`;
+                                                } else if (digits.length > 1) {
+                                                    const capped = digits.slice(0, 3);
+                                                    formatted = `${capped[0]}.${capped.slice(1)}`;
+                                                }
+
+                                                if (parseFloat(formatted) > 4.00) {
+                                                    field.onChange("4.00");
+                                                } else {
+                                                    field.onChange(formatted || digits);
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="grade_sci"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormLabel>วิทยาศาสตร์</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="py-6 pl-4 pr-10 rounded-xl"
+                                            placeholder="0.00"
+                                            inputMode="decimal"
+                                            {...field}
+                                            onChange={(e) => {
+                                                const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
+                                                const digits = e.target.value.replace(/\D/g, "");
+
+                                                if (isDeleting && digits.length <= 1) {
+                                                    field.onChange(digits);
+                                                    return;
+                                                }
+
+                                                let formatted = "";
+                                                if (digits.length === 1) {
+                                                    formatted = `${digits}.`;
+                                                } else if (digits.length > 1) {
+                                                    const capped = digits.slice(0, 3);
+                                                    formatted = `${capped[0]}.${capped.slice(1)}`;
+                                                }
+
+                                                if (parseFloat(formatted) > 4.00) {
+                                                    field.onChange("4.00");
+                                                } else {
+                                                    field.onChange(formatted || digits);
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="grade_eng"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormLabel>ภาษาอังกฤษ</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="py-6 pl-4 pr-10 rounded-xl"
+                                            placeholder="0.00"
+                                            inputMode="decimal"
+                                            {...field}
+                                            onChange={(e) => {
+                                                const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
+                                                const digits = e.target.value.replace(/\D/g, "");
+
+                                                if (isDeleting && digits.length <= 1) {
+                                                    field.onChange(digits);
+                                                    return;
+                                                }
+
+                                                let formatted = "";
+                                                if (digits.length === 1) {
+                                                    formatted = `${digits}.`;
+                                                } else if (digits.length > 1) {
+                                                    const capped = digits.slice(0, 3);
+                                                    formatted = `${capped[0]}.${capped.slice(1)}`;
+                                                }
+
+                                                if (parseFloat(formatted) > 4.00) {
+                                                    field.onChange("4.00");
+                                                } else {
+                                                    field.onChange(formatted || digits);
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                    </div>
                 </div>
 
                 {/* Medical History Section */}
@@ -772,21 +1123,43 @@ function Step2() {
     )
 }
 
+function calculateAge(birthDateString: string | Date) {
+    const today = new Date();
+    const birthDate = new Date(birthDateString);
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // Adjust if the birthday hasn't happened yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
 function Step3() {
     const {prev, next, setAllData, allData} = useContext(RegisterCtx);
+    const { user } = useUser();
+    const [loading, setLoading] = useState(false);
 
-    const form = useForm({
+    const { applicationId, isLoadingApp, refreshApplication } = useStudent();
+    const router = useRouter();
+
+    const toBool = (val: boolean | string) => val === "true" || val === true || val === false;
+
+    const form = useForm<RegisterFormValues>({
+        resolver: zodResolver(Step3Schema) as any,
         defaultValues: {
             name_prefix: allData?.name_prefix || "",
             name_first: allData?.name_first || "",
             name_last: allData?.name_last || "",
             name_nick: allData?.name_nick || "",
 
-            info_dob: allData?.info_dob || "",
+            info_dob: allData?.info_dob || undefined,
             info_gender: allData?.info_gender || "",
             info_religion: allData?.info_religion || "",
             info_phone: allData?.info_phone || "",
-            info_email: allData?.info_email || "",
             info_address: allData?.info_address || "",
 
             academic_level: allData?.academic_level || "",
@@ -794,11 +1167,17 @@ function Step3() {
             academic_program_other: allData?.academic_program_other || "",
             academic_school: allData?.academic_school || "",
 
+            grade_gpax: allData?.grade_gpax || "",
+            grade_math: allData?.grade_math || "",
+            grade_sci: allData?.grade_sci || "",
+            grade_eng: allData?.grade_eng || "",
+
             health_bloodType: allData?.health_bloodType || "",
             health_medicalRights: allData?.health_medicalRights || "",
             health_chronicDiseases: allData?.health_chronicDiseases || "",
             health_drugAllergies: allData?.health_drugAllergies || "",
             health_dietaryRestrictions: allData?.health_dietaryRestrictions || "",
+            health_more: allData?.health_more || "",
 
             guardian_name: allData?.guardian_name || "",
             guardian_relationship: allData?.guardian_relationship || "",
@@ -808,17 +1187,12 @@ function Step3() {
             availability_attendAllDays: allData?.availability_attendAllDays || "",
             availability_laptop: allData?.availability_laptop || "",
             availability_laptopOS: allData?.availability_laptopOS || "",
+            availability_laptopOS_other: allData?.availability_laptopOS_other || "",
             availability_tablet: allData?.availability_tablet || "",
             availability_mouse: allData?.availability_mouse || "",
             availability_travelPlan: allData?.availability_travelPlan || "",
 
             apparel_size: allData?.apparel_size || "",
-
-            file_facePhoto: allData?.file_facePhoto || "",
-            file_idCardCopy: allData?.file_idCardCopy || "",
-            file_parentPermission: allData?.file_parentPermission || "",
-            file_transcript: allData?.file_transcript || "",
-            file_studentStatus: allData?.file_studentStatus || ""
         },
     })
 
@@ -829,19 +1203,77 @@ function Step3() {
         return unsubscribe;
     }, [form.watch, setAllData]);
 
-    const onSubmit = (data: any) => {
-        setAllData((prev: any) => ({...prev, ...data}));
-        next();
+    const onSubmit = async () => {
+        console.log("ส่งข้อมูลทั้งหมดไป API:", allData);
+        setLoading(true);
+
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/info/${applicationId}`,
+                {
+                    prefix: allData.name_prefix,
+                    first_name: allData.name_first,
+                    last_name: allData.name_last,
+                    nick_name: allData.name_nick,
+                    age: calculateAge(allData.info_dob),
+                    birthdate: format(new Date(allData.info_dob), 'yyyy-MM-dd'),
+                    gender: allData.info_gender,
+                    religion: allData.info_religion,
+                    phone_number: allData.info_phone,
+                    education_level: allData.academic_level,
+                    education_institute: allData.academic_school,
+                    education_plan: allData.academic_program === "อื่นๆ" ? allData.academic_program_other : allData.academic_program,
+                    grade_gpax: allData.grade_gpax,
+                    grade_math: allData.grade_math,
+                    grade_sci: allData.grade_sci,
+                    grade_eng: allData.grade_eng,
+                    parent_fullname: allData.guardian_name,
+                    parent_relation: allData.guardian_relationship,
+                    parent_phone_number: allData.guardian_phone,
+                    have_participated: toBool(allData.availability_haveAttended),
+                    have_laptop: toBool(allData.availability_laptop),
+                    can_participate_every_day: toBool(allData.availability_attendAllDays),
+                    medical_insurance: allData.health_medicalRights,
+                    chronic_disease: `${allData.health_chronicDiseases} รายละเอียดเพิ่มเติม "${allData.health_more}"` ,
+                    drug_allergy: allData.health_drugAllergies,
+                    food_allergy: allData.health_dietaryRestrictions,
+                    blood_group: allData.health_bloodType,
+                    address: allData.info_address,
+                    shirt_size: allData.apparel_size,
+                    travel_plan: allData.availability_travelPlan,
+                    laptop_os: allData.availability_laptop === "false"
+                        ? "ไม่สะดวกนำมา"
+                        : allData.availability_laptopOS === "Linux"
+                            ? `Linux (${allData.availability_laptopOS_other})`
+                            : allData.availability_laptopOS === "อื่นๆ"
+                                ? `อื่นๆ: ${allData.availability_laptopOS_other}`
+                                : allData.availability_laptopOS,
+                    have_tablet: toBool(allData.availability_tablet),
+                    have_mouse: toBool(allData.availability_mouse)
+                },
+                { withCredentials: true }
+            );
+
+            // 5. *สำคัญมาก* บอก Context ให้เช็คสถานะใหม่ (เพื่อให้ติ๊กถูกสีเขียวขึ้นที่หน้า Dashboard)
+            await refreshApplication();
+
+            // เด้งกลับไปหน้า Dashboard หรือหน้าถัดไป
+            localStorage.removeItem("comcamp37_reg_input");
+            router.push("/application");
+        } catch (error: any) {
+            toast.error("บันทึกไม่สำเร็จ โปรดลองใหม่", {
+                position: "bottom-right",
+                description: error.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ (" + (error.code || "Unknown") + ")",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onPrev = () => {
-        // 1. Get current values from the form state (even if not validated/submitted)
         const currentValues = form.getValues();
 
-        // 2. Save them to context so they are there when we come back
         setAllData((prevData: any) => ({ ...prevData, ...currentValues }));
 
-        // 3. Go back
         prev();
     };
 
@@ -967,7 +1399,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="เคย" id="availability_haveAttended-yes"/>
+                                                            value="true" id="availability_haveAttended-yes"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -985,7 +1417,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="ไม่เคย" id="availability_haveAttended-no"/>
+                                                            value="false" id="availability_haveAttended-no"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1024,7 +1456,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="สะดวก" id="availability_attendAllDays-yes"/>
+                                                            value="true" id="availability_attendAllDays-yes"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1042,7 +1474,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="ไม่สะดวก" id="availability_attendAllDays-no"/>
+                                                            value="false" id="availability_attendAllDays-no"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1065,7 +1497,7 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำ laptop มาไหม</FormLabel>
+                                    <FormLabel>สะดวกนำ Laptop มาไหม</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1081,7 +1513,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="สะดวก" id="availability_laptop-yes"/>
+                                                            value="true" id="availability_laptop-yes"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1099,7 +1531,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="ไม่สะดวก" id="availability_laptop-no"/>
+                                                            value="false" id="availability_laptop-no"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1137,7 +1569,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="สะดวก" id="availability_tablet-yes"/>
+                                                            value="true" id="availability_tablet-yes"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1155,7 +1587,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="ไม่สะดวก" id="availability_tablet-no"/>
+                                                            value="false" id="availability_tablet-no"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1193,7 +1625,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="สะดวก" id="availability_mouse-yes"/>
+                                                            value="true" id="availability_mouse-yes"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1211,7 +1643,7 @@ function Step3() {
                                                     <FormControl>
                                                         <RadioGroupItem
                                                             className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="ไม่สะดวก" id="availability_mouse-no"/>
+                                                            value="false" id="availability_mouse-no"/>
                                                     </FormControl>
                                                     <span
                                                         className="flex-1 relative items-center text-sm transition-colors">
@@ -1226,6 +1658,56 @@ function Step3() {
                                 </FormItem>
                             )}
                         />
+
+                        { /* Laptop OS */ }
+                        {form.watch("availability_laptop") === "true" && (
+                        <div className="flex flex-row gap-5">
+                            <FormField
+                                control={form.control}
+                                name="availability_laptopOS"
+                                render={({ field }) => (
+                                    <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
+                                        <FormLabel>ระบบปฏิบัติการ (OS)</FormLabel>
+                                        <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="py-6 px-4 rounded-xl w-full">
+                                                    <SelectValue placeholder="เลือก" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className="rounded-xl">
+                                                <SelectItem className="py-3 px-4" value="Windows 11"><FontAwesomeIcon icon={faMicrosoft} />Windows 11</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="Windows 10"><FontAwesomeIcon icon={faWindows} />Windows 10</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="macOS"><FontAwesomeIcon icon={faApple} />macOS</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="Linux"><FontAwesomeIcon icon={faLinux} />Linux</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {((form.watch("availability_laptop") === "true")&&(form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) && (
+                                <FormField
+                                    control={form.control}
+                                    name="availability_laptopOS_other"
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                            <FormLabel>{form.watch("availability_laptopOS") === "Linux" ? "Distro" : "โปรดระบุ"}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
+                                                    placeholder=""
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+                        </div>
+                        )}
+
                         { /* วิธีการเดินทางมาค่าย */}
                         <span className="md:col-span-2 flex flex-col gap-y-3">
                         <FormField
@@ -1276,11 +1758,15 @@ function Step3() {
                                 </thead>
                                 <tbody className="divide-y divide-[#364959]">
                                 {[
-                                    { size: "S", chest: "34-46", length: "27" },
-                                    { size: "M", chest: "38-40", length: "28" },
-                                    { size: "L", chest: "42-44", length: "29" },
-                                    { size: "XL", chest: "46-48", length: "30" },
-                                    { size: "XXL", chest: "50-52", length: "31" }
+                                    { size: "SS", chest: "34", length: "25" },
+                                    { size: "S", chest: "36", length: "26" },
+                                    { size: "M", chest: "38", length: "27" },
+                                    { size: "L", chest: "40", length: "28" },
+                                    { size: "XL", chest: "42", length: "29" },
+                                    { size: "2XL", chest: "44", length: "30" },
+                                    { size: "3XL", chest: "46", length: "31" },
+                                    { size: "4XL", chest: "48", length: "32" },
+                                    { size: "5XL", chest: "50", length: "33" }
                                 ].map((item) => (
                                     <tr key={item.size} data-selected={item.size == form.getValues('apparel_size') ? 'true' : ''} className="bg-[#101922] data-[selected=true]:bg-slate-700 transition-colors">
                                         <td className="px-4 py-2 font-medium">{item.size}</td>
@@ -1304,7 +1790,7 @@ function Step3() {
                                             defaultValue={field.value}
                                             className="grid grid-cols-5 gap-3"
                                         >
-                                            {["S", "M", "L", "XL", "XXL"].map((type) => (
+                                            {["SS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"].map((type) => (
                                                 <div key={type} className="peer sr-onl">
                                                     <RadioGroupItem value={type} id={`apparel_size-${type}`} className="peer sr-only" />
                                                     <Label
@@ -1336,141 +1822,14 @@ function Step3() {
                         ย้อนกลับ
                     </Button>
                     <Button
+                        disabled={loading}
                         type="submit"
                         className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
                         //onClick={onSubmit}
                     >
-                        บันทึก
-                        <FontAwesomeIcon icon={faFloppyDisk}/>
+
+                        {loading ? (<>กำลังบันทึก <Spinner/></>) : (<>บันทึก <FontAwesomeIcon icon={faFloppyDisk}/></>)}
                     </Button>
-                </div>
-            </form>
-        </Form>
-    );
-}
-
-function Step4() {
-    const {prev, next, setAllData, allData} = useContext(RegisterCtx);
-
-    const form = useForm({
-        defaultValues: {
-            name_prefix: allData?.name_prefix || "",
-            name_first: allData?.name_first || "",
-            name_last: allData?.name_last || "",
-            name_nick: allData?.name_nick || "",
-
-            info_dob: allData?.info_dob || "",
-            info_gender: allData?.info_gender || "",
-            info_religion: allData?.info_religion || "",
-            info_phone: allData?.info_phone || "",
-            info_email: allData?.info_email || "",
-            info_address: allData?.info_address || "",
-
-            academic_level: allData?.academic_level || "",
-            academic_program: allData?.academic_program || "",
-            academic_program_other: allData?.academic_program_other || "",
-            academic_school: allData?.academic_school || "",
-
-            health_bloodType: allData?.health_bloodType || "",
-            health_medicalRights: allData?.health_medicalRights || "",
-            health_chronicDiseases: allData?.health_chronicDiseases || "",
-            health_drugAllergies: allData?.health_drugAllergies || "",
-            health_dietaryRestrictions: allData?.health_dietaryRestrictions || "",
-
-            guardian_name: allData?.guardian_name || "",
-            guardian_relationship: allData?.guardian_relationship || "",
-            guardian_phone: allData?.guardian_phone || "",
-
-            availability_haveAttended: allData?.availability_haveAttended || "",
-            availability_attendAllDays: allData?.availability_attendAllDays || "",
-            availability_laptop: allData?.availability_laptop || "",
-            availability_laptopOS: allData?.availability_laptopOS || "",
-            availability_tablet: allData?.availability_tablet || "",
-            availability_mouse: allData?.availability_mouse || "",
-            availability_travelPlan: allData?.availability_travelPlan || "",
-
-            apparel_size: allData?.apparel_size || "",
-
-            file_facePhoto: allData?.file_facePhoto || "",
-            file_idCardCopy: allData?.file_idCardCopy || "",
-            file_parentPermission: allData?.file_parentPermission || "",
-            file_transcript: allData?.file_transcript || "",
-            file_studentStatus: allData?.file_studentStatus || ""
-        },
-    })
-
-    useEffect(() => {
-        const { unsubscribe } = form.watch((values) => {
-            setAllData((prev: any) => ({ ...prev, ...values }));
-        });
-        return unsubscribe;
-    }, [form.watch, setAllData]);
-
-    const onSubmit = () => {
-        console.log("ส่งข้อมูลทั้งหมดไป API:", allData);
-        localStorage.removeItem("comcamp37_reg_input");
-        alert("บันทึกข้อมูลสำเร็จ!");
-    };
-
-    const onPrev = () => {
-        // 1. Get current values from the form state (even if not validated/submitted)
-        const currentValues = form.getValues();
-
-        // 2. Save them to context so they are there when we come back
-        setAllData((prevData: any) => ({ ...prevData, ...currentValues }));
-
-        // 3. Go back
-        prev();
-    };
-
-    return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden"
-            >
-                {/* Personal Info */}
-
-                <div className="p-6 md:p-8 gap-6 flex flex-col border-b border-slate-800">
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800">
-                            <FontAwesomeIcon icon={faFolderOpen}/>
-                        </div>
-                        <h2 className="text-xl font-bold">ไฟล์ที่ต้องอัปโหลด</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
-                        sad
-                    </div>
-                </div>
-
-                {/* Navigation Buttons */}
-                <div
-                    className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
-                    <Button
-                        type="button"
-                        className="px-8 py-5 font-bold rounded-xl border border-slate-600 bg-slate-900 text-white hover:bg-slate-700 focus:ring-offset-slate-900"
-                        onClick={onPrev}
-                    >
-                        <FontAwesomeIcon icon={faArrowLeft}/>
-                        ย้อนกลับ
-                    </Button>
-                    <div className="flex flex-row gap-x-3">
-                        <Button
-                            className="px-5 py-5 font-bold rounded-xl border border-slate-600 bg-slate-900 text-white hover:bg-slate-700 focus:ring-offset-slate-900"
-                            //onClick={onSubmit}
-                            >
-                            ข้ามขั้นตอนนี้
-                        </Button>
-                        <Button
-                            type="submit"
-                            className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
-                            //onClick={onSubmit}
-                        >
-                            บันทึก
-                            <FontAwesomeIcon icon={faArrowRight}/>
-                        </Button>
-                    </div>
                 </div>
             </form>
         </Form>

@@ -11,20 +11,21 @@ export interface Mission {
     status: 'locked' | 'current' | 'completed';
     label: string;
     icon: IconProp;
+    action: () => void;
 }
 
 export interface MissionPathProps {
     missions?: Mission[];
 }
 
-const MissionPath: React.FC<MissionPathProps> = ({ missions = [] }) => {
+const HorizontalMissionPath: React.FC<MissionPathProps> = ({ missions = [] }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerWidth, setContainerWidth] = useState(0);
 
     // --- Configuration ---
     const CONTAINER_HEIGHT = 220;
     const AMPLITUDE = 35;
-    const FREQUENCY = 3;
+    const FREQUENCY = 4;
     const MAX_CONTENT_WIDTH = 1000;
     const X_PADDING = 80;
 
@@ -155,7 +156,7 @@ const MissionPath: React.FC<MissionPathProps> = ({ missions = [] }) => {
                                             'bg-gray-100 text-gray-400 border-gray-300'
                                 }
                 `}
-                                onClick={() => console.log(`Clicked mission ${mission.id}`)}
+                                onClick={mission.action}
                                 disabled={mission.status === 'locked'}
                             >
 
@@ -173,4 +174,105 @@ const MissionPath: React.FC<MissionPathProps> = ({ missions = [] }) => {
     );
 };
 
-export default MissionPath;
+const VerticalMissionPath: React.FC<MissionPathProps> = ({ missions = [] }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [containerWidth, setContainerWidth] = useState(0);
+
+    const ITEM_SPACING = 140;
+    const Y_PADDING = 100;
+    const AMPLITUDE = 35;
+    const FREQUENCY = 0.015;
+
+    const totalHeight = (Math.max(missions.length - 1, 0) * ITEM_SPACING) + (Y_PADDING * 2);
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const updateWidth = () => {
+            if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth);
+        };
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, []);
+
+    const calculateX = (y: number) => {
+        const centerX = containerWidth / 2;
+        const relativeY = y - Y_PADDING;
+        const angle = relativeY * FREQUENCY;
+        return centerX + Math.sin(angle) * AMPLITUDE;
+    };
+
+    const getMissionY = (index: number) => {
+        return Y_PADDING + (index * ITEM_SPACING);
+    };
+
+    const currentMissionIndex = missions.findIndex((m) => m.status === 'current');
+    const activeIndex = currentMissionIndex !== -1
+        ? currentMissionIndex
+        : (missions.some(m => m.status === 'completed') ? missions.length - 1 : -1);
+
+    const progressHeight = activeIndex >= 0
+        ? (missions.every((m) => m.status === 'completed') ? totalHeight : getMissionY(activeIndex))
+        : 0;
+
+    const svgPathData = useMemo(() => {
+        if (containerWidth === 0) return '';
+        let path = `M ${calculateX(0)} 0`;
+        const resolution = 5;
+        for (let y = 0; y <= totalHeight; y += resolution) {
+            path += ` L ${calculateX(y)} ${y}`;
+        }
+        path += ` L ${calculateX(totalHeight)} ${totalHeight}`;
+        return path;
+    }, [containerWidth, totalHeight]);
+
+    return (
+        <div ref={containerRef} className="w-full relative overflow-hidden" style={{ height: totalHeight }}>
+            <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                <defs>
+                    <clipPath id="progress-clip-vertical">
+                        <rect x="0" y="0" width="100%" height={progressHeight} />
+                    </clipPath>
+                </defs>
+                {/* ใช้สีเดียวกับแนวนอน (#414a67) */}
+                <path d={svgPathData} stroke="#414a67" strokeWidth="12" fill="none" strokeLinecap="round" />
+                {/* ใช้สีเดียวกับแนวนอน (#f4d470) */}
+                <path d={svgPathData} stroke="#f4d470" strokeWidth="12" fill="none" strokeLinecap="round" clipPath="url(#progress-clip-vertical)" className="transition-all duration-1000 ease-in-out" />
+                <path d={svgPathData} stroke="white" strokeWidth="2" fill="none" strokeDasharray="10 10" strokeLinecap="round" className="opacity-30" />
+            </svg>
+
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                {missions.map((mission, index) => {
+                    const y = getMissionY(index);
+                    const x = calculateX(y);
+                    const isLeaningLeft = x < (containerWidth / 2);
+
+                    return (
+                        <div key={mission.id} className="absolute flex items-center justify-center pointer-events-auto" style={{ left: x, top: y, transform: 'translate(-50%, -50%)' }}>
+                            <motion.button
+                                whileHover={{ scale: 1.10 }} whileTap={{ scale: 0.90 }}
+                                // ใช้ Class Style เดียวกับแนวนอนเป๊ะๆ (ขนาด w-16 h-16)
+                                className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg font-bold text-lg z-10 border-4 relative ${
+                                    mission.status === 'completed' ? 'bg-amber-500 text-white border-amber-500' :
+                                        mission.status === 'current' ? 'bg-white text-amber-500 border-amber-500' :
+                                            'bg-gray-100 text-gray-400 border-gray-300'
+                                }`}
+                                onClick={mission.action} disabled={mission.status === 'locked'}
+                            >
+                                <FontAwesomeIcon className="text-2xl" icon={mission.status === 'completed' ? faCheck : mission.icon}/>
+                            </motion.button>
+
+                            {/* Text Box: วางสลับซ้ายขวาตามแนวคลื่น เพื่อไม่ให้ตกขอบ */}
+                            <div className={`absolute top-0 flex flex-col justify-center h-16 w-32 ${isLeaningLeft ? 'left-[4.5rem] text-left' : 'right-[4.5rem] text-right'}`}>
+                                <div className="text-sm font-bold text-white leading-tight">{mission.label}</div>
+                                <div className="text-xs text-[#9dabb9] mt-1">{mission.status === 'completed' ? 'เสร็จสิ้น' : 'ยังไม่เสร็จสิ้น'}</div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+export {VerticalMissionPath, HorizontalMissionPath };
