@@ -24,7 +24,7 @@ import '@vidstack/react/player/styles/base.css';
 import {MediaPlayer, MediaProvider, MuteButton, PlayButton, TimeSlider} from '@vidstack/react';
 
 const prefixQuestion = "aptitude"
-const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic/answer`
+const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic/chaos/answer`
 
 const questions = [
     { field: "question1", questionNum: 1, description: (
@@ -47,7 +47,8 @@ const questions = [
             คำถามสำหรับคะแนนพิเศษ :
         </div>
     ), question: "ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล  (ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง)", placeholder: "" },
-    { field: "1.จงระบุสถานะของหอคอย X, Y และ Z ใน นาทีที่ 2 และ นาทีที่ 3 อย่างละเอียด", questionNum: ' ', description: (
+    { field: "question201", questionNum: ' ', description: (
+        /* 1.จงระบุสถานะของหอคอย X, Y และ Z ใน นาทีที่ 2 และ นาทีที่ 3 อย่างละเอียด*/
         <div>
             <h1 className="font-bold text-xl mb-3">ข้อ 2 : หอคอยสัญญาณอัฉริยะ</h1>
             <p className="indent-8">
@@ -272,6 +273,8 @@ export default function questionAcademic() {
             question201: "",
             question202: "",
             question203: "",
+            question301: "",
+            question302: "",
         },
     });
 
@@ -301,6 +304,8 @@ export default function questionAcademic() {
                 { section: `${prefixQuestion}_201`, value: data.question2 },
                 { section: `${prefixQuestion}_202`, value: data.question201 },
                 { section: `${prefixQuestion}_203`, value: data.question201 },
+                { section: `${prefixQuestion}_301`, value: data.question301 },
+                { section: `${prefixQuestion}_302`, value: data.question302 },
             ]
         };
         console.log("Submitting Answers:", payload);
