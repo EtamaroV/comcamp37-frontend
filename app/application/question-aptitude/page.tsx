@@ -23,8 +23,69 @@ const prefixQuestion = "aptitude"
 const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic_chaos/answer`
 
 const questions = [
-    { field: "question1", questionNum: 1, description: "", question: "Aptitude_Test1", placeholder: "" },
-    { field: "question2", questionNum: 2, description: "", question: "Aptitude_Test2", placeholder: "" },
+    
+    { field: "question1",  questionNum: 1,  description: (
+        <div>
+            <span className="text-pretty">
+                1.ให้น้องอธิบายลำดับขั้นตอนการทำงานของโปรแกรมที่ใช้หา จำนวนเฉพาะ (เลขที่มากกว่า 1 และไม่มีเลขใดหารลงตัวนอกจาก 1 กับตัวมันเอง) ทั้งหมดที่อยู่ระหว่างค่า A ถึง B (รวม A และ B ด้วย) โดยต้องแสดงเลขที่เจอทั้งหมดเรียงจากน้อยไปหามาก หากไม่เจอเลยให้ตอบว่า NONE และบรรทัดสุดท้ายต้องแสดง ผลรวม ของเลขเหล่านั้นด้วย เช่น เมื่อ<br />
+                <div className="ml-3">
+                    1 ) A เป็น 1 และ B เป็น 10 คำตอบบรรทัดแรกจะเป็น 2 3 5 7 และคำตอบบรรทัดที่สองจะเป็น 17 <br />
+                    2) A เป็น 8 และ B เป็น 10 คำตอบบรรทัดแรกจะเป็น NONE และคำตอบบรรทัดที่สองจะเป็น 0 <br />
+
+                </div>
+            </span>
+        </div>
+    ), question: "",  placeholder: "" },
+    { field: "question201",  questionNum: 2,  description: (
+        <div>
+             <span className="text-pretty">
+               จงตอบคำถามต่อไปนี้หากน้องต้องการเขียนโปรแกรมเพื่อเก็บข้อมูลนักเรียน 1 คน ซึ่งประกอบด้วยข้อมูลดังนี้ <br />
+                <div className="ml-3">
+                    1. ชื่อนักเรียน เช่น "Somchai" <br />
+                    2. อายุ เช่น 15 <br />
+                    3.สถานะโรคประจำตัว คือมีและไม่มี <br />
+                    4.น้ำหนัก เช่น 48.5<br />
+                </div>
+            </span>
+        </div>
+    ), question: "2.1. ข้อมูลแต่ละประเภทควรใช้ชนิดข้อมูลอะไรในภาษา C เพราะเหตุใด จงอธิบาย",  placeholder: "" },
+    { field: "question202",  questionNum: 3,  description: "", question: "2.2. หากน้ำหนักมีทศนิยมที่ละเอียดมากควรปรับเปลี่ยนชนิดของข้อมูลหรือไม่ อย่างไร",  placeholder: "" },
+    { field: "question203",  questionNum: 3,  description: "", question: "2.3. จงยกตัวอย่างสิ่งที่อาจจะเกิดขึ้นได้หากใช้ชนิดข้อมูลผิดรูปแบบมาอย่างน้อยหนึ่งข้อ",  placeholder: "" },
+    { field: "question3",  questionNum: 3,  description: "", question: "3.ในภาษา C เมื่อเราต้องการเก็บข้อมูลชนิดเดียวกันหลาย ๆ ตัว เราจะใช้โครงสร้างข้อมูลชนิดหนึ่งซึ่งเราต้องระบุขนาดของมันไว้ตั้งแต่ตอนประกาศตัวแปร หากน้อง ๆ ระบุขนาดของโครงสร้างข้อมูลชนิดนี้ไว้ 5 แต่พยายามใส่ข้อมูลตำแหน่งที่ 6 ลงไปจะเกิดอะไรขึ้น เพราะเหตุใด จงอธิบายโดยละเอียด",  placeholder: "" },
+    { field: "question4",  questionNum: 4,  description: "", question: "4.ในความคิดของน้อง ทำไมเราถึงต้องเรียนภาษา C แม้ว่าจะมีภาษาอื่น ๆ บนโลกอีกมากมาย",  placeholder: "" },
+    { field: "question5",  questionNum: 5,  description: (
+        <span className="text-pretty">
+                <div>
+                5.น้องคิดว่า “Microcontroller” คืออะไร และเคยมีประสบการณ์อะไรเกี่ยวกับ Microcontroller มาบ้าง <br />
+                <strong>หมายเหตุ ถ้าน้องไม่รู้จักหรือไม่เคยมีประสบการณ์ให้ตอบตามความเป็นจริงได้เลย</strong>
+                </div>
+            </span>
+    ), question: "",  placeholder: "" },
+    { field: "question6",  questionNum: 6,  description: "", question: "6.ในการทำงานร่วมชิ้นงานที่มีความจำเป็นต้องใช้ Micro:bit หากเราได้ทำการตรวจสอบแล้วว่าโค้ดที่ได้ทำการเขียนขึ้นมาถูกต้องสมบูรณ์แล้ว แต่เมื่อทำนำ Micro:bit เชื่อมต่อสายไฟเข้ากับมอเตอร์จริง ๆ มอเตอร์กลับไม่ทำงาน จากสถานะการณ์เบื้องต้นน้องคิดว่าปัญหาน่าจะเกิดจากอะไรได้บ้าง?",  placeholder: "" },
+    { field: "question7",  questionNum: 7,  description: (
+        <div>
+             <span className="text-pretty">
+                7.น้องจะต้องบังคับหุ่นยนต์ให้เก็บซากหุ่นต่าง ๆ ในพื้นที่ ไปไว้ที่จุด Checkpoint 2 จุดที่แตกต่างกันสำหรับหุ่นยนต์แต่ละประเภท ถ้าหากวางในที่ที่ผิดประเภท จะโดนหักคะแนน โดยจะเก็บครั้งละกี่ตัวก็ได้ และจะต้องเก็บให้ได้มากที่สุดภายในระยะเวลาที่จำกัด (ขยะชิ้นใหญ่และขยะชิ้นเล็กจะได้คะแนนแตกต่างกัน ขยะชิ้นใหญ่จะได้คะแนนมากกว่าชิ้นเล็ก แต่ถ้าวางชิ้นใหญ่ผิดประเภทก็จะลบคะแนนมากกว่าเช่นกัน) <br />
+                <strong>พี่ ๆ มีหุ่นยนต์มาให้น้องเลือก 2 ตัว ในการเอาไปทำภารกิจ เก็บซากหุ่นยนต์ โดยให้น้องเลือกหุ่นยนต์ตัวใดตัวหนึ่ง และอธิบายว่าทำไมน้องถึงเลือกหุ่นยนต์ตัวนั้น รวมถึงวิธีการที่น้องจะทำภารกิจนี้ให้สำเร็จ</strong><br />
+                {/* ยังไม่ได้เพอ่มรูปน้า */}
+                <div>
+                    <strong>หุ่นยนต์ A</strong><br />
+                    Code name: สาส์นจากสวรรค์หุ่นยนต์ผู้ซึ่งปลดแอกจากการจองจำของปีศาจจากขุมนรก<br />
+                    <img src="https://i.postimg.cc/L88RTbv4/Screenshot-2026-02-20-175750.png" height="300px"></img>
+                </div>
+                <div>
+                    <strong>หุ่นยนต์ B</strong><br />
+                    Code name: ราชาปีศาจหุ่นยนต์ผู้ซึ่งทำลายล้างทุกสิ่งผู้ที่ปกครองทุกอย่างผู้ที่เกิดมาเพื่อสร้างความโกลาหลแก่โลกใบนี้    <br />
+                    <img src="https://i.postimg.cc/P5P9Ns29/Screenshot-2026-02-20-192144.png" height="300px"></img>
+                </div>
+            </span>
+        </div>
+    ), question: "Aptitude_Test7",  placeholder: "" },
+    { field: "question8",  questionNum: 8,  description: "", question: "8.ในความคิดของน้อง AI คืออะไร เเละ AI ถูกสร้างขึ้นมาเพื่ออะไร",  placeholder: "" },
+    { field: "question9",  questionNum: 9,  description: "", question: "9.สมมุติว่าน้องได้ทำการสร้าง AI ผ่านกระบวนการ Machine learning ขึ้นมาตัวหนึ่งเพื่อช่วยในการเเยกขยะ ก่อนนำไปรีไซเคิลเเต่ในขั้นตอนการทดสอบกลับพบว่า AI ตรวจจับขวดน้ำที่ทำจากเเก้วว่าเป็นขวดที่ทำจาก พลาสติก เมื่อทำการตรวจสอบปัญหาพบว่าส่วนของ Hardware (เช่น กล้อง) ไม่มีส่วนเกี่ยวข้องกับปัญหาในครั้งนี้ น้องคิดว่าที่มาของปัญหาในครั้งนี้คืออะไร เเละน้องจะมีเเนวทางเเก้ปัญหาอย่างไรเพื่อให้ AI สามารถตรวจสอบเเละเเยกขวดเเก้วออกจากขวดพลาสติกได้",  placeholder: "" },
+    { field: "question10", questionNum: 10, description: "", question: "10.ในความคิดของน้อง น้องคิดว่าการเรียนรู้ของ AI นั้นเหมือนกับมนุษย์หรือไม่ อย่างไร", placeholder: "" }
+
+
 ]
 
 export default function questionAptitude() {
@@ -111,7 +172,7 @@ export default function questionAptitude() {
                                         <FormItem>
                                             <FormLabel className="flex flex-col items-start text-base">
                                                 <div className="flex flex-row items-start gap-x-2">
-                                                    <div>{question.questionNum}.</div><div className="leading-relaxed text-pretty">{question.description === "" ? question.question : question.description}</div>
+                                                    <div className="leading-relaxed text-pretty">{question.description === "" ? question.question : question.description}</div>
                                                 </div>
                                                 <div className={`text-pretty ${question.question === "" || question.description === "" ? "hidden" : "block"}`}>{question.question}</div>
                                             </FormLabel>

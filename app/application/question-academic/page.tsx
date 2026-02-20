@@ -349,7 +349,7 @@ export default function questionAcademic() {
                                         <FormItem>
                                             <FormLabel className="flex flex-col items-start text-base">
                                                 <div className="flex flex-row items-start gap-x-2">
-                                                    <div></div><div className="leading-relaxed text-pretty">{question.description === "" ? question.question : question.description}</div>
+                                                    <div className="leading-relaxed text-pretty">{question.description === "" ? question.question : question.description}</div>
                                                 </div>
                                                 <div className={`text-pretty ${question.question === "" || question.description === "" ? "hidden" : "block"}`}>{question.question}</div>
                                             </FormLabel>
