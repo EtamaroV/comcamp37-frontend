@@ -60,7 +60,7 @@ function AboutSection() {
                 <div className="w-full h-screen flex flex-col items-start justify-center align-middle gap-15 z-10 md:max-w-180 p-5 md:p-10 lg:p-20">
 
                     {/* หัวข้อสไลด์เข้ามาแบบเด้งๆ */}
-                    <motion.div variants={cartoonPop} className="font-zootopia text-5xl hidden md:block">
+                    <motion.div variants={cartoonPop} className="font-zootopia text-5xl hidden md:block text-white [text-shadow:4px_4px_5_rgba(0,0,0,0.3)]">
                         About
                     </motion.div>
 

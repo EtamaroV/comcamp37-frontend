@@ -35,7 +35,7 @@ export default function NotFoundPage() {
     };
 
     return (
-        <div className='flex flex-col items-center justify-center h-dvh px-15 overflow-hidden'> {/* เพิ่มสีพื้นหลังจางๆ นิดหน่อยถ้าต้องการ */}
+        <div className='absolute top-0 w-full flex flex-col items-center justify-center h-dvh px-15 overflow-hidden'> {/* เพิ่มสีพื้นหลังจางๆ นิดหน่อยถ้าต้องการ */}
             <motion.div
                 className='z-20 flex flex-col w-full max-w-[340px] items-center text-center mx-5'
                 variants={containerVariants}

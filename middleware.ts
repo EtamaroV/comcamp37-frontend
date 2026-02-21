@@ -6,18 +6,13 @@ export const runtime = 'experimental-edge';
 const ACCESS_RULES = [
     {
         path: '/signin',
-        startTime: new Date('2026-02-23T00:00:00+07:00').getTime(),
+        startTime: new Date(process.env.NEXT_PUBLIC_TIME_START_REGIS || "2026-02-23T00:00:00+07:00").getTime(),
         endTime: null,
     },
     {
         path: '/application',
-        startTime: new Date('2026-02-23T00:00:00+07:00').getTime(),
+        startTime: new Date(process.env.NEXT_PUBLIC_TIME_START_REGIS || "2026-02-23T00:00:00+07:00").getTime(),
         endTime: null,
-    },
-    {
-        path: '/application/register',
-        startTime: new Date('2026-02-23T00:00:00+07:00').getTime(),
-        endTime: new Date('2026-03-10T23:59:59+07:00').getTime(),
     }
 ];
 

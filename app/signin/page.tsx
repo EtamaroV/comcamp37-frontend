@@ -5,14 +5,20 @@ import { motion } from "motion/react"
 
 import { authClient } from "@/lib/auth-client";
 import {Variants} from "motion";
+import {useEffect} from "react";
+import {useRouter} from "next/navigation";
+import {useUser} from "@/contexts/UserContext";
 
 const loginWithGoogle = async () => {
     await authClient.signIn.social({
         provider: "google",
-        callbackURL: "http://localhost:3000/application"
+        callbackURL: `${process.env.NEXT_PUBLIC_SERVER_URL}/application`
     })
 }
 export default function SignInPage() {
+    const router = useRouter();
+    const { user } = useUser()
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -49,51 +55,58 @@ export default function SignInPage() {
             transition: { duration: 1 }
         }
     };
+
+    useEffect(() => {
+        if (user) {
+            router.replace('/application');
+        }
+    }, [user]);
+
     return (
-        <div className='flex flex-col items-center justify-center h-dvh px-15 overflow-hidden'>
+        <div className='absolute top-0 w-full flex flex-col items-center justify-center h-dvh pt-20 px-15 overflow-hidden'>
             <motion.div
                 className='flex flex-col w-full max-w-[340px] items-center text-center mx-5'
                 variants={containerVariants}
                 initial="hidden"
-                whileInView="visible"
+                animate="visible"
                 viewport={{ once: true }}
             >
 
-                <div className="w-full h-auto relative mb-8 select-none">
+                <div className="w-full h-auto relative mb-8 drop-shadow-xl drop-shadow-black/40 select-none">
                     <motion.div variants={bgVariants} className="relative z-0">
                         <Image
                             className="drop-shadow-2xl"
-                            src="/Comcamp-Logo.png"
+                            src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`}
                             alt="Comcamp 37 Logo"
                             width={800}
                             height={800}
-                            priority
+                            unoptimized
                         />
                     </motion.div>
 
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(19%_20%,26%_46%,0%_50%,0%_25%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(19%_20%,26%_46%,0%_50%,0%_25%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(39%_19%,47%_35%,41%_43%,28%_45%,20%_31%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(39%_19%,47%_35%,41%_43%,28%_45%,20%_31%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(74%_11%,72%_44%,44%_44%,48%_26%,43%_9%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(74%_11%,72%_44%,44%_44%,48%_26%,43%_9%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(11%_48%,33%_45%,35%_77%,10%_77%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(11%_48%,33%_45%,35%_77%,10%_77%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(34%_53%,49%_53%,49%_73%,35%_73%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(34%_53%,49%_53%,49%_73%,35%_73%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(55%_52%,69%_52%,74%_73%,49%_73%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(55%_52%,69%_52%,74%_73%,49%_73%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(74%_52%,92%_54%,91%_67%,80%_68%,79%_85%,58%_85%,55%_77%,74%_77%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(74%_52%,92%_54%,91%_67%,80%_68%,79%_85%,58%_85%,55%_77%,74%_77%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                     <motion.div variants={itemVariants} className="absolute top-0 left-0 w-full h-full z-10">
-                        <Image className="w-full h-full [clip-path:polygon(74%_24%,72%_41%,88%_53%,100%_55%,100%_37%,88%_26%)]" src="/Comcamp-Logo.png" alt="Logo Part" width={800} height={800} priority />
+                        <Image className="w-full h-full [clip-path:polygon(74%_24%,72%_41%,88%_53%,100%_55%,100%_37%,88%_26%)]" src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/Comcamp-Logo.png`} alt="Logo Part" width={800} height={800} unoptimized />
                     </motion.div>
                 </div>
 
@@ -105,7 +118,7 @@ export default function SignInPage() {
                     className="group bg-white w-full flex items-center justify-center gap-3 h-13 md:h-15 px-4 rounded-xl shadow-lg cursor-pointer"
                 >
                     <Image src="/google.svg" width={22} height={22} alt="Google Logo"/>
-                    <span className="text-gray-700 font-medium md:text-lg md:leading-15.5 leading-13.5 tracking-tight opacity-80 font-(family-name:Roboto h-full">
+                    <span className="text-gray-700 font-medium md:text-lg md:leading-15.5 leading-13.5 tracking-tight opacity-80 font-noto-sans-thai h-full">
                         Continue with Google
                     </span>
                 </motion.button>

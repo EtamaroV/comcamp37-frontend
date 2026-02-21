@@ -6,7 +6,7 @@ import {Navbar} from "@/components/ui/navbar";
 import {Footer} from "@/components/ui/footer";
 import { Toaster } from "@/components/ui/sonner"
 import MicrosoftClarity from "@/app/metrics/MicrosoftClarity";
-//import {UserProvider} from "@/contexts/UserContext";
+import {UserProvider} from "@/contexts/UserContext";
 
 export const runtime = 'edge';
 
@@ -94,11 +94,11 @@ export default function RootLayout({
         <body
             className={`${notoSansThai.variable} ${zootopiaFont.variable} ${baiJamjuree.variable} ${roboto.variable} font-bai_jamjuree antialiased bg-theme-primary dark`} /* bg-[#2D364E] #232C40 */
         >
-        {/*<UserProvider>*/}
+        <UserProvider>
             { process.env.NEXT_PUBLIC_IS_COMINGSOON  == 'false' && (<Navbar/>)}
 
         {children}
-            {/*</UserProvider>*/}
+        </UserProvider>
         <MicrosoftClarity/>
         <Toaster />
         </body>
