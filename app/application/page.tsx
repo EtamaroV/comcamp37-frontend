@@ -68,7 +68,7 @@ const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => 
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute z-31 rounded-xl left-0 top-0 backdrop-blur-lg backdrop-brightness-75 inset-0 flex items-center justify-center"
+                    className="absolute z-32 rounded-xl left-0 top-0 backdrop-blur-lg backdrop-brightness-75 inset-0 flex items-center justify-center"
                 >
                     <motion.span
                         // ตั้งค่าแอนิเมชันของตัวหนังสือ (เด้งดึ๋งนิดๆ ตอนโผล่มา)
@@ -250,9 +250,11 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
 export default function applicationHome() {
     const { user, isLoading } = useUser();
     const router = useRouter();
-    const { studentStatus, studentInfo, studentFaceImage, ApplicationStatus, refreshApplication } = useStudent();
+    const { studentStatus, studentInfo, studentFaceImage, ApplicationStatus, refreshApplication, applicationId } = useStudent();
 
     const [isSubmitLoading, setSubmitLoading] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
 
     const statusExpired = useCountdown(REGIS_EXPIRED_DATE);
     let currentStatus: ApplicationStatus = 'INCOMPLETE';
@@ -265,8 +267,8 @@ export default function applicationHome() {
         studentStatus?.std_status_info_done &&
         studentStatus.std_status_file_done &&
         studentStatus.std_status_regis_question_done &&
-        studentStatus.std_status_academic_question_done &&
-        studentStatus.std_status_academic_chaos_done
+        studentStatus.std_status_acdemic_question_done &&
+        studentStatus.std_status_academic_chaos_question_done
     ) {
         currentStatus = "READY"
     }
@@ -274,8 +276,8 @@ export default function applicationHome() {
     const myMissions: Mission[] = [
         { id: 1, status: `${ studentStatus?.std_status_info_done ? 'completed' : 'current' }`, label: 'ทะเบียนประวัติ', icon: faUser, action: () => {router.push('/application/register')} },
         { id: 2, status: `${ studentStatus?.std_status_regis_question_done ? 'completed' : 'current' }`, label: 'ด่านตรวจเข้าเมือง', icon: faTents, action: () => {router.push('/application/question-regis')} },
-        { id: 3, status: `${ studentStatus?.std_status_academic_question_done ? 'completed' : 'current' }`, label: 'บททดสอบแห่งพงไพร', icon: faPersonHiking, action: () => {router.push('/application/question-academic')} },
-        { id: 4, status: `${ studentStatus?.std_status_academic_chaos_done ? 'completed' : 'current' }`, label: 'ถอดรหัสสัญชาตญาณ', icon: faSignsPost, action: () => {router.push('/application/question-aptitude')} },
+        { id: 3, status: `${ studentStatus?.std_status_acdemic_question_done ? 'completed' : 'current' }`, label: 'บททดสอบแห่งพงไพร', icon: faPersonHiking, action: () => {router.push('/application/question-academic')} },
+        { id: 4, status: `${ studentStatus?.std_status_academic_chaos_question_done ? 'completed' : 'current' }`, label: 'ถอดรหัสสัญชาตญาณ', icon: faSignsPost, action: () => {router.push('/application/question-aptitude')} },
         { id: 5, status: `${ studentStatus?.std_status_file_done ? 'completed' : 'current' }`, label: 'ยื่นหลักฐานเข้าเมือง', icon: faFolderOpen, action: () => {router.push('/application/file')} },
     ];
 
@@ -287,13 +289,18 @@ export default function applicationHome() {
         setSubmitLoading(true);
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/submit`,
-                {},
+                {
+                    application_id: applicationId,
+                    confirm: true
+                },
                 { withCredentials: true }
             );
 
             await refreshApplication();
-
             toast.success("ส่งเรียบร้อยแล้ว");
+
+            setIsConfirmModalOpen(false);
+
         } catch (error: any) {
             console.error(error);
             toast.error("ส่งไม่สำเร็จ", {
@@ -306,6 +313,75 @@ export default function applicationHome() {
 
     return (
         <>
+            <AnimatePresence>
+                {isConfirmModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => !isSubmitLoading && setIsConfirmModalOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+
+                        {/* กล่อง Dialog */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                            className="relative w-full max-w-xl bg-slate-900 border border-slate-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6"
+                        >
+                            <div>
+                                <h2 className="text-2xl font-bold text-white mb-2">ยืนยันการส่งใบสมัคร</h2>
+                                <p className="text-slate-300">
+                                    โปรดตรวจสอบข้อมูลให้ครบถ้วนและถูกต้อง <br/>
+                                    <span className="text-red-400 font-medium">หากกดยืนยันแล้ว จะไม่สามารถกลับมาแก้ไขข้อมูลได้อีก</span>
+                                </p>
+                            </div>
+
+                            {/* กล่อง Checkbox ยืนยันความจริง */}
+                            <label className="flex items-start gap-3 p-4 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={isAgreed}
+                                    onChange={(e) => setIsAgreed(e.target.checked)}
+                                    disabled={isSubmitLoading}
+                                    className="mt-1 w-5 h-5 rounded border-slate-500 text-primary cursor-pointer focus:ring-primary focus:ring-offset-slate-900 bg-slate-900"
+                                />
+                                <span className="text-slate-200 select-none text-sm md:text-base leading-relaxed">
+                        ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอก และเอกสารที่แนบมาทั้งหมดในการสมัคร ComCamp37 เป็นความจริงทุกประการ
+                    </span>
+                            </label>
+
+                            {/* ปุ่มกดยกเลิก / ยืนยัน */}
+                            <div className="flex flex-col-reverse md:flex-row gap-3 justify-end mt-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setIsConfirmModalOpen(false)}
+                                    disabled={isSubmitLoading}
+                                    className="cursor-pointer w-full md:w-auto border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                                >
+                                    ยกเลิก
+                                </Button>
+                                <Button
+                                    type="button"
+                                    onClick={handleSubmitApplication}
+                                    // ปุ่มจะกดได้ก็ต่อเมื่อติ๊กถูกแล้ว และไม่ได้อยู่ในสถานะ Loading
+                                    disabled={!isAgreed || isSubmitLoading}
+                                    className={`w-full md:w-auto font-bold transition-all ${
+                                        isAgreed ? ' cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black' : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                    }`}
+                                >
+                                    {isSubmitLoading ? 'กำลังส่งข้อมูล...' : 'ส่งใบสมัคร'}
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         <main className="flex-1 w-full max-w-[1280px] mx-auto py-3 px-3 md:px-6 flex flex-col gap-3 md:gap-5 mt-5 md:mt-0">
 
             <div className="order-2 md:order-1">
@@ -370,13 +446,19 @@ export default function applicationHome() {
 
                 </div>
 
-                <ApplicationCard status={currentStatus} onSubmit={handleSubmitApplication} loading={isSubmitLoading}></ApplicationCard>
+                <ApplicationCard status={currentStatus} onSubmit={() => {
+                    setIsAgreed(false);
+                    setIsConfirmModalOpen(true);
+                }} loading={isSubmitLoading}></ApplicationCard>
                 <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-slate-900 rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center">
                 </div>
 
             </div>
             <div className="grid md:hidden grid-cols-1 grid-rows-none md:grid-cols-5 md:grid-rows-2 gap-y-5 md:gap-5 order-3">
-                <ApplicationCardMD status={currentStatus} onSubmit={handleSubmitApplication} loading={isSubmitLoading}></ApplicationCardMD>
+                <ApplicationCardMD status={currentStatus} onSubmit={() => {
+                    setIsAgreed(false);
+                    setIsConfirmModalOpen(true);
+                }} loading={isSubmitLoading}></ApplicationCardMD>
             </div>
         </main>
         </>

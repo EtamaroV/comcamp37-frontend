@@ -149,7 +149,7 @@ const HorizontalMissionPath: React.FC<MissionPathProps> = ({ missions = [] }) =>
                             <motion.button
                                 whileHover={{ scale: 1.10 }}
                                 whileTap={{ scale: 0.98 }}
-                                className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg font-bold text-lg z-10 border-4
+                                className={`cursor-pointer w-16 h-16 rounded-full flex items-center justify-center shadow-lg font-bold text-lg z-10 border-4
                   ${
                                     mission.status === 'completed' ? 'bg-amber-500 text-white border-amber-500' :
                                         mission.status === 'current' ? 'bg-white text-amber-500 border-amber-500' :

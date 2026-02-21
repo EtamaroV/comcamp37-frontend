@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faFloppyDisk,
+    faFloppyDisk, faPersonHiking,
     faTents,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -14,13 +14,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { questionAptitudeSchema } from "@/app/application/question-aptitude/schema";
+import { questionAcademicSchema } from "@/app/application/question-academic/schema";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
 const prefixQuestion = "academic"
-const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic_chaos/answer`
+const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic/answer`
 
 const questions = [
     
@@ -69,9 +69,9 @@ const questions = [
                 <br /><strong className="font-lg/4">พี่ ๆ มีหุ่นยนต์มาให้น้องเลือก 2 ตัว ในการเอาไปทำภารกิจ เก็บซากหุ่นยนต์ โดยให้น้องเลือกหุ่นยนต์ตัวใดตัวหนึ่ง และอธิบายว่าทำไมน้องถึงเลือกหุ่นยนต์ตัวนั้น รวมถึงวิธีการที่น้องจะทำภารกิจนี้ให้สำเร็จ</strong><br />
                 {/* ยังไม่ได้เพอ่มรูปน้า */}
                 
-                <div className='flex flex-row [&>div]:mx-5 my-3 flex-1 gap-5'>
+                <div className='flex flex-col md:flex-row [&>div]:mx-5 my-3 flex-1 gap-5'>
 
-                    <div className='flex flex-col flex-1'> 
+                    <div className='flex flex-col flex-1'>
 
                         <strong className="text-lg">หุ่นยนต์ A</strong>
                         <p className="text-sm flex-1 mt-1"> 
@@ -110,16 +110,18 @@ const questions = [
 
 ]
 
-export default function questionAptitude() {
+export default function questionAcademic() {
     const router = useRouter();
-    const { applicationId, refreshApplication, studentAcademicChaosAnswer } = useStudent();
+    const { applicationId, refreshApplication, studentAcademicAnswer } = useStudent();
     const [loading, setLoading] = useState(false);
 
     const form = useForm({
-        resolver: zodResolver(questionAptitudeSchema),
+        resolver: zodResolver(questionAcademicSchema),
         defaultValues: {
             question1: "",
-            question2: "",
+            question201: "",
+            question202: "",
+            question203: "",
             question3: "",
             question4: "",
             question5: "",
@@ -132,20 +134,20 @@ export default function questionAptitude() {
     });
 
     useEffect(() => {
-        if (studentAcademicChaosAnswer && studentAcademicChaosAnswer.length > 0) {
+        if (studentAcademicAnswer && studentAcademicAnswer.length > 0) {
 
-            const mappedValues = studentAcademicChaosAnswer.reduce((acc, item) => {
+            const mappedValues = studentAcademicAnswer.reduce((acc, item) => {
 
-                const index = item.std_academic_chaos_answer_section.split('_')[1];
+                const index = item.std_academic_answer_section.split('_')[1];
                 const key = `question${index}`;
 
-                acc[key] = item.std_academic_chaos_answer;
+                acc[key] = item.std_academic_answer;
                 return acc;
             }, {} as Record<string, string>);
 
             form.reset(mappedValues);
         }
-    }, [studentAcademicChaosAnswer, form.reset]);
+    }, [studentAcademicAnswer, form.reset]);
 
     const onSubmit = async (data: any) => {
         setLoading(true);
@@ -153,7 +155,17 @@ export default function questionAptitude() {
             application_id: applicationId,
             answers: [
                 { section: `${prefixQuestion}_1`, value: data.question1 },
-                { section: `${prefixQuestion}_2`, value: data.question2 }
+                { section: `${prefixQuestion}_201`, value: data.question201 },
+                { section: `${prefixQuestion}_202`, value: data.question202 },
+                { section: `${prefixQuestion}_203`, value: data.question203 },
+                { section: `${prefixQuestion}_3`, value: data.question3 },
+                { section: `${prefixQuestion}_4`, value: data.question4 },
+                { section: `${prefixQuestion}_5`, value: data.question5 },
+                { section: `${prefixQuestion}_6`, value: data.question6 },
+                { section: `${prefixQuestion}_7`, value: data.question7 },
+                { section: `${prefixQuestion}_8`, value: data.question8 },
+                { section: `${prefixQuestion}_9`, value: data.question9 },
+                { section: `${prefixQuestion}_10`, value: data.question10 }
             ]
         };
         console.log("Submitting Answers:", payload);
@@ -188,9 +200,9 @@ export default function questionAptitude() {
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
                         <div className="flex items-center gap-3">
                             <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
-                                <FontAwesomeIcon icon={faTents} />
+                                <FontAwesomeIcon icon={faPersonHiking} />
                             </div>
-                            <h2 className="text-xl font-bold text-white">ด่านตรวจเข้าเมือง</h2>
+                            <h2 className="text-xl font-bold text-white">บททดสอบแห่งพงไพร</h2>
                         </div>
                         <div className="grid gap-10">
                             {questions.map((question) => (

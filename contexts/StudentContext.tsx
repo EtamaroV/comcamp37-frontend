@@ -10,8 +10,8 @@ export interface StudentStatus {
     std_status_info_done: boolean;
     std_status_file_done: boolean;
     std_status_regis_question_done: boolean;
-    std_status_academic_question_done: boolean;
-    std_status_academic_chaos_done: boolean;
+    std_status_acdemic_question_done: boolean;
+    std_status_academic_chaos_question_done: boolean;
     std_status_payment_done: boolean;
 }
 

@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faFloppyDisk, faPause, faPlay,
+    faFloppyDisk, faPause, faPlay, faSignsPost,
     faTents, faVolumeHigh, faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { questionAcademicSchema } from "@/app/application/question-academic/schema";
+import { questionAptitudeSchema } from "@/app/application/question-aptitude/schema";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ const prefixQuestion = "aptitude"
 const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic/chaos/answer`
 
 const questions = [
-    { field: "question1", questionNum: 1, description: (
+    { field: "question101", questionNum: 1, description: (
         <div>
             <h1 className="font-bold text-xl mb-3">ข้อ 1 : คำสาปสามสีแห่งจอมมาร</h1>
             <p>
@@ -42,7 +42,7 @@ const questions = [
             
         </div>
         ), question: " ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล  (ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง)", placeholder: "ตัวอย่างคำตอบ : วิธีการคือให้ผู้กล้าที่ยืนอยู่ท้ายแถว มองสีอักขระของเพื่อนคนที่ยืนอยู่ข้างหน้าตัวเองเพียงคนเดียว ถ้าเห็นว่าเพื่อนข้างหน้าเป็นสีอะไร ก็ให้ตะโกนตอบสีนั้นออกมาเลย เช่น ถ้าเห็นเพื่อนข้างหน้าเป็นสีแดง ก็ให้ตอบว่า “แดง” ส่วนเพื่อนคนอื่น ๆ ในแถวก็ให้ทำเหมือนกัน คือให้มองสีของคนที่อยู่ข้างหน้าเรา แล้วตอบตามสีที่เราเห็นไปเรื่อย ๆ จนครบทุกคนเหตุผลที่เลือกวิธีนี้เพราะคิดว่าพ่อมดน่าจะจัดคนที่มีสีเดียวกันให้ยืนอยู่ติด ๆ กันเป็นกลุ่ม ๆ เพื่อความสวยงาม หรือถ้าเป็นการสุ่ม ก็น่าจะมีโอกาสสูงที่คนยืนติดกันจะเป็นสีเดียวกัน วิธีนี้จึงเป็นวิธีที่ง่ายที่สุดและไม่ต้องคิดเลขให้ปวดหัว แค่เชื่อมั่นในเพื่อนข้างหน้าก็พอ คาดว่าน่าจะมีคนรอดประมาณ 30-40 คน ขึ้นอยู่กับดวงว่าพ่อมดเรียงสีมาแบบไหน" },
-    { field: "question101", questionNum: '101', description: (
+    { field: "question102", questionNum: '101', description: (
         <div>
             คำถามสำหรับคะแนนพิเศษ :
         </div>
@@ -261,15 +261,16 @@ const questions = [
         <p>2.อธิบายเหตุผลว่าทำไมถึงคิดเช่นนั้น <span className="font-extrabold">จงอธิบายเหตุผลอย่างละเอียดและชัดเจน</span></p>), placeholder: "" }
 ]
 
-export default function questionAcademic() {
+export default function questionAptitude() {
     const router = useRouter();
-    const { applicationId, refreshApplication, studentAcademicAnswer } = useStudent();
+    const { applicationId, refreshApplication, studentAcademicChaosAnswer } = useStudent();
     const [loading, setLoading] = useState(false);
 
     const form = useForm({
-        resolver: zodResolver(questionAcademicSchema),
+        resolver: zodResolver(questionAptitudeSchema),
         defaultValues: {
-            question1: "",
+            question101: "",
+            question102: "",
             question201: "",
             question202: "",
             question203: "",
@@ -279,31 +280,31 @@ export default function questionAcademic() {
     });
 
     useEffect(() => {
-        if (studentAcademicAnswer && studentAcademicAnswer.length > 0) {
+        if (studentAcademicChaosAnswer && studentAcademicChaosAnswer.length > 0) {
 
-            const mappedValues = studentAcademicAnswer.reduce((acc, item) => {
+            const mappedValues = studentAcademicChaosAnswer.reduce((acc, item) => {
 
-                const index = item.std_academic_answer_section.split('_')[1];
+                const index = item.std_academic_chaos_answer_section.split('_')[1];
                 const key = `question${index}`;
 
-                acc[key] = item.std_academic_answer;
+                acc[key] = item.std_academic_chaos_answer;
                 return acc;
             }, {} as Record<string, string>);
 
             form.reset(mappedValues);
         }
-    }, [studentAcademicAnswer, form.reset]);
+    }, [studentAcademicChaosAnswer, form.reset]);
 
     const onSubmit = async (data: any) => {
         setLoading(true);
         const payload = {
             application_id: applicationId,
             answers: [
-                { section: `${prefixQuestion}_1`, value: data.question1 },
                 { section: `${prefixQuestion}_101`, value: data.question101 },
-                { section: `${prefixQuestion}_201`, value: data.question2 },
-                { section: `${prefixQuestion}_202`, value: data.question201 },
-                { section: `${prefixQuestion}_203`, value: data.question201 },
+                { section: `${prefixQuestion}_102`, value: data.question102 },
+                { section: `${prefixQuestion}_201`, value: data.question201 },
+                { section: `${prefixQuestion}_202`, value: data.question202 },
+                { section: `${prefixQuestion}_203`, value: data.question203 },
                 { section: `${prefixQuestion}_301`, value: data.question301 },
                 { section: `${prefixQuestion}_302`, value: data.question302 },
             ]
@@ -340,9 +341,9 @@ export default function questionAcademic() {
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
                         <div className="flex items-center gap-3">
                             <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
-                                <FontAwesomeIcon icon={faTents} />
+                                <FontAwesomeIcon icon={faSignsPost} />
                             </div>
-                            <h2 className="text-xl font-bold text-white">ด่านตรวจเข้าเมือง</h2>
+                            <h2 className="text-xl font-bold text-white">ถอดรหัสสัญชาตญาณ</h2>
                         </div>
                         <div className="grid gap-10">
                             {questions.map((question) => (
@@ -354,9 +355,9 @@ export default function questionAcademic() {
                                         <FormItem>
                                             <FormLabel className="flex flex-col items-start text-base">
                                                 <div className="flex flex-row items-start gap-x-2">
-                                                    <div className="leading-relaxed text-pretty">{question.description === "" ? question.question : question.description}</div>
+                                                    <div className="leading-relaxed text-pretty">{question.description}</div>
                                                 </div>
-                                                <div className={`text-pretty ${question.question === "" || question.description === "" ? "hidden" : "block"}`}>{question.question}</div>
+                                                <div className={`text-pretty ${question.question === "" ? "hidden" : "block"}`}>{question.question}</div>
                                             </FormLabel>
                                             <FormControl>
                                                 <Textarea
