@@ -334,12 +334,12 @@ function Step1() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden"
+                className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20"
             >
                 {/* Personal Info */}
                 <div className="p-6 md:p-8 gap-6 flex flex-col">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                             <FontAwesomeIcon icon={faUser} />
                         </div>
                         <h2 className="text-xl font-bold text-white">ข้อมูลส่วนตัว</h2>
@@ -505,7 +505,7 @@ function Step1() {
                                             <FormItem>
                                                 <label
                                                     htmlFor="gender-female"
-                                                    className="group flex items-center space-x-3 space-y-0 px-4 py-3.5 rounded-xl border has-[:checked]:border-pink-300 has-[:checked]:bg-pink-300/5 transition-all cursor-pointer hover:bg-slate-800/30"
+                                                    className="group flex items-center space-x-3 space-y-0 px-4 py-3.5 rounded-xl border has-[:checked]:border-pink-300 has-[:checked]:bg-pink-300/5 transition-all cursor-pointer hover:bg-twilight-indigo-800/30"
                                                 >
                                                     <FormControl>
                                                         <RadioGroupItem value="female" id="gender-female" />
@@ -635,10 +635,10 @@ function Step1() {
                 </div>
 
                 {/* Navigation Buttons */}
-                <div className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row-reverse justify-between gap-4">
+                <div className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row-reverse justify-between gap-4">
                     <Button
                         type="submit"
-                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
                         //onClick={onSubmit}
                     >
                         ถัดไป
@@ -647,7 +647,7 @@ function Step1() {
                     { (studentStatus?.std_status_info_done == true) && (
                     <Button
                         type="button"
-                        className="px-4 py-5 font-bold rounded-xl  bg-slate-900 text-white hover:bg-slate-700 focus:ring-offset-slate-900"
+                        className="px-4 py-5 font-bold rounded-xl  bg-twilight-indigo-900 text-white hover:bg-twilight-indigo-700 focus:ring-offset-twilight-indigo-900"
                         onClick={() => router.push('/application')}
                     >
                         ยกเลิก
@@ -749,12 +749,12 @@ function Step2() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden"
+                className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20"
             >
                 {/* Academic Information Section */}
-                <div className="p-6 md:p-8 border-b border-slate-800">
+                <div className="p-6 md:p-8 border-b border-twilight-indigo-800">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                             <FontAwesomeIcon icon={faGraduationCap} />
                         </div>
                         <h2 className="text-xl font-bold text-white">ข้อมูลการศึกษา</h2>
@@ -1039,7 +1039,7 @@ function Step2() {
                 {/* Medical History Section */}
                 <div className="p-6 md:p-8">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-red-500">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-red-500">
                             <FontAwesomeIcon icon={faBriefcaseMedical}/>
                         </div>
                         <h2 className="text-xl font-bold">ข้อมูลสุขภาพ</h2>
@@ -1108,10 +1108,10 @@ function Step2() {
                 </div>
 
                 {/* Navigation Buttons */}
-                <div className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
+                <div className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
                     <Button
                         type="button"
-                        className="px-8 py-5 font-bold rounded-xl border border-slate-600 bg-slate-900 text-white hover:bg-slate-700 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl border border-twilight-indigo-800 bg-twilight-indigo-900 text-white hover:bg-twilight-indigo-700 focus:ring-offset-twilight-indigo-900"
                         onClick={onPrev}
                     >
                         <FontAwesomeIcon icon={faArrowLeft}/>
@@ -1119,7 +1119,7 @@ function Step2() {
                     </Button>
                     <Button
                         type="submit"
-                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
                         //onClick={onSubmit}
                     >
                         ถัดไป
@@ -1298,12 +1298,12 @@ function Step3() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden"
+                className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20"
             >
                 {/* Personal Info */}
-                <div className="p-6 md:p-8 gap-6 flex flex-col flex-col border-b border-slate-800">
+                <div className="p-6 md:p-8 gap-6 flex flex-col flex-col border-b border-twilight-indigo-800">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                             <FontAwesomeIcon icon={faPersonBreastfeeding} />
                         </div>
                         <h2 className="text-xl font-bold text-white">ข้อมูลติดต่อผู้ปกครอง</h2>
@@ -1375,9 +1375,9 @@ function Step3() {
                     </div>
                 </div>
 
-                <div className="p-6 md:p-8 gap-6 flex flex-col border-b border-slate-800">
+                <div className="p-6 md:p-8 gap-6 flex flex-col border-b border-twilight-indigo-800">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800">
                             <FontAwesomeIcon icon={faBoxArchive}/>
                         </div>
                         <h2 className="text-xl font-bold">ความพร้อมและการเดินทาง</h2>
@@ -1745,26 +1745,26 @@ function Step3() {
                         </span>
                     </div>
                 </div>
-                <div className="p-6 md:p-8 gap-6 flex flex-col border-b border-slate-800">
+                <div className="p-6 md:p-8 gap-6 flex flex-col border-b border-twilight-indigo-800">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800">
                             <FontAwesomeIcon icon={faShirt}/>
                         </div>
                         <h2 className="text-xl font-bold">ขนาดเสื้อค่าย</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="overflow-hidden rounded-xl border border-[#364959]">
+                        <div className="overflow-hidden rounded-xl border border-twilight-indigo-700/50">
                             <table className="w-full text-sm text-left">
                                 <thead
-                                    className="bg-slate-800/80 text-[#111418] text-white font-semibold">
+                                    className="bg-twilight-indigo-800/80 text-[#111418] text-white font-semibold">
                                 <tr>
                                     <th className="px-4 py-3">ขนาด</th>
                                     <th className="px-4 py-3">อก (นิ้ว)</th>
                                     <th className="px-4 py-3">ยาว (นิ้ว)</th>
                                 </tr>
                                 </thead>
-                                <tbody className="divide-y divide-[#364959]">
+                                <tbody className="divide-y divide-twilight-indigo-700/50">
                                 {[
                                     { size: "SS", chest: "34", length: "25" },
                                     { size: "S", chest: "36", length: "26" },
@@ -1776,7 +1776,7 @@ function Step3() {
                                     { size: "4XL", chest: "48", length: "32" },
                                     { size: "5XL", chest: "50", length: "33" }
                                 ].map((item) => (
-                                    <tr key={item.size} data-selected={item.size == form.getValues('apparel_size') ? 'true' : ''} className="bg-[#101922] data-[selected=true]:bg-slate-700 transition-colors">
+                                    <tr key={item.size} data-selected={item.size == form.getValues('apparel_size') ? 'true' : ''} className="bg-twilight-indigo-800/20 data-[selected=true]:bg-twilight-indigo-700 transition-colors">
                                         <td className="px-4 py-2 font-medium">{item.size}</td>
                                         <td className="px-4 py-2 text-gray-400">{item.chest}</td>
                                         <td className="px-4 py-2 text-gray-400">{item.length}</td>
@@ -1803,7 +1803,7 @@ function Step3() {
                                                     <RadioGroupItem value={type} id={`apparel_size-${type}`} className="peer sr-only" />
                                                     <Label
                                                         htmlFor={`apparel_size-${type}`}
-                                                        className="font-bold text-center justify-center px-5 py-4 rounded-xl border cursor-pointer peer-data-[state=checked]:bg-white peer-data-[state=checked]:text-slate-900 peer-data-[state=checked]:border-white peer-data-[state=checked]:shadow-grow-white transition-all hover:not-peer-data-[state=checked]:bg-input/30"
+                                                        className="font-bold text-center justify-center px-5 py-4 rounded-xl border cursor-pointer peer-data-[state=checked]:bg-white peer-data-[state=checked]:text-twilight-indigo-900 peer-data-[state=checked]:border-white peer-data-[state=checked]:shadow-grow-white transition-all hover:not-peer-data-[state=checked]:bg-input/30"
                                                     >
                                                         {type}
                                                     </Label>
@@ -1820,10 +1820,10 @@ function Step3() {
 
                 {/* Navigation Buttons */}
                 <div
-                    className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
+                    className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
                     <Button
                         type="button"
-                        className="px-8 py-5 font-bold rounded-xl border border-slate-600 bg-slate-900 text-white hover:bg-slate-700 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl border border-twilight-indigo-800 bg-twilight-indigo-900 text-white hover:bg-twilight-indigo-700 focus:ring-offset-twilight-indigo-900"
                         onClick={onPrev}
                     >
                         <FontAwesomeIcon icon={faArrowLeft}/>
@@ -1832,7 +1832,7 @@ function Step3() {
                     <Button
                         disabled={loading}
                         type="submit"
-                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
                         //onClick={onSubmit}
                     >
 

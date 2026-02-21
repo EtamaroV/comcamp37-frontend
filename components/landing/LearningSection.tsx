@@ -39,56 +39,64 @@ function LearningSection() {
 
     return (
         <motion.div
-            className="flex flex-col w-full align-middle justify-center items-center overflow-hidden"
+            className="flex flex-col w-full align-middle justify-center items-center overflow-hidden bg-theme-primary-darken"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
         >
             {/* --- Mobile Title --- */}
-            <motion.div
-                variants={titleVariants}
-                className="font-zootopia text-5xl md:hidden flex-row flex items-center justify-center gap-3 w-full my-5"
+            <div
+
+                className="font-zootopia text-5xl md:hidden flex-row flex items-center justify-center gap-3 w-full py-5 bg-theme-primary z-10"
             >
-                <div className="h-1.5 w-full flex-1 bg-linear-to-l from-white to-transparent"></div>
-                <div className="text-center">
+                <motion.div variants={titleVariants} className="h-1.5 w-full flex-1 bg-linear-to-l from-white to-transparent"></motion.div>
+                <motion.div className="text-center" variants={titleVariants}>
                     What you<br/>will learn
-                </div>
-                <div className="h-1.5 w-full flex-1 bg-linear-to-r from-white to-transparent"></div>
-            </motion.div>
+                </motion.div>
+                <motion.div variants={titleVariants} className="h-1.5 w-full flex-1 bg-linear-to-r from-white to-transparent"></motion.div>
+            </div>
 
-            {/* --- Desktop Folder Tab Design --- */}
-            <div className="flex flex-row w-full">
-                {/* แถบพื้นหลังด้านซ้ายสุด */}
-                <motion.div variants={contentVariants}
-                    className="bg-theme-primary-darken flex-1 h-[50px] self-end origin-left"
-                ></motion.div>
+            <div className="md:mt-0 -mt-13 flex flex-row w-full items-end">
 
-                <div className="flex flex-row max-w-[1600px] w-full">
-                    <motion.div variants={contentVariants} className="flex-3 flex flex-row w-full h-[50px] self-end">
-                        {/* แถบใน Container */}
+                <div
+                    className="absolute bg-theme-primary self-start w-full h-[46px] origin-left z-10 mix-blend-lighten"
+                ></div>
+
+                <div
+                    className="hidden md:block bg-theme-primary self-start flex-1 h-[46px] origin-left z-8 drop-shadow-[0_6px_6px_rgba(0,0,0,0.4)]"
+                ></div>
+
+                <div className="flex flex-row max-w-[1600px] w-full relative z-9">
+
+                    <div
+                        className="hidden md:block flex-3 w-full h-[46px] self-start bg-theme-primary z-1 drop-shadow-[0_8px_6px_rgba(0,0,0,0.4)]"
+                    ></div>
+
+                    <div
+                        className="flex-5 relative drop-shadow-[0_8px_6px_rgba(0,0,0,0.4)] z-2"
+                    >
                         <div
-                            className="bg-theme-primary-darken w-full origin-left"
+                            className="absolute ml-[20%] md:ml-0 -mt-2 md:mt-0 inset-0 w-full h-full bg-theme-primary"
+                            style={{
+                                clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50px 100%, 0 calc(100% - 50px))'
+                            }}
                         ></div>
 
-                        <div className="flex flex-col">
-                            {/* ส่วนสามเหลี่ยมมุมตัด (Corner) */}
-                            <div
-                                className="overflow-hidden inline-block w-0 h-0 border-solid border-t-[50px] border-r-0 border-l-[50px] border-b-0 border-l-theme-primary-darken border-r-transparent border-t-transparent border-b-transparent"
-                            ></div>
-                        </div>
-                    </motion.div>
+                        <div className="block md:hidden w-dvw h-26">
 
-                    {/* หัวข้อกลาง (Desktop) */}
-                    <motion.div
-                        variants={titleVariants}
-                        className="flex-5 font-zootopia text-5xl text-center px-20 py-6 hidden md:block whitespace-nowrap"
-                    >
-                        What you will learn
-                    </motion.div>
+                        </div>
+                        <div className="hidden md:block font-zootopia text-5xl text-center px-20 py-6 whitespace-nowrap relative z-30">
+                            What you will learn
+                        </div>
+                    </div>
 
                     <div className="flex-6 md:hidden"></div>
                 </div>
-                <div className="flex-1"></div>
+
+                <div className="hidden md:block flex-1 bg-theme-primary h-[96px] z-20 relative">
+                    <div className="absolute w-full -ml-5 bg-theme-primary h-[96px] z-11"></div>
+                    <div className="w-full bg-theme-primary h-[96px] z-10 drop-shadow-[0_6px_6px_rgba(0,0,0,0.4)]"></div>
+                </div>
             </div>
 
             {/* --- เนื้อหาด้านล่าง (Switcher) --- */}

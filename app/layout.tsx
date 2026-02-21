@@ -7,6 +7,7 @@ import {Footer} from "@/components/ui/footer";
 import { Toaster } from "@/components/ui/sonner"
 import MicrosoftClarity from "@/app/metrics/MicrosoftClarity";
 import {UserProvider} from "@/contexts/UserContext";
+import {headers} from "next/headers";
 
 export const runtime = 'edge';
 
@@ -89,6 +90,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="en">
         <body

@@ -2,28 +2,32 @@
 
 import {Navbar} from "@/components/ui/navbar";
 import {Footer} from "@/components/ui/footer";
+import {useEffect} from "react";
 
 export default function Privacy() {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
       <>
-      <div className='w-full h-full bg-[#1F456E] text-white scroll-smooth'>
+      <div className='w-full h-full bg-theme-primary-darken text-white scroll-smooth'>
         {/* <div className='bg-[#212738] flex justify-center font-bold py-8 sticky top-0 z-1'>banner</div> */}
         <div className='flex justify-center'>
-            <div className='font-zootopia text-center w-full flex flex-col items-center justify-center font-bold text-5xl px-15 pt-26 pb-3 bg-gradient-to-b from-[#1F456E] to-[#151E3D]'>
+            <div className='font-zootopia text-center w-full flex flex-col items-center justify-center font-bold text-5xl px-15 pt-26 pb-3 bg-gradient-to-b from-theme-primary to-twilight-indigo-800'>
             Privacy Policy <br />
             <span className='text-center font-bai_jamjuree text-sm mt-5 opacity-40'>Last updated: 26/01/2026</span>
             </div>
         </div>
         <div className="top-0 left-0 w-full overflow-hidden leading-[0]">
-            <div className="w-full -mt-[10vh] h-[20vh] bg-[#151E3D] [clip-path:ellipse(80%_100%_at_50%_0%)] mb-10">
+            <div className="w-full -mt-[10vh] h-[20vh] bg-twilight-indigo-800 [clip-path:ellipse(80%_100%_at_50%_0%)] mb-10">
             </div>
         </div>
 
         <div className='flex justify-around'>
-          <nav className=' font-bold min-w-70 max-h-80 pt-0 text-lg bg-[#151E3D] m-10 mt-0 mr-10 rounded-2xl self-start
+          <nav className=' font-bold min-w-70 max-h-80 pt-0 text-lg bg-twilight-indigo-900 m-10 mt-0 mr-10 rounded-2xl self-start
           sticky top-24 w-1/4 max-h-[calc(60vh-5rem)] hidden md:flex flex-col
   '>
-              <p className="sticky flex justify-center bg-[#151E3D] p-5 px-20 top-0 w-full m-0 border-b border-white/10 rounded-t-2xl">Navigation</p>
+              <p className="sticky flex justify-center bg-twilight-indigo-900 p-5 px-20 top-0 w-full m-0 border-b border-white/10 rounded-t-2xl">Navigation</p>
               <br />
               <ul className='overflow-y-auto px-4 pb-4 text-sm/6'>
                   {[

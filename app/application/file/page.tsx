@@ -31,15 +31,15 @@ export default function fileUploadPage() {
     ]
 
     return (
-        <main className="flex-1 w-full max-w-[1280px] mx-auto py-6 md:px-6 md:py-10">
+        <main className="flex-1 w-full max-w-[1280px] mx-auto pt-6 md:px-6 md:pt-10">
             <div className="mb-6 flex flex-col gap-2 px-4 md:px-0">
                 <h1 className="text-white tracking-tight text-3xl font-bold leading-tight">ยื่นหลักฐานเข้าเมือง</h1>
             </div>
 
-            <div className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden">
+            <div className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                 <div className="p-6 md:p-8 gap-6 flex flex-col">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
+                        <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                             <FontAwesomeIcon icon={faFolderOpen} />
                         </div>
                         <h2 className="text-xl font-bold text-white">อัปโหลดเอกสาร</h2>
@@ -78,10 +78,10 @@ export default function fileUploadPage() {
                 </div>
 
                 <div
-                    className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row justify-end gap-4">
+                    className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row justify-end gap-4">
                     <Button
                         type="button"
-                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
+                        className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
                         onClick={()=>{router.push("/application")}}
                     >
                         เสร็จสิ้น

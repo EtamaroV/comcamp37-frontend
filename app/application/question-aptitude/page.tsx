@@ -334,13 +334,13 @@ export default function questionAptitude() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex-1 w-full max-w-[960px] mx-auto py-6 md:px-6 md:py-10"
+                className="flex-1 w-full max-w-[960px] mx-auto pt-6 md:px-6 md:pt-10"
             >
 
-                <div className="bg-slate-900 rounded-[40px] md:rounded-xl border border-slate-800 shadow-sm overflow-hidden">
+                <div className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
                         <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center size-10 rounded-full bg-slate-800 text-white">
+                            <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                                 <FontAwesomeIcon icon={faSignsPost} />
                             </div>
                             <h2 className="text-xl font-bold text-white">ถอดรหัสสัญชาตญาณ</h2>
@@ -376,11 +376,11 @@ export default function questionAptitude() {
                         </div>
                     </div>
 
-                    <div className="p-6 md:p-8 border-t border-slate-800 bg-slate-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
+                    <div className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row justify-between gap-4">
                         <Button
                             type="button"
                             variant="ghost"
-                            className="px-4 py-5 font-bold rounded-xl text-white hover:bg-slate-700"
+                            className="px-4 py-5 font-bold rounded-xl text-white hover:bg-twilight-indigo-700"
                             onClick={() => router.push('/application')}
                             disabled={loading}
                         >

@@ -5,7 +5,7 @@ import "../globals.css";
 import {Navbar} from "@/components/ui/navbar";
 import {Footer} from "@/components/ui/footer";
 import {UserProvider, useUser} from "@/contexts/UserContext";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import LoadingScreen from "@/app/application/loading";
 import {StudentProvider, useStudent} from "@/contexts/StudentContext";
@@ -60,24 +60,64 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }
 
+function GetAppId() {
+    const [ appid, setappid ] = useState<string>("");
+    const { applicationId } = useStudent();
+    useEffect(() => {
+        if (applicationId != null) {
+            setappid(applicationId);
+        }
+    }, [applicationId]);
+    return <div className="w-full text-center font-thin text-xs opacity-30 mt-2 text-twilight-indigo-300">{appid}</div>;
+}
+
 export default function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
     const router = useRouter();
+    /*useEffect(() => {
+        const appColor = "#001E47";
+        const originalAppColor = "#014AAD";
+        const originalBodyClasses = ["bg-theme-primary"];
+        const appBodyClasses = ["bg-[#001E47]"];
+
+        let meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.setAttribute('name', 'theme-color');
+            document.head.appendChild(meta);
+        }
+        const originalThemeColor = meta.getAttribute('content');
+        meta.setAttribute('content', appColor);
+
+        document.body.classList.remove(...originalBodyClasses);
+        document.body.classList.add(...appBodyClasses);
+
+        return () => {
+            meta?.setAttribute('content', originalAppColor || "");
+
+            document.body.classList.remove(...appBodyClasses);
+            document.body.classList.add(...originalBodyClasses);
+        };
+    }, []);*/
     return (
+        <span id="application-root">
         <UserProvider>
             <StudentProvider>
                 <AuthGate>
                     <NoApp/>
                     {children}
-                    <div className="w-full text-center py-3 md:px-20 text-sm leading-5 text-slate-500 flex flex-col gap-x-3 gap-y-10">
-                        <span className="self-center">©2026 ComCamp37. All rights reserved.<br className="md:hidden"/> Made with 🧡 by CPE39.</span>
+
+                    <div className="w-full text-center py-3 md:px-20 text-sm leading-5 text-slate-600 flex flex-col gap-x-3">
+                        <span className="mt-2 self-center">©2026 ComCamp37. All rights reserved.<br className="md:hidden"/> Made with 🧡 by CPE39.</span>
+                        <GetAppId/>
                     </div>
                 </AuthGate>
             </StudentProvider>
         </UserProvider>
+        </span>
     );
 }
 
@@ -93,7 +133,7 @@ function NoApp() {
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={{ type: "spring", duration: 0.5 }}
-                className="bg-slate-800 border border-slate-700 shadow-2xl rounded-2xl p-10 max-w-md w-full flex flex-col items-center text-center space-y-6"
+                className="bg-twilight-indigo-800 border border-twilight-indigo-700 shadow-2xl rounded-2xl p-10 max-w-md w-full flex flex-col items-center text-center space-y-6"
             >
                 {/* User Profile Image */}
                 <div className="relative">
@@ -101,18 +141,18 @@ function NoApp() {
                         <img
                             src={user?.image || ""}
                             alt="User"
-                            className="w-full h-full rounded-full object-cover border-4 border-slate-800"
+                            className="w-full h-full rounded-full object-cover border-4 border-twilight-indigo-800"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-white">ยินดีต้อนรับ<br/>{user?.name}</h2>
-                    <p className="text-slate-400 text-base">
+                    <p className="text-twilight-indigo-400 text-base">
                         {user?.email}
                     </p>
 
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-twilight-indigo-400 text-sm">
                         หากไม่ใช่คุณ <span className="text-blue-400 cursor-pointer hover:underline" onClick={() => {signOut(); router.push('/signin')}}>ออกจากระบบ</span>
                     </p>
                 </div>
@@ -120,15 +160,13 @@ function NoApp() {
                 <div className="space-y-2 w-full">
                     <Button
                         onClick={() => createApplication()}
-                        className="cursor-pointer relative w-full px-8 py-6 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-slate-900"
+                        className="cursor-pointer relative w-full px-8 py-6 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
                     >
                         สร้างใบสมัคร
                     </Button>
                 </div>
             </motion.div>
         </div>
-    )} else {
-        return (<></>)
-    }
+    )}
 }
 

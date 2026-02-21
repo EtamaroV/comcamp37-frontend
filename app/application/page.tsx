@@ -24,6 +24,8 @@ import axios from "axios";
 import {Spinner} from "@/components/ui/spinner";
 import {REGIS_EXPIRED_DATE, TimerStatus, useCountdown} from "@/app/application/countdown";
 import {toast} from "sonner";
+import {addYears, format} from "date-fns";
+import {th} from "date-fns/locale";
 
 interface CountdownLabelProps {
     status: TimerStatus;
@@ -109,7 +111,7 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
             title: 'ภารกิจยังไม่สำเร็จ',
             description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
             buttonText: 'รอการดำเนินการ',
-            buttonClass: 'bg-slate-600 hover:bg-slate-600 cursor-not-allowed opacity-70',
+            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
             isDisabled: true,
             imgClass: 'opacity-50',
         },
@@ -117,7 +119,7 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
             title: 'ภารกิจเสร็จสิ้น',
             description: 'ใบสมัครของคุณพร้อมแล้ว โปรดตรวจสอบข้อมูลก่อนกดส่งใบสมัคร',
             buttonText: 'ส่งใบสมัคร',
-            buttonClass: 'bg-primary hover:bg-primary/90 cursor-pointer',
+            buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
             isDisabled: false,
             imgClass: '',
         },
@@ -133,7 +135,7 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
             title: 'หมดเวลารับสมัคร',
             description: 'ขออภัย หมดเขตรับสมัครแล้ว',
             buttonText: 'หมดเวลา',
-            buttonClass: 'bg-slate-600 hover:bg-slate-600 cursor-not-allowed opacity-70',
+            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
             isDisabled: true,
             imgClass: 'grayscale opacity-50',
         },
@@ -142,7 +144,7 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
     const current = statusConfig[status];
 
     return (
-        <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-slate-900 rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center">
+        <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-twilight-indigo-900 rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center">
             <Image
                 src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/docsIcon.png`}
                 alt="Document Icon"
@@ -158,18 +160,20 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
                     <div className="text-2xl font-bold text-white transition-colors duration-300">
                         {current.title}
                     </div>
-                    <div className="text-lg text-slate-300 mt-2 transition-colors duration-300">
+                    <div className="text-lg text-twilight-indigo-300 mt-2 transition-colors duration-300">
                         {current.description}
                     </div>
                 </div>
-                <Button
+                <motion.button
                     type="button"
+                    whileHover={{ scale: 1.05, rotate: -1 }}
+                    whileTap={{ scale: 0.95 }}
                     disabled={current.isDisabled || loading}
                     onClick={status === 'READY' ? onSubmit : undefined}
-                    className={`h-12 w-full text-lg font-bold rounded-xl transition-all duration-300 ${current.buttonClass}`}
+                    className={`h-12 w-full text-lg font-bold rounded-xl ${current.buttonClass}`}
                 >
                     {loading ? 'กำลังส่งใบสมัคร...' : current.buttonText}
-                </Button>
+                </motion.button>
             </div>
         </div>
     );
@@ -181,7 +185,7 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
             title: 'ภารกิจยังไม่สำเร็จ',
             description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
             buttonText: 'รอการดำเนินการ',
-            buttonClass: 'bg-slate-600 hover:bg-slate-600 cursor-not-allowed opacity-70',
+            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
             isDisabled: true,
             imgClass: 'opacity-50',
         },
@@ -205,7 +209,7 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
             title: 'หมดเวลารับสมัคร',
             description: 'ขออภัย หมดเขตรับสมัครแล้ว',
             buttonText: 'หมดเวลา',
-            buttonClass: 'bg-slate-600 hover:bg-slate-600 cursor-not-allowed opacity-70',
+            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
             isDisabled: true,
             imgClass: 'grayscale opacity-50',
         },
@@ -214,7 +218,7 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
     const current = statusConfig[status];
 
     return (
-        <div className="flex bg-slate-900 rounded-xl shadow-sm p-6 flex-col items-center gap-y-10">
+        <div className="flex bg-twilight-indigo-900 rounded-xl shadow-sm p-6 flex-col items-center gap-y-10">
             <Image
                 src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/docsIcon.png`}
                 alt="Document Icon"
@@ -230,7 +234,7 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
                     <div className="text-2xl font-bold text-white transition-colors duration-300">
                         {current.title}
                     </div>
-                    <div className="text-lg text-slate-300 mt-2 transition-colors duration-300">
+                    <div className="text-lg text-twilight-indigo-300 mt-2 transition-colors duration-300">
                         {current.description}
                     </div>
                 </div>
@@ -331,26 +335,26 @@ export default function applicationHome() {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
-                            className="relative w-full max-w-xl bg-slate-900 border border-slate-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6"
+                            className="relative w-full max-w-xl bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6"
                         >
                             <div>
                                 <h2 className="text-2xl font-bold text-white mb-2">ยืนยันการส่งใบสมัคร</h2>
-                                <p className="text-slate-300">
+                                <p className="text-twilight-indigo-300">
                                     โปรดตรวจสอบข้อมูลให้ครบถ้วนและถูกต้อง <br/>
                                     <span className="text-red-400 font-medium">หากกดยืนยันแล้ว จะไม่สามารถกลับมาแก้ไขข้อมูลได้อีก</span>
                                 </p>
                             </div>
 
                             {/* กล่อง Checkbox ยืนยันความจริง */}
-                            <label className="flex items-start gap-3 p-4 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+                            <label className="flex items-start gap-3 p-4 bg-twilight-indigo-900/50 border border-twilight-indigo-700 rounded-xl cursor-pointer hover:bg-twilight-indigo-800 transition-colors">
                                 <input
                                     type="checkbox"
                                     checked={isAgreed}
                                     onChange={(e) => setIsAgreed(e.target.checked)}
                                     disabled={isSubmitLoading}
-                                    className="mt-1 w-5 h-5 rounded border-slate-500 text-primary cursor-pointer focus:ring-primary focus:ring-offset-slate-900 bg-slate-900"
+                                    className="mt-1 w-5 h-5 rounded border-twilight-indigo-500 text-primary cursor-pointer focus:ring-primary focus:ring-offset-twilight-indigo-900 bg-twilight-indigo-900"
                                 />
-                                <span className="text-slate-200 select-none text-sm md:text-base leading-relaxed">
+                                <span className="text-twilight-indigo-200 select-none text-sm md:text-base leading-relaxed">
                         ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอก และเอกสารที่แนบมาทั้งหมดในการสมัคร ComCamp37 เป็นความจริงทุกประการ
                     </span>
                             </label>
@@ -362,7 +366,7 @@ export default function applicationHome() {
                                     variant="outline"
                                     onClick={() => setIsConfirmModalOpen(false)}
                                     disabled={isSubmitLoading}
-                                    className="cursor-pointer w-full md:w-auto border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                                    className="cursor-pointer w-full md:w-auto border-twilight-indigo-600 text-twilight-indigo-300 hover:bg-twilight-indigo-700 hover:text-white transition-colors"
                                 >
                                     ยกเลิก
                                 </Button>
@@ -372,7 +376,7 @@ export default function applicationHome() {
                                     // ปุ่มจะกดได้ก็ต่อเมื่อติ๊กถูกแล้ว และไม่ได้อยู่ในสถานะ Loading
                                     disabled={!isAgreed || isSubmitLoading}
                                     className={`w-full md:w-auto font-bold transition-all ${
-                                        isAgreed ? ' cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black' : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                        isAgreed ? ' cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black' : 'bg-twilight-indigo-700 text-twilight-indigo-400 cursor-not-allowed'
                                     }`}
                                 >
                                     {isSubmitLoading ? 'กำลังส่งข้อมูล...' : 'ส่งใบสมัคร'}
@@ -389,9 +393,9 @@ export default function applicationHome() {
                 <div className="absolute w-full justify-center left-0 z-20 hidden md:flex">
                     <HorizontalMissionPath missions={myMissions}/>
                 </div>
-                <div className="md:h-[250px] w-full relative bg-slate-900 rounded-xl shadow-sm px-7 py-5">
+                <div className="md:h-[250px] w-full relative bg-twilight-indigo-900 rounded-xl shadow-sm px-7 py-5">
                     <MissionOverlay status={currentStatus} />
-                    <div className="text-2xl font-bold z-30 absolute bg-slate-900 pb-3">ภารกิจของคุณ <FontAwesomeIcon icon={faMapLocationDot} /></div>
+                    <div className="text-2xl font-bold z-30 absolute bg-twilight-indigo-900 pb-3">ภารกิจของคุณ <FontAwesomeIcon icon={faMapLocationDot} /></div>
                     <div className="block md:hidden">
                         <div className="backdrop-blur-md rounded-2xl shadow-xl py-4">
                             <VerticalMissionPath missions={myMissions} />
@@ -404,14 +408,14 @@ export default function applicationHome() {
 
             <div className="grid grid-cols-1 grid-rows-none md:grid-cols-5 md:grid-rows-2 gap-y-5 md:gap-5 order-1 md:order-2 z-50">
 
-                <div className="col-span-1 md:col-span-2 md:row-span-2 bg-slate-900 rounded-xl shadow-sm px-5 py-6 flex flex-col items-center gap-6">
+                <div className="col-span-1 md:col-span-2 md:row-span-2 bg-twilight-indigo-900 rounded-xl shadow-sm px-5 py-6 flex flex-col items-center gap-6">
 
                     <div className="w-35 h-35 bg-white rounded-full shadow-sm relative">
                         <img
                             src={studentFaceImage || user?.image || "https://storage.comcamp.io/web-assets/gooseNick.png"}
                             onError={(e) => { e.currentTarget.src = "https://storage.comcamp.io/web-assets/gooseNick.png"; }}
                             alt=""
-                            className="relative z-10 w-full h-full bg-slate-700 border-white border border-5 rounded-full object-cover object-top"
+                            className="relative z-10 w-full h-full bg-twilight-indigo-700 border-white border border-5 rounded-full object-cover object-top"
                         />
                         <Image
                             src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/RabbitEars.png`}
@@ -443,6 +447,10 @@ export default function applicationHome() {
                         <div className="font-bold">แผนการเรียน</div>
                         <div className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_plan || "")}</div>
                     </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">วันเกิด</div>
+                        <div className="font-medium">{studentInfo?.std_info_birthdate ? format(addYears(studentInfo?.std_info_birthdate, 543), "d MMMM yyyy", { locale: th }) : ""}</div>
+                    </div>
 
                 </div>
 
@@ -450,7 +458,11 @@ export default function applicationHome() {
                     setIsAgreed(false);
                     setIsConfirmModalOpen(true);
                 }} loading={isSubmitLoading}></ApplicationCard>
-                <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-slate-900 rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center">
+
+                <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-twilight-indigo-900 rounded-xl shadow-sm py-1.5 justify-center align-middle items-center overflow-hidden">
+                    <Image src="https://storage.comcamp.io/web-assets/UnderConstruction.webp" height={0} width={0} sizes="100%" alt="" unoptimized
+                        className="w-full"
+                    />
                 </div>
 
             </div>

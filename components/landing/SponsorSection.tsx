@@ -13,7 +13,7 @@ function SponsorSection() {
         <div className='flex flex-col md:min-h-screen justify-center items-center align-middle gap-y-50 py-25 mx-3'>
             <div className="w-full max-w-[1600px] flex flex-col gap-y-10">
                 <div className="flex flex-row align-middle justify-center items-center gap-10">
-                    <svg width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="hidden md:block" width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M500 2.5H0" stroke="url(#paint0_linear_590_593)" strokeWidth="5"/>
                         <defs>
                             <linearGradient id="paint0_linear_590_593" x1="0" y1="3" x2="500" y2="3" gradientUnits="userSpaceOnUse">
@@ -25,7 +25,7 @@ function SponsorSection() {
 
                     <div className="font-zootopia text-5xl">Organizer</div>
 
-                    <svg width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="hidden md:block" width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M500 2.5H0" stroke="url(#paint0_linear_590_594)" strokeWidth="5"/>
                         <defs>
                             <linearGradient id="paint0_linear_590_594" x1="0" y1="3" x2="500" y2="3" gradientUnits="userSpaceOnUse">
@@ -60,7 +60,7 @@ function SponsorSection() {
 
             <div className="w-full max-w-[1600px] flex flex-col gap-y-10">
                 <div className="flex flex-row align-middle justify-center items-center gap-10">
-                    <svg width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="hidden md:block" width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M500 2.5H0" stroke="url(#paint0_linear_590_593)" strokeWidth="5"/>
                         <defs>
                             <linearGradient id="paint0_linear_590_593" x1="0" y1="3" x2="500" y2="3" gradientUnits="userSpaceOnUse">
@@ -72,7 +72,7 @@ function SponsorSection() {
 
                     <div className="font-zootopia text-4xl md:text-5xl whitespace-nowrap">Sponsored By</div>
 
-                    <svg width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="hidden md:block" width="500" height="5" viewBox="0 0 500 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M500 2.5H0" stroke="url(#paint0_linear_590_594)" strokeWidth="5"/>
                         <defs>
                             <linearGradient id="paint0_linear_590_594" x1="0" y1="3" x2="500" y2="3" gradientUnits="userSpaceOnUse">

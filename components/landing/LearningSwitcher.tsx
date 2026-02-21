@@ -7,6 +7,7 @@ import {
     LearningDescription,
     LearningLogo
 } from './LearningFolders';
+import {LearningFolderMobile} from "@/components/landing/LearningFoldersMobile";
 
 // ข้อมูลเหมือนเดิม (ละไว้เพื่อความกระชับ)
 const FOLDER_DATA = [
@@ -174,7 +175,7 @@ const FolderSwitcher = () => {
 
     return (
         <div className="flex flex-row justify-evenly w-full bg-theme-primary-darken overflow-hidden z-10">
-            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:pt-5 md:p-20 overflow-hidden max-w-[1600px] gap-y-3">
+            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:pt-5 md:p-20 overflow-hidden max-w-[1600px] gap-y-3 ">
             {/* === Left: Buttons === */}
             <div className="flex md:flex-col justify-evenly items-center flex-1 gap-6 z-12 order-2 md:order-1">
                 {FOLDER_DATA.map((item, index) => {
@@ -245,7 +246,7 @@ const FolderSwitcher = () => {
                         animate="animate"
                         exit="exit"
                         transition={{ duration: 0.5, ease: "easeInOut" }}
-                        className="w-full h-full" // Ensure wrapping div fills space
+                        className="block w-full h-full" // Ensure wrapping div fills space
                     >
                         <LearningFolder
                             color1={activeData.colors.c1}
@@ -265,6 +266,37 @@ const FolderSwitcher = () => {
                                 {activeData.logo}
                             </LearningLogo>
                         </LearningFolder>
+                    </motion.div>
+                </AnimatePresence>
+
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeData.id} // สำคัญมาก! เปลี่ยน key = trigger animation
+                        variants={folderVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        className="hidden w-full h-full" // Ensure wrapping div fills space
+                    >
+                        <LearningFolderMobile
+                            color1={activeData.colors.c1}
+                            color2={activeData.colors.c2}
+                            color3={activeData.colors.c3}
+                        >
+                            <LearningContent>
+                                <div>
+                                    <LearningTitle>{activeData.title}</LearningTitle>
+                                    <LearningDescription>
+                                        {activeData.description}
+                                    </LearningDescription>
+                                </div>
+                            </LearningContent>
+
+                            <LearningLogo>
+                                {activeData.logo}
+                            </LearningLogo>
+                        </LearningFolderMobile>
                     </motion.div>
                 </AnimatePresence>
             </div>

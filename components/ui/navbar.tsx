@@ -63,7 +63,7 @@ function Navbar() {
                     onClick={() => { router.push('/application'); if(isMobile) closeMenu(); }}
                     className={baseClass + (isMobile ? "drop-shadow-black/50 drop-shadow-lg font-bai_jamjuree bg-white/10 hover:bg-white hover:text-black" : "hover:bg-white hover:text-black drop-shadow-black/50 drop-shadow-lg")}
                 >
-                    ใบสมัครของคุณ
+                    ใบสมัครของฉัน
                 </button>
             );
         }
@@ -74,7 +74,7 @@ function Navbar() {
                     onClick={() => { router.push('/signin'); if(isMobile) closeMenu(); }}
                     className={baseClass + (isMobile ? "drop-shadow-black/50 drop-shadow-lg font-bai_jamjuree bg-white/10 hover:bg-white hover:text-black" : "hover:bg-white hover:text-black drop-shadow-black/50 drop-shadow-lg")}
                 >
-                    ลงทะเบียน
+                    สมัครเลย!
                 </button>
             );
         }

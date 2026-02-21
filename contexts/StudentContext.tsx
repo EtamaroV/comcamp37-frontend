@@ -4,6 +4,10 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useUser } from "./UserContext";
 import axios from "axios";
 
+import { mockStudentApplication } from "@/mock/MockData";
+
+const isMockMode = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+
 // 1. กำหนด Type ของ Status ให้ตรงกับ Database/API
 export interface StudentStatus {
     std_application_id: string;
@@ -125,13 +129,21 @@ export const StudentProvider = ({ children }: { children: ReactNode }) => {
 
     // ฟังก์ชันดึงข้อมูล (GET)
     const fetchApplication = async () => {
-        if (!user) {
+        if (!user && !isMockMode) { // ถ้า Mock อยู่ ไม่ต้องรอ user ก็ได้
             setIsLoadingApp(true);
             return;
         }
 
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/student/application`, { withCredentials: true });
+            let res;
+            if (isMockMode) {
+                // --- จังหวะ Mock ---
+                console.log("🛠️ StudentContext: Using Mock Data");
+                await new Promise(resolve => setTimeout(resolve, 800)); // จำลองดีเลย์
+                res = { data :mockStudentApplication };
+            } else {
+                res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/student/application`, { withCredentials: true });
+            }
 
             if (res.data && res.data.length > 0) {
                 const appData = res.data[0];

@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --color-theme-primary: #1F456E;
-    --color-theme-primary-darken: #151E3D;
+    --color-theme-primary: #014AAD;
+    --color-theme-primary-darken: #1C3071;
 
     --color-theme-secondary: #EB8B51;
     --color-theme-secondary-darken: #B36231;
@@ -14,6 +14,18 @@
     --color-pallete-2: #4C3B33;
     --color-pallete-3: #4C3B33;
     --color-pallete-4: #4C3B33;
+
+    --color-twilight-indigo-50: #ebeefa;
+    --color-twilight-indigo-100: #d6ddf5;
+    --color-twilight-indigo-200: #adbceb;
+    --color-twilight-indigo-300: #859ae0;
+    --color-twilight-indigo-400: #5c78d6;
+    --color-twilight-indigo-500: #3357cc;
+    --color-twilight-indigo-600: #2945a3;
+    --color-twilight-indigo-700: #1f347a;
+    --color-twilight-indigo-800: #142352;
+    --color-twilight-indigo-900: #0a1129;
+    --color-twilight-indigo-950: #070c1d;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -132,13 +144,52 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+@layer utilities {
+    /* ลายจุด (ปรับสีและขนาดตามต้องการ) */
+    .bg-dots {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.7) 2px, transparent 2px);
+        background-size: 24px 24px;
+    }
+
+    /* Mask สำหรับมุมซ้ายบน */
+    .mask-svg-tl {
+        -webkit-mask-image: url('https://storage.comcamp.io/web-assets/Landing/mask-top-left.svg');
+        mask-image: url('https://storage.comcamp.io/web-assets/Landing/mask-top-left.svg');
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: top left;
+        mask-position: top left;
+        /* ปรับขนาด mask ให้พอดี หากจอใหญ่/เล็กเกินไป */
+        -webkit-mask-size: contain;
+        mask-size: contain;
+    }
+
+    /* Mask สำหรับมุมขวาล่าง */
+    .mask-svg-br {
+        -webkit-mask-image: url('https://storage.comcamp.io/web-assets/Landing/mask-bottom-right.svg');
+        mask-image: url('https://storage.comcamp.io/web-assets/Landing/mask-bottom-right.svg');
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: bottom right;
+        mask-position: bottom right;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+    }
+}
+
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+        @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+      @apply bg-background text-foreground;
+      transition: background-color 2s cubic-bezier(0.76, 0, 0.24, 1) 0s;
   }
+
+}
+
+body:has(#application-root) {
+    background-color: #001E47 !important;
 }
 
 html {

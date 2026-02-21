@@ -259,11 +259,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 </div>
             )}
 
-            <div className={cn("relative w-full rounded-xl transition-all overflow-hidden bg-slate-800 border border-slate-700", height)}>
+            <div className={cn("relative w-full rounded-xl transition-all overflow-hidden bg-twilight-indigo-800 border border-twilight-indigo-700", height)}>
 
                 {/* LOADING STATE */}
                 {isLoading && (
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-800/95 backdrop-blur-sm">
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-twilight-indigo-800/95 backdrop-blur-sm">
                         <div className="relative mb-3">
                             <FontAwesomeIcon icon={faSpinner} spin className="text-4xl text-primary" />
                             {isUploading && ( // แสดง % เฉพาะตอน Upload
@@ -272,11 +272,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                  </span>
                             )}
                         </div>
-                        <p className="text-sm font-medium text-slate-300 mb-2">
+                        <p className="text-sm font-medium text-twilight-indigo-300 mb-2">
                             {isFetching ? "กำลังดึงข้อมูลไฟล์..." : "กำลังอัปโหลด..."}
                         </p>
                         {isUploading && (
-                            <div className="w-48 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="w-48 h-1.5 bg-twilight-indigo-700 rounded-full overflow-hidden">
                                 <div className="h-full bg-primary transition-all duration-100 ease-out" style={{ width: `${progress}%` }} />
                             </div>
                         )}
@@ -293,20 +293,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
                     >
                         <div className={cn("flex flex-col items-center justify-center w-full h-full border-2 border-dashed rounded-xl transition-all cursor-pointer",
                             isDragging
-                                ? "border-primary bg-slate-700/50"
-                                : "border-slate-700 hover:bg-slate-700/30"
+                                ? "border-primary bg-twilight-indigo-700/50"
+                                : "border-twilight-indigo-700 hover:bg-twilight-indigo-700/30"
                         )}>
-                            <div className="p-4 mb-3 rounded-full bg-slate-800/80 shadow-sm">
-                                <FontAwesomeIcon icon={uploadIcon} className="text-3xl text-slate-400" />
+                            <div className="p-4 mb-3 rounded-full bg-twilight-indigo-800/80 shadow-sm">
+                                <FontAwesomeIcon icon={uploadIcon} className="text-3xl text-twilight-indigo-400" />
                             </div>
                             <h3 className="font-semibold text-white text-sm">{label}</h3>
-                            <p className="text-xs text-slate-400 mt-1">{description}</p>
+                            <p className="text-xs text-twilight-indigo-400 mt-1">{description}</p>
                             <div className="mt-4 flex flex-col gap-1.5 items-center">
-                                <div className=" px-2 py-1 rounded-md bg-slate-900/50 text-[10px] text-slate-500 font-mono">
+                                <div className=" px-2 py-1 rounded-md bg-twilight-indigo-900/50 text-[10px] text-twilight-indigo-500 font-mono">
                                     ขนาดไฟล์สูงสุด: {maxSizeMB} MB
                                 </div>
                                 {accept && (
-                                    <span className="text-[10px] text-slate-500 bg-slate-900/50 px-2 py-1 rounded-md max-w-[200px] truncate">
+                                    <span className="text-[10px] text-twilight-indigo-500 bg-twilight-indigo-900/50 px-2 py-1 rounded-md max-w-[200px] truncate">
                                         ไฟล์ที่รองรับ: {accept.replace(/,/g, ', ')}
                                     </span>
                                 )}
@@ -318,20 +318,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 {/* CONTENT STATE */}
                 {hasContent && !isLoading && (
                     <div className="h-full w-full flex flex-col">
-                        <div className="flex items-center gap-3 p-3 border-b border-slate-700 h-[60px] shrink-0 bg-slate-800">
-                            <div className="h-10 w-10 shrink-0 rounded bg-slate-700 flex items-center justify-center">
+                        <div className="flex items-center gap-3 p-3 border-b border-twilight-indigo-700 h-[60px] shrink-0 bg-twilight-indigo-800">
+                            <div className="h-10 w-10 shrink-0 rounded bg-twilight-indigo-700 flex items-center justify-center">
                                 {getFileIcon(displayFileName || "unknown")}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium truncate text-white">{displayFileName}</p>
-                                <p className="text-[10px] text-slate-400">
+                                <p className="text-[10px] text-twilight-indigo-400">
                                     {file ? `${displaySize} • อัปโหลดเสร็จสิ้น` : "ไฟล์ปัจจุบันบนระบบ"}
                                 </p>
                             </div>
                             <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 text-lg" />
                         </div>
 
-                        <div className="flex-1 min-h-0 bg-slate-900/50 flex items-center justify-center relative overflow-hidden">
+                        <div className="flex-1 min-h-0 bg-twilight-indigo-900/50 flex items-center justify-center relative overflow-hidden">
                             {previewUrl ? (
                                 isPDF ? (
                                     // กรณีเป็น PDF (หรือโหลดรูปไม่ผ่าน) -> ใช้ iframe/embed
@@ -354,17 +354,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                     />
                                 )
                             ) : (
-                                <div className="flex flex-col items-center text-slate-500 opacity-60">
+                                <div className="flex flex-col items-center text-twilight-indigo-500 opacity-60">
                                     <FontAwesomeIcon icon={faFileAlt} className="text-4xl mb-2" />
                                     <span className="text-xs">ไม่สามารถแสดงตัวอย่างได้</span>
                                 </div>
                             )}
                         </div>
 
-                        <div className="p-2 border-t border-slate-700 bg-slate-800 h-[50px] shrink-0 flex gap-2">
+                        <div className="p-2 border-t border-twilight-indigo-700 bg-twilight-indigo-800 h-[50px] shrink-0 flex gap-2">
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="flex-[2] flex items-center justify-center gap-2 text-xs font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-md transition-colors"
+                                className="flex-[2] flex items-center justify-center gap-2 text-xs font-medium text-twilight-indigo-300 bg-twilight-indigo-700 hover:bg-twilight-indigo-600 rounded-md transition-colors"
                             >
                                 <FontAwesomeIcon icon={faSyncAlt} className="text-xs" /> เปลี่ยน
                             </button>

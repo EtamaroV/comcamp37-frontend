@@ -17,6 +17,7 @@ const ACCESS_RULES = [
 ];
 
 export function middleware(request: NextRequest) {
+    const requestHeaders = new Headers(request.headers)
 
     if (process.env.NEXT_PUBLIC_BYPASS_REGISTER_TIME === 'true') {
         return NextResponse.next();
@@ -34,6 +35,8 @@ export function middleware(request: NextRequest) {
 
     const now = Date.now();
 
+    requestHeaders.set('x-current-path', request.nextUrl.pathname)
+
     const rule = ACCESS_RULES.find(r => pathname.startsWith(r.path));
 
     if (rule) {
@@ -48,7 +51,13 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    return NextResponse.next();
+    return NextResponse.next(
+        {
+            request: {
+                headers: requestHeaders,
+            },
+        }
+    );
 }
 
 // Next.js 16 performance tip: Use a matcher so the proxy only runs on specific routes
