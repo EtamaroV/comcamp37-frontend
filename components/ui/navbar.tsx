@@ -120,7 +120,7 @@ function Navbar() {
                     { isApplicationPage && (
                     <div className="h-full items-center flex flex-row gap-x-5">
                         <div className="border-l border-white/30 h-[70%]"></div>
-                        <div onClick={()=>router.push('/application')} className="font-bold text-lg cursor-pointer text-white transition-all duration-300 hover:[text-shadow:_0_0_20px_rgba(235,139,81,1.0)] drop-shadow-black/50 drop-shadow-lg">ใบสมัครของคุณ</div>
+                        <div onClick={()=>router.push('/application')} className="font-bold text-lg cursor-pointer text-white transition-all duration-300 hover:[text-shadow:_0_0_20px_rgba(235,139,81,1.0)] drop-shadow-black/50 drop-shadow-lg">ใบสมัครของฉัน</div>
                     </div>
                     )}
                 </div>

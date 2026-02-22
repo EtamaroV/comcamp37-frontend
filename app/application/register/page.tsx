@@ -14,8 +14,33 @@ export default function RegisterPage() {
 function RegisterPageInner() {
     const { step, allData } = useContext(RegisterCtx);
 
-    const totalSteps = 3;
-    const progress = Math.round((step / totalSteps) * 100);
+    const requiredFields = [
+        // ข้อมูลส่วนตัว
+        "name_prefix", "name_first", "name_last", "name_nick",
+        "info_dob", "info_gender", "info_religion", "info_phone", "info_address",
+        // ข้อมูลการศึกษา
+        "academic_level", "academic_program", "academic_school",
+        "grade_gpax", "grade_math", "grade_sci", "grade_eng",
+        // ข้อมูลสุขภาพ
+        "health_bloodType", "health_medicalRights", "health_chronicDiseases",
+        "health_drugAllergies", "health_dietaryRestrictions",
+        // ข้อมูลผู้ปกครอง
+        "guardian_name", "guardian_relationship", "guardian_phone",
+        // ข้อมูลความพร้อม และอื่นๆ
+        "availability_haveAttended", "availability_attendAllDays",
+        "availability_laptop", "availability_tablet", "availability_mouse",
+        "availability_travelPlan", "apparel_size"
+    ];
+
+    const filledFieldsCount = requiredFields.filter((key) => {
+        const value = allData[key];
+
+        return value !== undefined && value !== null && value !== "";
+    }).length;
+
+    const totalSteps = 3; // ยังเก็บไว้แสดงผล UI ว่าอยู่หน้าไหนจากกี่หน้า
+    const totalFields = requiredFields.length;
+    const progress = totalFields === 0 ? 0 : Math.round((filledFieldsCount / totalFields) * 100);
 
     return (
         <main className="flex-1 w-full max-w-[960px] mx-auto pt-6 md:px-6 md:pt-10">

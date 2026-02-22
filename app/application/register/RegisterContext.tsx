@@ -389,7 +389,12 @@ function Step1() {
                                             </div>
                                             </FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            field.onChange(value);
+                                        }}  
+                                        maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -407,7 +412,12 @@ function Step1() {
                                             นามสกุล
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            field.onChange(value);
+                                        }} 
+                                        maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -428,7 +438,7 @@ function Step1() {
                                             ชื่อเล่น
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -470,7 +480,7 @@ function Step1() {
                                                 selected={field.value}
                                                 onSelect={field.onChange}
                                                 disabled={(date) =>
-                                                    date > new Date() || date < new Date("1826-01-01")
+                                                    date > new Date("2012-12-31") || date < new Date("2005-12-31")
                                                 }
                                                 locale={th}
                                                 captionLayout="dropdown"
@@ -596,6 +606,7 @@ function Step1() {
                                                 // Add 'pl-10' to make room for the icon on the left
                                                 className="py-6 pl-4 pr-10 rounded-xl"
                                                 placeholder="0XX-XXX-XXXX"
+                                                
                                                 {...field}
                                                 value={formatPhoneNumber(field.value)}
                                                 onChange={(e) => {
@@ -604,6 +615,7 @@ function Step1() {
                                                         field.onChange(rawValue);
                                                     }
                                                 }}
+                                               
                                             />
                                         </div>
                                     </FormControl>
@@ -864,8 +876,9 @@ function Step2() {
                                             <FormControl>
                                                 <Input
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
-                                                    placeholder="เช่น ศิลป์-ภาษาญี่ปุ่น"
+                                                    placeholder="เช่น ศิลป์-คำนวณ"
                                                     {...field}
+                                                    maxLength={100}
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -890,7 +903,9 @@ function Step2() {
                                         <SchoolInput
                                             className="py-6 px-4 pr-10 rounded-xl"
                                             {...field}
+                                            
                                             placeholder="ชื่อสถาบันการศึกษาของคุณ"
+                                            
                                         />
                                         <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faSchool} />
                                         </div>
@@ -927,6 +942,7 @@ function Step2() {
                                                 const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
                                                 const digits = e.target.value.replace(/\D/g, "");
 
+
                                                 if (isDeleting && digits.length <= 1) {
                                                     field.onChange(digits);
                                                     return;
@@ -946,6 +962,7 @@ function Step2() {
                                                     field.onChange(formatted || digits);
                                                 }
                                             }}
+                                            
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -1138,9 +1155,9 @@ function Step2() {
                         {/* ข้อมูลทางการแพทย์อื่น ๆ */}
                         {[
                             { id: "health_medicalRights", label: "สิทธิการรักษาพยาบาล", placeholder: "เช่น บัตรทอง" },
-                            { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้กรอก \"-\")", area: true },
-                            { id: "health_drugAllergies", label: "การแพ้ยา", placeholder: "ระบุชื่อยาที่แพ้ และอาการที่เกิดขึ้น เช่น ผื่นคัน, หายใจลำบาก (หากไม่มีให้กรอก \"-\")", area: true },
-                            { id: "health_dietaryRestrictions", label: "ข้อจำกัดด้านอาหาร", placeholder: "เช่น แพ้อาหาร มังสวิรัติ ไม่ทานเผ็ด ประเภทอาหารที่สามารถทานได้ (หากไม่มีให้กรอก \"-\")", area: true },
+                            { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้ระบุว่า \"-\")", area: true },
+                            { id: "health_drugAllergies", label: "การแพ้ยา", placeholder: "ระบุชื่อยาที่แพ้ และอาการที่เกิดขึ้น เช่น ผื่นคัน, หายใจลำบาก (หากไม่มีให้ระบุว่า \"-\")", area: true },
+                            { id: "health_dietaryRestrictions", label: "ข้อจำกัดด้านอาหาร", placeholder: "เช่น แพ้อาหาร มังสวิรัติ ไม่ทานเผ็ด ประเภทอาหารที่สามารถทานได้ (หากไม่มีให้ระบุว่า \"-\")", area: true },
                             { id: "health_more", label: "รายละเอียดเพิ่มเติม", placeholder: "ข้อมูลเพิ่มเติมเกี่ยวกับสุขภาพ และความปลอดภัย (ถ้ามี)", area: true, notreq: true }
                         ].map((item) => (
                             <FormField
@@ -1158,9 +1175,9 @@ function Step2() {
                                         </FormLabel>
                                         <FormControl>
                                             {item.area ? (
-                                                <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field}/>
+                                                <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field} maxLength={210} />
                                             ) : (
-                                                <Input className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field}/>
+                                                <Input className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field} maxLength={105} />
                                             )}
                                         </FormControl>
                                         <FormMessage />
@@ -1385,7 +1402,13 @@ function Step3() {
                                             ชื่อผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="นายห่านน้อย คอยรัก" {...field}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            field.onChange(value);
+                                        }}
+                                        maxLength={100}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -1403,7 +1426,7 @@ function Step3() {
                                             ความสัมพันธ์กับผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -1586,7 +1609,7 @@ function Step3() {
 
                                     <FormLabel><div className="relative">
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
-                                            สะดวกนำ iPad/Tablet มาไหม
+                                            สะดวกนำ Tablet มาไหม (เช่น iPad, Samsung Galaxy Tab S series, ฯลฯ)
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
@@ -1799,6 +1822,7 @@ function Step3() {
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
                                                     placeholder=""
                                                     {...field}
+                                                    maxLength={100}
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -1864,15 +1888,15 @@ function Step3() {
                                 </thead>
                                 <tbody className="divide-y divide-twilight-indigo-700/50">
                                 {[
-                                    { size: "SS", chest: "34", length: "25" },
-                                    { size: "S", chest: "36", length: "26" },
-                                    { size: "M", chest: "38", length: "27" },
-                                    { size: "L", chest: "40", length: "28" },
-                                    { size: "XL", chest: "42", length: "29" },
-                                    { size: "2XL", chest: "44", length: "30" },
-                                    { size: "3XL", chest: "46", length: "31" },
-                                    { size: "4XL", chest: "48", length: "32" },
-                                    { size: "5XL", chest: "50", length: "33" }
+                                    { size: "S", chest: "34", length: "25" },
+                                    { size: "M", chest: "38", length: "27.5" },
+                                    { size: "L", chest: "42", length: "28.5" },
+                                    { size: "XL", chest: "44", length: "29.5" },
+                                    { size: "2XL", chest: "46", length: "30" },
+                                    { size: "3XL", chest: "50", length: "30.5" },
+                                    { size: "4XL", chest: "52", length: "31" },
+                                    { size: "5XL", chest: "56", length: "31.5" },
+                                    { size: "6XL", chest: "60", length: "31.5" },
                                 ].map((item) => (
                                     <tr key={item.size} data-selected={item.size == form.getValues('apparel_size') ? 'true' : ''} className="bg-twilight-indigo-800/20 data-[selected=true]:bg-twilight-indigo-700 transition-colors">
                                         <td className="px-4 py-2 font-medium">{item.size}</td>
@@ -1899,7 +1923,7 @@ function Step3() {
                                             defaultValue={field.value}
                                             className="grid grid-cols-5 gap-3"
                                         >
-                                            {["SS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"].map((type) => (
+                                            {["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL"].map((type) => (
                                                 <div key={type} className="peer sr-onl">
                                                     <RadioGroupItem value={type} id={`apparel_size-${type}`} className="peer sr-only" />
                                                     <Label
