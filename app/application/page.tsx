@@ -105,62 +105,67 @@ interface ApplicationCardProps {
     onSubmit?: () => void;
 }
 
+const statusConfig = {
+    INCOMPLETE: {
+        title: 'ภารกิจยังไม่สำเร็จ',
+        description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
+        buttonText: 'รอการดำเนินการ',
+        buttonClass: 'bg-slate-600 cursor-not-allowed opacity-70',
+        isDisabled: true,
+        imgClass: '',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_incomplete.webp`
+    },
+    READY: {
+        title: 'ภารกิจเสร็จสิ้น',
+        description: 'ใบสมัครของคุณพร้อมแล้ว โปรดตรวจสอบข้อมูลก่อนกดส่งใบสมัคร',
+        buttonText: 'ส่งใบสมัคร',
+        buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
+        isDisabled: false,
+        imgClass: '',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_ready.webp`
+    },
+    SUBMITTED: {
+        title: 'ส่งใบสมัครเรียบร้อยแล้ว',
+        description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย!',
+        buttonText: 'ส่งข้อมูลสำเร็จ',
+        buttonClass: 'hidden',
+        isDisabled: true,
+        imgClass: '',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_submitted.webp`
+    },
+    EXPIRED: {
+        title: 'หมดเวลารับสมัคร',
+        description: 'ขออภัย หมดเขตรับสมัครแล้ว',
+        buttonText: 'หมดเวลา',
+        buttonClass: 'bg-slate-600 cursor-not-allowed opacity-70',
+        isDisabled: true,
+        imgClass: '',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_expired.webp`
+    },
+};
+
 function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
-    const statusConfig = {
-        INCOMPLETE: {
-            title: 'ภารกิจยังไม่สำเร็จ',
-            description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
-            buttonText: 'รอการดำเนินการ',
-            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
-            isDisabled: true,
-            imgClass: 'opacity-50',
-        },
-        READY: {
-            title: 'ภารกิจเสร็จสิ้น',
-            description: 'ใบสมัครของคุณพร้อมแล้ว โปรดตรวจสอบข้อมูลก่อนกดส่งใบสมัคร',
-            buttonText: 'ส่งใบสมัคร',
-            buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
-            isDisabled: false,
-            imgClass: '',
-        },
-        SUBMITTED: {
-            title: 'ส่งใบสมัครเรียบร้อยแล้ว',
-            description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย!',
-            buttonText: 'ส่งข้อมูลสำเร็จ',
-            buttonClass: 'hidden',
-            isDisabled: true,
-            imgClass: '',
-        },
-        EXPIRED: {
-            title: 'หมดเวลารับสมัคร',
-            description: 'ขออภัย หมดเขตรับสมัครแล้ว',
-            buttonText: 'หมดเวลา',
-            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
-            isDisabled: true,
-            imgClass: 'grayscale opacity-50',
-        },
-    };
 
     const current = statusConfig[status];
 
     return (
         <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-twilight-indigo-900 rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center">
             <Image
-                src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/docsIcon.png`}
-                alt="Document Icon"
+                src={current.imgURL}
+                alt=""
                 loading="eager"
                 width={0}
                 height={0}
                 sizes="100vw"
                 unoptimized
-                className={`relative w-30 scale-135 rotate-20 transition-all duration-300 ${current.imgClass}`}
+                className={`relative w-30 scale-125 rounded-full aspect-square transition-all duration-300 ${current.imgClass}`}
             />
             <div className="flex-1 h-full flex flex-col justify-evenly gap-4">
                 <div>
                     <div className="text-2xl font-bold text-white transition-colors duration-300">
                         {current.title}
                     </div>
-                    <div className="text-lg text-twilight-indigo-300 mt-2 transition-colors duration-300">
+                    <div className="text-lg text-slate-300 mt-2 transition-colors duration-300">
                         {current.description}
                     </div>
                 </div>
@@ -180,61 +185,27 @@ function ApplicationCard({ status, loading, onSubmit }: ApplicationCardProps) {
 }
 
 function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) {
-    const statusConfig = {
-        INCOMPLETE: {
-            title: 'ภารกิจยังไม่สำเร็จ',
-            description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
-            buttonText: 'รอการดำเนินการ',
-            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
-            isDisabled: true,
-            imgClass: 'opacity-50',
-        },
-        READY: {
-            title: 'ภารกิจสำเร็จ',
-            description: 'ใบสมัครของคุณพร้อมแล้ว โปรดตรวจสอบข้อมูลก่อนกดส่งใบสมัคร',
-            buttonText: 'ส่งใบสมัคร',
-            buttonClass: 'bg-primary hover:bg-primary/90 cursor-pointer',
-            isDisabled: false,
-            imgClass: '',
-        },
-        SUBMITTED: {
-            title: 'ส่งใบสมัครเรียบร้อยแล้ว',
-            description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย !',
-            buttonText: 'ส่งข้อมูลสำเร็จ',
-            buttonClass: 'hidden',
-            isDisabled: true,
-            imgClass: '',
-        },
-        EXPIRED: {
-            title: 'หมดเวลารับสมัคร',
-            description: 'ขออภัย หมดเขตรับสมัครแล้ว',
-            buttonText: 'หมดเวลา',
-            buttonClass: 'bg-twilight-indigo-600 hover:bg-twilight-indigo-600 cursor-not-allowed opacity-70',
-            isDisabled: true,
-            imgClass: 'grayscale opacity-50',
-        },
-    };
 
     const current = statusConfig[status];
 
     return (
         <div className="flex bg-twilight-indigo-900 rounded-xl shadow-sm p-6 flex-col items-center gap-y-10">
             <Image
-                src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/docsIcon.png`}
+                src={current.imgURL}
                 alt="Document Icon"
                 loading="eager"
                 width={0}
                 height={0}
                 sizes="100vw"
                 unoptimized
-                className={`relative w-[50%] rotate-20 transition-all duration-300 ${current.imgClass}`}
+                className={`relative w-[50%] rounded-full aspect-square transition-all duration-300 ${current.imgClass}`}
             />
             <div className="w-full h-full flex flex-col justify-evenly gap-4">
                 <div>
                     <div className="text-2xl font-bold text-white transition-colors duration-300">
                         {current.title}
                     </div>
-                    <div className="text-lg text-twilight-indigo-300 mt-2 transition-colors duration-300">
+                    <div className="text-lg text-slate-300 mt-2 transition-colors duration-300">
                         {current.description}
                     </div>
                 </div>
