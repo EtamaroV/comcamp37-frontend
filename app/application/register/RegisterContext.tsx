@@ -345,7 +345,7 @@ function Step1() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลส่วนตัว</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* คำนำหน้า */}
                         <FormField
                             control={form.control}
@@ -404,7 +404,7 @@ function Step1() {
                     </div>
 
                     { /* แถวสอง */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* ชื่อเล่น */}
                         <FormField
                             control={form.control}
@@ -466,7 +466,7 @@ function Step1() {
                     </div>
 
                     { /* แถวสาม */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* เพศ */}
                         <FormField
                             control={form.control}
@@ -553,7 +553,7 @@ function Step1() {
                     </div>
 
                     { /* แถวสี่ */ }
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
 
                         {/* เบอร์โทรศัพท์ */}
                         <FormField
@@ -612,7 +612,7 @@ function Step1() {
                         />
                     </div>
 
-                    <div className="grid grid-cols-1">
+                    <div className="grid grid-cols-1 items-start">
                         <FormField
                             control={form.control}
                             name="info_address"
@@ -760,7 +760,7 @@ function Step2() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลการศึกษา</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* ระดับชั้นการศึกษา */}
                         <FormField
                             control={form.control}
@@ -787,7 +787,7 @@ function Step2() {
                         />
 
                         {/* สายการเรียน */}
-                        <div className="flex flex-row gap-5">
+                        <div className="flex flex-row gap-5 items-start">
                             <FormField
                                 control={form.control}
                                 name="academic_program"
@@ -863,7 +863,7 @@ function Step2() {
                     <div className="items-center gap-3 mt-10">
                         <h2 className="col-span-1 text-lg font-bold text-white">ผลการเรียน</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3 items-start">
                         {/* GPAX */}
                         <FormField
                             control={form.control}
@@ -1309,7 +1309,7 @@ function Step3() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลติดต่อผู้ปกครอง</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* ชื่อผู้ปกครอง */}
                         <FormField
                             control={form.control}
@@ -1342,7 +1342,7 @@ function Step3() {
                     </div>
 
                     { /* แถวสอง */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* เบอร์โทรศัพท์ผู้ปกครอง */}
                         <FormField
                             control={form.control}
@@ -1383,7 +1383,7 @@ function Step3() {
                         <h2 className="text-xl font-bold">ความพร้อมและการเดินทาง</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10 items-start">
                         {/* เคยเข้า ComCamp ไหม */}
                         <FormField
                             control={form.control}
@@ -1498,62 +1498,6 @@ function Step3() {
                             )}
                         />
 
-                        { /* สะดวกนำ laptop มาไหม */}
-                        <FormField
-                            control={form.control}
-                            name="availability_laptop"
-                            render={({field}) => (
-                                <FormItem className="col-span-1">
-
-                                    <FormLabel>สะดวกนำ Laptop มาไหม</FormLabel>
-                                    <FormControl>
-                                        <RadioGroup
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            className="flex flex-row gap-10 items-center mt-1"
-                                        >
-                                            {/* ใช่ */}
-                                            <FormItem>
-                                                <label
-                                                    htmlFor="availability_laptop-yes"
-                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer w-18"
-                                                >
-                                                    <FormControl>
-                                                        <RadioGroupItem
-                                                            className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="true" id="availability_laptop-yes"/>
-                                                    </FormControl>
-                                                    <span
-                                                        className="flex-1 relative items-center text-sm transition-colors">
-                                                      <span>สะดวก</span>
-                                                    </span>
-                                                </label>
-                                            </FormItem>
-
-                                            {/* ไม่ใช่ */}
-                                            <FormItem>
-                                                <label
-                                                    htmlFor="availability_laptop-no"
-                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer"
-                                                >
-                                                    <FormControl>
-                                                        <RadioGroupItem
-                                                            className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="false" id="availability_laptop-no"/>
-                                                    </FormControl>
-                                                    <span
-                                                        className="flex-1 relative items-center text-sm transition-colors">
-                                                      <span>ไม่สะดวก</span>
-                                                    </span>
-                                                </label>
-                                            </FormItem>
-
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
                         { /* สะดวกนำ iPad/Tablet มาไหม */}
                         <FormField
                             control={form.control}
@@ -1610,6 +1554,64 @@ function Step3() {
                                 </FormItem>
                             )}
                         />
+
+                        { /* สะดวกนำ laptop มาไหม */}
+                        <FormField
+                            control={form.control}
+                            name="availability_laptop"
+                            render={({field}) => (
+                                <FormItem className="col-span-1">
+
+                                    <FormLabel>สะดวกนำ Laptop มาไหม</FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-row gap-10 items-center mt-1"
+                                        >
+                                            {/* ใช่ */}
+                                            <FormItem>
+                                                <label
+                                                    htmlFor="availability_laptop-yes"
+                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer w-18"
+                                                >
+                                                    <FormControl>
+                                                        <RadioGroupItem
+                                                            className="cursor-pointer brightness-200 w-5 h-5"
+                                                            value="true" id="availability_laptop-yes"/>
+                                                    </FormControl>
+                                                    <span
+                                                        className="flex-1 relative items-center text-sm transition-colors">
+                                                      <span>สะดวก</span>
+                                                    </span>
+                                                </label>
+                                            </FormItem>
+
+                                            {/* ไม่ใช่ */}
+                                            <FormItem>
+                                                <label
+                                                    htmlFor="availability_laptop-no"
+                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer"
+                                                >
+                                                    <FormControl>
+                                                        <RadioGroupItem
+                                                            className="cursor-pointer brightness-200 w-5 h-5"
+                                                            value="false" id="availability_laptop-no"/>
+                                                    </FormControl>
+                                                    <span
+                                                        className="flex-1 relative items-center text-sm transition-colors">
+                                                      <span>ไม่สะดวก</span>
+                                                    </span>
+                                                </label>
+                                            </FormItem>
+
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+
                         { /* สะดวกนำเมาส์มาไหม */}
                         <FormField
                             control={form.control}
@@ -1669,13 +1671,13 @@ function Step3() {
 
                         { /* Laptop OS */ }
                         {form.watch("availability_laptop") === "true" && (
-                        <div className="flex flex-row gap-5">
+                        <div className="flex flex-row gap-5 items-start">
                             <FormField
                                 control={form.control}
                                 name="availability_laptopOS"
                                 render={({ field }) => (
                                     <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
-                                        <FormLabel>ระบบปฏิบัติการ (OS)</FormLabel>
+                                        <FormLabel>ระบบปฏิบัติการ Laptop (OS)</FormLabel>
                                         <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
