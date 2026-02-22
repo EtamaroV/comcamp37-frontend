@@ -393,7 +393,8 @@ function Step1() {
                                         onChange={(e) => {
                                             const value = e.target.value.replace(/\d/g, ""); 
                                             field.onChange(value);
-                                        }}  />
+                                        }}  
+                                        maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -415,7 +416,8 @@ function Step1() {
                                         onChange={(e) => {
                                             const value = e.target.value.replace(/\d/g, ""); 
                                             field.onChange(value);
-                                        }} />
+                                        }} 
+                                        maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -436,7 +438,7 @@ function Step1() {
                                             ชื่อเล่น
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -874,8 +876,9 @@ function Step2() {
                                             <FormControl>
                                                 <Input
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
-                                                    placeholder="เช่น ศิลป์-ภาษาญี่ปุ่น"
+                                                    placeholder="เช่น ศิลป์-คำนวณ"
                                                     {...field}
+                                                    maxLength={100}
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -900,7 +903,9 @@ function Step2() {
                                         <SchoolInput
                                             className="py-6 px-4 pr-10 rounded-xl"
                                             {...field}
+                                            
                                             placeholder="ชื่อสถาบันการศึกษาของคุณ"
+                                            
                                         />
                                         <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faSchool} />
                                         </div>
@@ -937,6 +942,7 @@ function Step2() {
                                                 const isDeleting = (e.nativeEvent as InputEvent).inputType?.includes("delete");
                                                 const digits = e.target.value.replace(/\D/g, "");
 
+
                                                 if (isDeleting && digits.length <= 1) {
                                                     field.onChange(digits);
                                                     return;
@@ -956,6 +962,7 @@ function Step2() {
                                                     field.onChange(formatted || digits);
                                                 }
                                             }}
+                                            
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -1148,9 +1155,9 @@ function Step2() {
                         {/* ข้อมูลทางการแพทย์อื่น ๆ */}
                         {[
                             { id: "health_medicalRights", label: "สิทธิการรักษาพยาบาล", placeholder: "เช่น บัตรทอง" },
-                            { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้กรอก \"-\")", area: true },
-                            { id: "health_drugAllergies", label: "การแพ้ยา", placeholder: "ระบุชื่อยาที่แพ้ และอาการที่เกิดขึ้น เช่น ผื่นคัน, หายใจลำบาก (หากไม่มีให้กรอก \"-\")", area: true },
-                            { id: "health_dietaryRestrictions", label: "ข้อจำกัดด้านอาหาร", placeholder: "เช่น แพ้อาหาร มังสวิรัติ ไม่ทานเผ็ด ประเภทอาหารที่สามารถทานได้ (หากไม่มีให้กรอก \"-\")", area: true },
+                            { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้ระบุว่า \"-\")", area: true },
+                            { id: "health_drugAllergies", label: "การแพ้ยา", placeholder: "ระบุชื่อยาที่แพ้ และอาการที่เกิดขึ้น เช่น ผื่นคัน, หายใจลำบาก (หากไม่มีให้ระบุว่า \"-\")", area: true },
+                            { id: "health_dietaryRestrictions", label: "ข้อจำกัดด้านอาหาร", placeholder: "เช่น แพ้อาหาร มังสวิรัติ ไม่ทานเผ็ด ประเภทอาหารที่สามารถทานได้ (หากไม่มีให้ระบุว่า \"-\")", area: true },
                             { id: "health_more", label: "รายละเอียดเพิ่มเติม", placeholder: "ข้อมูลเพิ่มเติมเกี่ยวกับสุขภาพ และความปลอดภัย (ถ้ามี)", area: true, notreq: true }
                         ].map((item) => (
                             <FormField
@@ -1395,11 +1402,13 @@ function Step3() {
                                             ชื่อผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="" {...field} 
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="นายห่านน้อย คอยรัก" {...field} 
                                         onChange={(e) => {
                                             const value = e.target.value.replace(/\d/g, ""); 
                                             field.onChange(value);
-                                        }}/>
+                                        }}
+                                        maxLength={100}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -1417,7 +1426,7 @@ function Step3() {
                                             ความสัมพันธ์กับผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} />
+                                        <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -1813,6 +1822,7 @@ function Step3() {
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
                                                     placeholder=""
                                                     {...field}
+                                                    maxLength={100}
                                                 />
                                             </FormControl>
                                             <FormMessage />
