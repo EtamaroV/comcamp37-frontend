@@ -17,7 +17,8 @@ function RegisterPageInner() {
     const requiredFields = [
         // ข้อมูลส่วนตัว
         "name_prefix", "name_first", "name_last", "name_nick",
-        "info_dob", "info_gender", "info_religion", "info_phone", "info_address",
+        "info_dob", "info_gender", "info_religion", "info_phone",
+        "info_zipcode", "info_province", "info_district", "info_sub_district", "info_address",
         // ข้อมูลการศึกษา
         "academic_level", "academic_program", "academic_school",
         "grade_gpax", "grade_math", "grade_sci", "grade_eng",

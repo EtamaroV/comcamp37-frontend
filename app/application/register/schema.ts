@@ -36,7 +36,39 @@ export const Step1Schema = z.object({
     info_religion: z.string().min(1, "กรุณาเลือกศาสนา"),
 
     info_phone: z.string().regex(phoneRegex, "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลักและต้องขึ้นต้นด้วยเลข 0"),
-    info_address: z.string().min(1, "กรุณาระบุที่อยู่"),
+
+
+    info_zipcode: z.string().min(5, "กรุณาระบุรหัสไปรษณีย์"),
+    info_province: z.string().min(1, "กรุณาเลือกจังหวัด"), //จริงๆมันก็เลือกให้แล้ว
+    info_district: z.string(),
+    info_sub_district: z.string(),
+    info_address: z.string().min(1, "กรุณาระบุที่อยู่")
+}).superRefine((data, ctx) => {
+    // เช็คว่ามีข้อมูลจังหวัดถูกกรอกไว้หรือไม่
+    const hasProvince = !!data.info_province && data.info_province.trim() !== "";
+    const isBKK = data.info_province === "กรุงเทพมหานคร";
+
+    // สร้างคำศัพท์แบบ Dynamic สำหรับ Error Message
+    const districtWord = isBKK ? "เขต" : (hasProvince ? "อำเภอ" : "เขต/อำเภอ");
+    const subDistrictWord = isBKK ? "แขวง" : (hasProvince ? "ตำบล" : "แขวง/ตำบล");
+
+    // ตรวจสอบ เขต/อำเภอ
+    if (!data.info_district || data.info_district.trim() === "") {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `กรุณาเลือก${districtWord}`,
+            path: ["info_district"],
+        });
+    }
+
+    // ตรวจสอบ แขวง/ตำบล
+    if (!data.info_sub_district || data.info_sub_district.trim() === "") {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `กรุณาเลือก${subDistrictWord}`,
+            path: ["info_sub_district"],
+        });
+    }
 });
 
 // --- Step 2: ข้อมูลการศึกษาและสุขภาพ ---
