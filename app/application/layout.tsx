@@ -127,7 +127,7 @@ function NoApp() {
     const router = useRouter();
     if ( !hasApplication ) {
     return (
-        <div className="w-full h-full fixed top-0 bg-theme-primary-darken/90 backdrop-blur-xl flex flex-col justify-center items-center z-100">
+        <div className="w-full h-full fixed top-0 bg-black/20 backdrop-blur-xl flex flex-col justify-center items-center z-100">
 
             <motion.div
                 initial={{ scale: 0.9, y: 20 }}
@@ -139,20 +139,20 @@ function NoApp() {
                 <div className="relative">
                     <div className="w-28 h-28 rounded-full">
                         <img
-                            src={user?.image || ""}
-                            alt="User"
-                            className="w-full h-full rounded-full object-cover border-4 border-twilight-indigo-800"
+                            src={user?.image || "https://storage.comcamp.io/web-assets/gooseNick.png"}
+                            alt=""
+                            className="w-full h-full rounded-full object-cover bg-twilight-indigo-700 border-4 border-twilight-indigo-700"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-white">ยินดีต้อนรับ<br/>{user?.name}</h2>
-                    <p className="text-twilight-indigo-400 text-base">
+                    <p className="text-slate-400 text-base">
                         {user?.email}
                     </p>
 
-                    <p className="text-twilight-indigo-400 text-sm">
+                    <p className="text-slate-400 text-sm">
                         หากไม่ใช่คุณ <span className="text-blue-400 cursor-pointer hover:underline" onClick={() => {signOut(); router.push('/signin')}}>ออกจากระบบ</span>
                     </p>
                 </div>

@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import * as React from "react";
-import {Variants} from "motion";
+import { Variants } from "motion";
 
 const TIMELINE_DATA = [
     {
@@ -38,13 +38,17 @@ const TIMELINE_DATA = [
 function TimelineSection() {
     const [progress, setProgress] = React.useState(0);
     const [currentMilestone, setCurrentMilestone] = React.useState(0);
+
+    // Desktop Refs
     const checkpointsRef = React.useRef<(HTMLDivElement | null)[]>([]);
     const progressBarRef = React.useRef<HTMLDivElement>(null);
 
-    // --- Animation Variants ---
+    // Mobile Refs (เพิ่มใหม่)
+    const mobileCheckpointsRef = React.useRef<(HTMLDivElement | null)[]>([]);
+    const mobileProgressBarRef = React.useRef<HTMLDivElement>(null);
 
-    // 1. เส้น Header ขยายออกข้าง
-    const headerLineVariants:Variants = {
+    // --- Animation Variants ---
+    const headerLineVariants: Variants = {
         hidden: { scaleX: 0, opacity: 0 },
         visible: {
             scaleX: 1,
@@ -53,8 +57,7 @@ function TimelineSection() {
         }
     };
 
-    // 2. Card เด้งขึ้นมาทีละอัน (Stagger)
-    const cardVariants:Variants = {
+    const cardVariants: Variants = {
         hidden: { opacity: 0, scale: 0.5, y: 50 },
         visible: (index: number) => ({
             opacity: 1,
@@ -62,15 +65,15 @@ function TimelineSection() {
             y: 0,
             transition: {
                 type: "spring",
-                bounce: 0.5, // ค่านี้ยิ่งเยอะยิ่งเด้ง
+                bounce: 0.5,
                 damping: 12,
                 stiffness: 120,
-                delay: index * 0.15 // หน่วงเวลาให้โผล่ตามกันมา
+                delay: index * 0.15
             }
         })
     };
 
-    // --- Logic เดิม (คำนวณ Progress) ---
+    // --- Logic คำนวณ Progress ---
     React.useEffect(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -114,40 +117,51 @@ function TimelineSection() {
         setCurrentMilestone(milestoneIndex);
 
         const calculateProgress = () => {
-            if (!progressBarRef.current || checkpointsRef.current.length === 0) return;
+            const isMobile = window.innerWidth < 1024;
 
-            const barRect = progressBarRef.current.getBoundingClientRect();
-            const barLeft = barRect.left;
-            const barWidth = barRect.width;
+            const activeBarRef = isMobile ? mobileProgressBarRef : progressBarRef;
+            const activeCheckpoints = isMobile ? mobileCheckpointsRef.current : checkpointsRef.current;
 
-            if (barWidth === 0) return;
+            if (!activeBarRef.current || activeCheckpoints.length === 0) return;
 
-            const currentCheckpoint = checkpointsRef.current[milestoneIndex];
+            const barRect = activeBarRef.current.getBoundingClientRect();
+
+            const barStart = isMobile ? barRect.top : barRect.left;
+            const barSize = isMobile ? barRect.height : barRect.width;
+
+            if (barSize === 0) return;
+
+            const currentCheckpoint = activeCheckpoints[milestoneIndex];
             if (!currentCheckpoint) {
                 setProgress(0);
                 return;
             }
 
             const currentRect = currentCheckpoint.getBoundingClientRect();
-            // ปรับการคำนวณ Center ให้แม่นยำขึ้นสำหรับการแสดงผล
-            const currentCenter = (currentRect.left + currentRect.width / 2) - barLeft;
+
+            const currentCenter = isMobile
+                ? (currentRect.top + currentRect.height / 2) - barStart
+                : (currentRect.left + currentRect.width / 2) - barStart;
 
             if (milestoneProgress === 1) {
-                const progressPercent = (currentCenter / barWidth) * 100;
+                const progressPercent = (currentCenter / barSize) * 100;
                 setProgress(Math.min(progressPercent, 100));
             } else {
-                const nextCheckpoint = checkpointsRef.current[milestoneIndex + 1];
+                const nextCheckpoint = activeCheckpoints[milestoneIndex + 1];
                 if (!nextCheckpoint) {
-                    const progressPercent = (currentCenter / barWidth) * 100;
+                    const progressPercent = (currentCenter / barSize) * 100;
                     setProgress(Math.min(progressPercent, 100));
                     return;
                 }
 
                 const nextRect = nextCheckpoint.getBoundingClientRect();
-                const nextCenter = (nextRect.left + nextRect.width / 2) - barLeft;
+                const nextCenter = isMobile
+                    ? (nextRect.top + nextRect.height / 2) - barStart
+                    : (nextRect.left + nextRect.width / 2) - barStart;
+
                 const distance = nextCenter - currentCenter;
                 const progressPixels = currentCenter + (distance * milestoneProgress);
-                const progressPercent = (progressPixels / barWidth) * 100;
+                const progressPercent = (progressPixels / barSize) * 100;
 
                 setProgress(Math.min(progressPercent, 100));
             }
@@ -170,7 +184,7 @@ function TimelineSection() {
         >
             <div className="w-full max-w-7xl flex flex-col gap-8 md:gap-12">
 
-                {/* --- Header Section (เส้นพุ่งออก + ตัวหนังสือเด้ง) --- */}
+                {/* --- Header Section --- */}
                 <div className="flex flex-row items-center justify-center gap-4 md:gap-8 lg:gap-10 overflow-hidden">
                     <motion.svg
                         variants={headerLineVariants}
@@ -237,7 +251,7 @@ function TimelineSection() {
                         ref={progressBarRef}
                         className="absolute xl:bottom-6.5 bottom-4.5 left-0 right-0 h-3 bg-black/40 rounded-full shadow-inner overflow-hidden border border-white/5"
                     >
-                        {/* Progress Fill (Flowing Effect) */}
+                        {/* Progress Fill */}
                         <motion.div
                             className="h-full bg-theme-secondary"
                             style={{ boxShadow: "0 0 15px rgba(239, 68, 68, 0.6)" }}
@@ -262,9 +276,8 @@ function TimelineSection() {
                                 variants={cardVariants}
                                 className="flex flex-col gap-6 items-center z-10"
                             >
-                                {/* Milestone Card */}
                                 <motion.div
-                                    whileHover={{ y: -8, scale: 1.05 }} // Hover แล้วลอยขึ้น
+                                    whileHover={{ y: -8, scale: 1.05 }}
                                     className={`
                                         text-xl xl:text-2xl text-white text-center font-bold w-48 xl:w-60 py-6 xl:py-8 rounded-3xl backdrop-blur-md 
                                         bg-gradient-to-b from-white/10 to-white/5 border border-white/20 
@@ -278,7 +291,6 @@ function TimelineSection() {
                                     {item.dateDisplay}
                                 </div>
 
-                                {/* Checkpoint Circle */}
                                 <div
                                     ref={(el) => { checkpointsRef.current[index] = el; }}
                                     className={`
@@ -302,7 +314,6 @@ function TimelineSection() {
                                             <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
                                         </motion.svg>
                                     ) : (
-                                        // X Mark or Dot
                                         <svg width="24" height="24" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-50">
                                             <path d="M14.143 42.4262C12.1903 40.4736 12.1903 37.3078 14.143 35.3552L35.26 14.2381C37.2396 12.2586 40.4512 12.3484 42.4307 14.328C44.3045 16.2017 44.3942 19.246 42.5205 21.1198L21.214 42.4262C19.2614 44.3789 16.0956 44.3789 14.143 42.4262Z" fill="white"/>
                                             <path d="M42.4262 42.4265C40.4735 44.3791 37.3077 44.3791 35.3551 42.4265L14.238 21.3094C12.2585 19.3299 12.3483 16.1182 14.3279 14.1387C16.2016 12.2649 19.2459 12.1752 21.1197 14.0489L42.4262 35.3554C44.3788 37.308 44.3788 40.4738 42.4262 42.4265Z" fill="white"/>
@@ -316,7 +327,11 @@ function TimelineSection() {
 
                 {/* --- Mobile/Tablet Timeline (Vertical) --- */}
                 <div className="lg:hidden flex flex-col gap-8 mt-8 relative px-4">
-                    <div className="absolute left-9.5 -top-6 w-1.5 h-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                    {/* ผูก Ref ของ Mobile Progress Bar ที่นี่ */}
+                    <div
+                        ref={mobileProgressBarRef}
+                        className="absolute left-10.5 -top-6 w-1.5 h-full bg-black/40 rounded-full overflow-hidden"
+                    >
                         <motion.div
                             className="w-full bg-theme-secondary shadow-[0_0_10px_rgba(239,68,68,0.8)]"
                             initial={{ height: 0 }}
@@ -346,10 +361,11 @@ function TimelineSection() {
                                 }}
                                 className="flex flex-row gap-6 items-start z-10"
                             >
-                                {/* Checkpoint */}
+                                {/* ผูก Ref ของ Mobile Checkpoints ที่นี่ */}
                                 <div
+                                    ref={(el) => { mobileCheckpointsRef.current[index] = el; }}
                                     className={`
-                                        border-4 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg flex-shrink-0 
+                                        border-4 w-12 h-12 sm:w-14 mt-1 sm:h-14 rounded-full flex items-center justify-center shadow-lg flex-shrink-0 
                                         transition-all duration-500
                                         ${isCompleted
                                         ? 'border-theme-secondary bg-theme-secondary'
@@ -383,7 +399,6 @@ function TimelineSection() {
                                         text-xl sm:text-2xl text-white font-bold py-4 px-6 rounded-2xl backdrop-blur-sm 
                                         bg-gradient-to-b from-white/10 to-white/5 border border-white/20 
                                         shadow-lg transition-all duration-300
-                                        ${(isCompleted || isCurrent) ? 'ring-2 ring-red-500/50 bg-white/10' : ''}
                                     `}>
                                         {item.title}
                                     </div>

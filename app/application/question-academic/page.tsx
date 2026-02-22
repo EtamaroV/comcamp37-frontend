@@ -104,7 +104,7 @@ const questions = [
         </div>
     ), question: "คำตอบ",  placeholder: "" },
     { field: "question8",  questionNum: 8,  description: "", question: "8. ในความคิดของน้อง AI คืออะไร เเละ AI ถูกสร้างขึ้นมาเพื่ออะไร",  placeholder: "" },
-    { field: "question9",  questionNum: 9,  description: "", question: "9. สมมุติว่าน้องได้ทำการสร้าง AI ผ่านกระบวนการ Machine learning ขึ้นมาตัวหนึ่งเพื่อช่วยในการเเยกขยะ ก่อนนำไปรีไซเคิลเเต่ในขั้นตอนการทดสอบกลับพบว่า AI ตรวจจับขวดน้ำที่ทำจากเเก้วว่าเป็นขวดที่ทำจาก พลาสติก เมื่อทำการตรวจสอบปัญหาพบว่าส่วนของ Hardware (เช่น กล้อง) ไม่มีส่วนเกี่ยวข้องกับปัญหาในครั้งนี้ น้องคิดว่าที่มาของปัญหาในครั้งนี้คืออะไร เเละน้องจะมีเเนวทางเเก้ปัญหาอย่างไรเพื่อให้ AI สามารถตรวจสอบเเละเเยกขวดเเก้วออกจากขวดพลาสติกได้",  placeholder: "" },
+    { field: "question9",  questionNum: 9,  description: "", question: "9. สมมุติว่าน้องได้ทำการสร้าง AI ผ่านกระบวนการ Machine learning ขึ้นมาตัวหนึ่งเพื่อช่วยในการเเยกขยะ ก่อนนำไปรีไซเคิลแต่ในขั้นตอนการทดสอบกลับพบว่า AI ตรวจจับขวดน้ำที่ทำจากเเก้วว่าเป็นขวดที่ทำจาก พลาสติก เมื่อทำการตรวจสอบปัญหาพบว่าส่วนของ Hardware (เช่น กล้อง) ไม่มีส่วนเกี่ยวข้องกับปัญหาในครั้งนี้ น้องคิดว่าที่มาของปัญหาในครั้งนี้คืออะไร เเละน้องจะมีเเนวทางเเก้ปัญหาอย่างไรเพื่อให้ AI สามารถตรวจสอบเเละเเยกขวดเเก้วออกจากขวดพลาสติกได้",  placeholder: "" },
     { field: "question10", questionNum: 10, description: "", question: "10. ในความคิดของน้อง น้องคิดว่าการเรียนรู้ของ AI นั้นเหมือนกับมนุษย์หรือไม่ อย่างไร", placeholder: "" }
 
 
@@ -198,12 +198,14 @@ export default function questionAcademic() {
 
                 <div className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-row items-center gap-3 relative">
                             <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                                 <FontAwesomeIcon icon={faPersonHiking} />
                             </div>
                             <h2 className="text-xl font-bold text-white">บททดสอบแห่งพงไพร</h2>
+                            <div className="absolute right-0 hidden md:block px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-center text-sm text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         </div>
+                        <div className="block md:hidden -my-3 px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-start text-xs text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         <div className="grid gap-10">
                             {questions.map((question) => (
                                 <FormField

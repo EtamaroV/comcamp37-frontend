@@ -91,7 +91,7 @@ function Navbar() {
             initial={{ y: -100, opacity: 1 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className={`p-3 top-0 w-full ${isLandingPage ? 'sticky md:fixed' : 'sticky'} flex flex-col items-center z-[1000]`}
+            className={`select-none p-3 top-0 w-full ${isLandingPage ? 'sticky md:fixed' : 'sticky'} flex flex-col items-center z-[1000]`}
         >
             <nav className="
                 relative z-50

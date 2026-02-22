@@ -41,12 +41,14 @@ const questions = [
             </ul>
             
         </div>
-        ), question: " ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล  (ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง)", placeholder: "ตัวอย่างคำตอบ : วิธีการคือให้ผู้กล้าที่ยืนอยู่ท้ายแถว มองสีอักขระของเพื่อนคนที่ยืนอยู่ข้างหน้าตัวเองเพียงคนเดียว ถ้าเห็นว่าเพื่อนข้างหน้าเป็นสีอะไร ก็ให้ตะโกนตอบสีนั้นออกมาเลย เช่น ถ้าเห็นเพื่อนข้างหน้าเป็นสีแดง ก็ให้ตอบว่า “แดง” ส่วนเพื่อนคนอื่น ๆ ในแถวก็ให้ทำเหมือนกัน คือให้มองสีของคนที่อยู่ข้างหน้าเรา แล้วตอบตามสีที่เราเห็นไปเรื่อย ๆ จนครบทุกคน เหตุผลที่เลือกวิธีนี้เพราะคิดว่าพ่อมดน่าจะจัดคนที่มีสีเดียวกันให้ยืนอยู่ติด ๆ กันเป็นกลุ่ม ๆ เพื่อความสวยงาม หรือถ้าเป็นการสุ่ม ก็น่าจะมีโอกาสสูงที่คนยืนติดกันจะเป็นสีเดียวกัน วิธีนี้จึงเป็นวิธีที่ง่ายที่สุดและไม่ต้องคิดเลขให้ปวดหัว แค่เชื่อมั่นในเพื่อนข้างหน้าก็พอ คาดว่าน่าจะมีคนรอดประมาณ 30-40 คน ขึ้นอยู่กับดวงว่าพ่อมดเรียงสีมาแบบไหน" },
+        ), question: " ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล", placeholder: (
+            <span><b>ตัวอย่างคำตอบ</b><br/>วิธีการคือให้ผู้กล้าที่ยืนอยู่ท้ายแถว มองสีอักขระของเพื่อนคนที่ยืนอยู่ข้างหน้าตัวเองเพียงคนเดียว ถ้าเห็นว่าเพื่อนข้างหน้าเป็นสีอะไร ก็ให้ตะโกนตอบสีนั้นออกมาเลย เช่น ถ้าเห็นเพื่อนข้างหน้าเป็นสีแดง ก็ให้ตอบว่า “แดง” ส่วนเพื่อนคนอื่น ๆ ในแถวก็ให้ทำเหมือนกัน คือให้มองสีของคนที่อยู่ข้างหน้าเรา แล้วตอบตามสีที่เราเห็นไปเรื่อย ๆ จนครบทุกคน เหตุผลที่เลือกวิธีนี้เพราะคิดว่าพ่อมดน่าจะจัดคนที่มีสีเดียวกันให้ยืนอยู่ติด ๆ กันเป็นกลุ่ม ๆ เพื่อความสวยงาม หรือถ้าเป็นการสุ่ม ก็น่าจะมีโอกาสสูงที่คนยืนติดกันจะเป็นสีเดียวกัน วิธีนี้จึงเป็นวิธีที่ง่ายที่สุดและไม่ต้องคิดเลขให้ปวดหัว แค่เชื่อมั่นในเพื่อนข้างหน้าก็พอ คาดว่าน่าจะมีคนรอดประมาณ 30-40 คน ขึ้นอยู่กับดวงว่าพ่อมดเรียงสีมาแบบไหน</span>
+        )},
     { field: "question102", questionNum: '101', description: (
         <div>
             คำถามสำหรับคะแนนพิเศษ :
         </div>
-    ), question: "ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล  (ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง)", placeholder: "" },
+    ), question: "ให้น้องอธิบายวิธีการ (Method) หรือ อัลกอริทึม (Algorithm) ที่น้องจะนัดแนะกับชาวเมือง เพื่อให้มีคนรอดชีวิตมากที่สุดเท่าที่จะทำได้ พร้อมบอกเหตุผล", placeholder: "" },
     { field: "question201", questionNum: ' ', description: (
         /* 1.จงระบุสถานะของหอคอย X, Y และ Z ใน นาทีที่ 2 และ นาทีที่ 3 อย่างละเอียด*/
         <div>
@@ -339,12 +341,14 @@ export default function questionAptitude() {
 
                 <div className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center flex-row relative gap-3">
                             <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                                 <FontAwesomeIcon icon={faSignsPost} />
                             </div>
                             <h2 className="text-xl font-bold text-white">ถอดรหัสสัญชาตญาณ</h2>
+                            <div className="absolute right-0 hidden md:block px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-center text-sm text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         </div>
+                        <div className="block md:hidden -my-3 px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-start text-xs text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         <div className="grid gap-10">
                             {questions.map((question) => (
                                 <FormField
@@ -366,7 +370,7 @@ export default function questionAptitude() {
                                                 </div>
                                             </FormLabel>
                                             <div className={`text-pretty ${question.placeholder === "" ? "hidden" : "block"} my-2`}>
-                                                <div className="resize-none max text-pretty bg-twilight-indigo-600/20 rounded-xl md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
+                                                <div className="resize-none text-pretty bg-twilight-indigo-800/25 rounded-xl md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                                                     <h1 className="p-4">{question.placeholder}</h1>
                                                 </div>
                                             </div>

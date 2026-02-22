@@ -147,12 +147,14 @@ export default function questionRegis() {
 
                 <div className="bg-twilight-indigo-900 rounded-[40px] md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
                     <div className="p-6 md:p-8 gap-6 flex flex-col">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center flex-row relative gap-3">
                             <div className="flex items-center justify-center size-10 rounded-full bg-twilight-indigo-800 text-white">
                                 <FontAwesomeIcon icon={faTents} />
                             </div>
                             <h2 className="text-xl font-bold text-white">ด่านตรวจเข้าเมือง</h2>
+                            <div className="absolute right-0 hidden md:block px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-center text-sm text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม</div>
                         </div>
+                        <div className="block md:hidden -my-3 px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-start text-xs text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม</div>
                         <div className="grid gap-10">
                             {questions.map((question) => (
                                 <FormField
