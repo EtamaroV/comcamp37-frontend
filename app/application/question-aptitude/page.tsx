@@ -213,7 +213,7 @@ const questions = [
 </li>
                 <li><span>ชั้น 2 - ห้องควบคุมระบบ :</span> ห้องสั่งเปิด-ปิดเครื่องฟอกอากาศ ห้องควบคุมระบบการทำงานของเครื่องฟอกอากาศ ซึ่งเป็นเครื่องฟอกอากาศเครื่องแรกที่ถือกำเนิดขึ้น ที่อาจจะเป็นเครื่องสุดท้ายที่อยู่รอด เนื่องจากมีการพัฒนาระบบอยู่ตลอดเวลาและอัปเดตการทำงานจาก “คอลมีอ้าซูบาซูบาซูบาเอ้ยคอมพิวเตอร์” ทำให้ระบบมีความทันสมัย รวมถึงยังมีพลังการฟอกอากาศที่แข็งแกร่งและพร้อมที่รับได้ในทุก ๆ สถานการณ์ที่จะเกิดขึ้น ทำให้ห้องควบคุมระบบห้องนี้ เป็นห้องที่มีระบบนิรภัยขั้นสูง เพื่อป้องกันการแทรกซึมของบุคคลภายนอกและผู้ประสงค์ร้าย
 </li>
-                <li><span>ชั้น 3 - ห้องเครื่องจักร :</span> ห้องดูแลเครื่องกล เปรียบเสมือนโครงสร้าง Hardware ของระบบฟอกอากาศที่ต้องคอยมีการทำนุบำรุงอยู่อย่างต่อเนื่องเพื่อไม่ให้การทำงานของเครื่องฟอกอากาศมีประสิทธิภาพที่ต่ำลงกว่าเกณฑ์มาตรฐาน
+                <li><span>ชั้น 3 - ห้องเครื่องจักร :</span> ห้องดูแลเครื่องกล เปรียบเสมือนโครงสร้าง Hardware ของระบบฟอกอากาศที่ต้องคอย<></>ทำนุบำรุงอยู่อย่างต่อเนื่องเพื่อไม่ให้การทำงานของเครื่องฟอกอากาศมีประสิทธิภาพที่ต่ำลงกว่าเกณฑ์มาตรฐาน
 </li>
                 <li><span>รอบกำแพงเมือง :</span>  พื้นที่ภายนอกตัวเมือง เป็นพื้นที่สำหรับการตรวจสอบสภาพฝุ่นภายนอกตัวเมืองเพื่อเตรียมตัวสำหรับการปรับสมดุลประสิทธิภาพของเครื่องฟอกอากาศให้สามารถทำงานได้อย่างมีประสิทธิภาพ</li>
             </ol>
@@ -359,9 +359,14 @@ export default function questionAptitude() {
                                                 </div>
                                                 <div className={`text-pretty ${question.question === "" ? "hidden" : "block"}`}>{question.question}</div>
                                             </FormLabel>
+                                            <div className={`text-pretty ${question.placeholder === "" ? "hidden" : "block"} my-2`}>
+                                                <div className="resize-none max text-pretty bg-twilight-indigo-600/20 rounded-xl md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
+                                                    <h1 className="p-4">{question.placeholder}</h1>
+                                                </div>
+                                            </div>
                                             <FormControl>
                                                 <Textarea
-                                                    placeholder={question.placeholder}
+                                                    // placeholder={question.placeholder}
                                                     className="resize-none rounded-xl py-3 px-4 h-40"
                                                     rows={7}
                                                     {...field}

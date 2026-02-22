@@ -352,7 +352,12 @@ function Step1() {
                             name="name_prefix"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-2">
-                                    <FormLabel>คำนำหน้าชื่อ</FormLabel>
+                                    <FormLabel>
+                                        <div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            คำนำหน้าชื่อ
+                                            </div>
+                                            </FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -378,7 +383,12 @@ function Step1() {
                             name="name_first"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-5">
-                                    <FormLabel>ชื่อจริง</FormLabel>
+                                    <FormLabel>
+                                        <div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ชื่อจริง
+                                            </div>
+                                            </FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field} />
                                     </FormControl>
@@ -393,7 +403,10 @@ function Step1() {
                             name="name_last"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-5">
-                                    <FormLabel>นามสกุล</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            นามสกุล
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field} />
                                     </FormControl>
@@ -411,7 +424,10 @@ function Step1() {
                             name="name_nick"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>ชื่อเล่น</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ชื่อเล่น
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} />
                                     </FormControl>
@@ -426,7 +442,10 @@ function Step1() {
                             name="info_dob" // ชื่อ field ใน schema (zod)
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>วันเดือนปีเกิด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            วันเดือนปีเกิด
+                                            </div></FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -474,7 +493,10 @@ function Step1() {
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
 
-                                    <FormLabel>เพศกำเนิด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เพศกำเนิด
+                                            </div></FormLabel>
                                     {/* ส่วนตัวเลือก Radio */}
                                     <FormControl>
                                         <RadioGroup
@@ -530,7 +552,10 @@ function Step1() {
                             name="info_religion"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>ศาสนา</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ศาสนา
+                                            </div></FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -561,7 +586,10 @@ function Step1() {
                             name="info_phone"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เบอร์โทรศัพท์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
@@ -591,7 +619,10 @@ function Step1() {
                             name="info_email"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>อีเมล</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            อีเมล
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon
@@ -618,7 +649,10 @@ function Step1() {
                             name="info_address"
                             render={({ field }) => (
                                 <FormItem className="md:col-span-2">
-                                    <FormLabel>ที่อยู่ปัจจุบัน</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ที่อยู่ปัจจุบัน
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="ที่อยู่"
@@ -767,7 +801,10 @@ function Step2() {
                             name="academic_level"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ระดับชั้นการศึกษา <span className="opacity-40">(ปีการศึกษา 2568)</span></FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ระดับชั้นการศึกษา
+                                            </div> <span className="opacity-40">(ปีการศึกษา 2568)</span></FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -793,7 +830,10 @@ function Step2() {
                                 name="academic_program"
                                 render={({ field }) => (
                                     <FormItem className={form.watch("academic_program") === "อื่นๆ" ? "w-auto" : "w-full"}>
-                                        <FormLabel>แผนการเรียน</FormLabel>
+                                        <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            แผนการเรียน
+                                            </div></FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -843,7 +883,10 @@ function Step2() {
                             name="academic_school"
                             render={({ field }) => (
                                 <FormItem className="md:col-span-2">
-                                    <FormLabel>ชื่อสถาบันการศึกษา</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ชื่อสถาบันการศึกษา
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                         <SchoolInput
@@ -861,7 +904,9 @@ function Step2() {
                     </div>
 
                     <div className="items-center gap-3 mt-10">
-                        <h2 className="col-span-1 text-lg font-bold text-white">ผลการเรียน</h2>
+                        <h2 className="col-span-1 text-lg font-bold text-white">
+                                            ผลการเรียน
+                                            </h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3">
                         {/* GPAX */}
@@ -870,7 +915,10 @@ function Step2() {
                             name="grade_gpax"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>ผลการเรียนเฉลี่ยสะสม (GPAX)</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ผลการเรียนเฉลี่ยสะสม (GPAX)
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -912,7 +960,10 @@ function Step2() {
                             name="grade_math"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>คณิตศาสตร์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            คณิตศาสตร์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -954,7 +1005,10 @@ function Step2() {
                             name="grade_sci"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>วิทยาศาสตร์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            วิทยาศาสตร์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -996,7 +1050,10 @@ function Step2() {
                             name="grade_eng"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>ภาษาอังกฤษ</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ภาษาอังกฤษ
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -1052,7 +1109,10 @@ function Step2() {
                             name="health_bloodType"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
-                                    <FormLabel>หมู่เลือด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            หมู่เลือด
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1091,7 +1151,9 @@ function Step2() {
                                 name={item.id as any}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>{item.label} {item.notreq ? (<span className="opacity-40">(ถ้ามี)</span>) : ''}</FormLabel>
+                                        <FormLabel>{!item.notreq ? (<div className="relative"><span className="absolute text-red-500 text-xl -left-3 -top-1">*</span></div>
+                                    ) : (
+                                        item.label)} {item.notreq ? (<span className="opacity-40">(ถ้ามี)</span>) : ""}</FormLabel>
                                         <FormControl>
                                             {item.area ? (
                                                 <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field}/>
@@ -1316,7 +1378,10 @@ function Step3() {
                             name="guardian_name"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>ชื่อผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ชื่อผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="" {...field} />
                                     </FormControl>
@@ -1331,7 +1396,10 @@ function Step3() {
                             name="guardian_relationship"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>ความสัมพันธ์กับผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ความสัมพันธ์กับผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} />
                                     </FormControl>
@@ -1349,7 +1417,10 @@ function Step3() {
                             name="guardian_phone"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>เบอร์ติดต่อผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เบอร์ติดต่อผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
@@ -1391,7 +1462,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>เคยเข้าร่วม ComCamp ไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เคยเข้าร่วม ComCamp ไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1448,7 +1522,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกเข้าร่วมทุกวันไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            สะดวกเข้าร่วมทุกวันไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1505,7 +1582,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำ Laptop มาไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            สะดวกนำ Laptop มาไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1561,7 +1641,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำ iPad/Tablet มาไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            สะดวกนำ iPad/Tablet มาไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1617,7 +1700,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำเมาส์มาไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            สะดวกนำเมาส์มาไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1675,7 +1761,10 @@ function Step3() {
                                 name="availability_laptopOS"
                                 render={({ field }) => (
                                     <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
-                                        <FormLabel>ระบบปฏิบัติการ (OS)</FormLabel>
+                                        <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            ระบบปฏิบัติการ (OS)
+                                            </div></FormLabel>
                                         <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -1723,7 +1812,10 @@ function Step3() {
                             name="availability_travelPlan"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>วิธีการเดินทางมาค่าย</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            วิธีการเดินทางมาค่าย
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="โปรดระบุวิธีการเดินทางมายังค่าย"
@@ -1737,7 +1829,10 @@ function Step3() {
                             )}
                         />
                         <p className="md:col-span-2 text-xs text-[#94a3b8]">
-                            เขียนอธิบายวิธีการมาค่ายของน้อง ทั้งนี้เพื่อให้พี่ค่ายสามารถวางแผนการอำนวยความสะดวกให้น้องได้อย่างเต็มที่
+                            <div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เขียนอธิบายวิธีการมาค่ายของน้อง ทั้งนี้เพื่อให้พี่ค่ายสามารถวางแผนการอำนวยความสะดวกให้น้องได้อย่างเต็มที่
+                                            </div>
                             <br/>
                             <br/>
                             ตัวอย่าง เดินทางจากบ้านพักด้วยรถโดยสารประจำทางสาย 75 ลงป้ายหน้ามหาวิทยาลัยฯ
@@ -1791,7 +1886,10 @@ function Step3() {
                             name="apparel_size"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col gap-4">
-                                    <FormLabel>เลือกขนาดเสื้อค่าย</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xl -left-3 -top-1">*</span>
+                                            เลือกขนาดเสื้อค่าย
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
