@@ -9,8 +9,8 @@ const TIMELINE_DATA = [
         id: 1,
         title: "เปิดรับสมัคร",
         dateDisplay: "23 กุมภาพันธ์ - 10 มีนาคม 2569",
-        startDate: "2026-02-23",
-        endDate: "2026-03-10",
+        startDate: process.env.NEXT_PUBLIC_TIME_START_REGIS,
+        endDate: process.env.NEXT_PUBLIC_TIME_END_REGIS,
     },
     {
         id: 2,
@@ -76,13 +76,13 @@ function TimelineSection() {
     // --- Logic คำนวณ Progress ---
     React.useEffect(() => {
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        //today.setHours(0, 0, 0, 0);
 
         let milestoneIndex = -1;
         let milestoneProgress = 0;
 
         const firstMilestoneStart = new Date(TIMELINE_DATA[0].startDate);
-        firstMilestoneStart.setHours(0, 0, 0, 0);
+        //firstMilestoneStart.setHours(0, 0, 0, 0);
 
         if (today < firstMilestoneStart) {
             setCurrentMilestone(-1);
@@ -94,7 +94,7 @@ function TimelineSection() {
             const milestoneStart = new Date(TIMELINE_DATA[i].startDate);
             milestoneStart.setHours(0, 0, 0, 0);
             const milestoneEnd = new Date(TIMELINE_DATA[i].endDate);
-            milestoneEnd.setHours(23, 59, 59, 999);
+            //milestoneEnd.setHours(23, 59, 59, 999);
 
             if (today >= milestoneStart && today <= milestoneEnd) {
                 milestoneIndex = i;
@@ -330,7 +330,7 @@ function TimelineSection() {
                     {/* ผูก Ref ของ Mobile Progress Bar ที่นี่ */}
                     <div
                         ref={mobileProgressBarRef}
-                        className="absolute left-10.5 -top-6 w-1.5 h-full bg-black/40 rounded-full overflow-hidden"
+                        className="absolute left-9.5 -top-6 w-1.5 h-full bg-black/40 rounded-full overflow-hidden"
                     >
                         <motion.div
                             className="w-full bg-theme-secondary shadow-[0_0_10px_rgba(239,68,68,0.8)]"
