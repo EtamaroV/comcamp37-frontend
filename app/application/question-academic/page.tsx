@@ -57,7 +57,7 @@ const questions = [
         <span className="text-pretty">
                 <div>
                 5. น้องคิดว่า “Microcontroller” คืออะไร และเคยมีประสบการณ์อะไรเกี่ยวกับ Microcontroller มาบ้าง <br />
-                <strong>: หมายเหตุ ถ้าน้องไม่รู้จักหรือไม่เคยมีประสบการณ์ให้ตอบตามความเป็นจริงได้เลย</strong>
+                <strong> หมายเหตุ ถ้าน้องไม่รู้จักหรือไม่เคยมีประสบการณ์ให้ตอบตามความเป็นจริงได้เลย</strong>
                 </div>
             </span>
     ), question: "",  placeholder: "" },

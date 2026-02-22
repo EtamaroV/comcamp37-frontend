@@ -1609,7 +1609,7 @@ function Step3() {
 
                                     <FormLabel><div className="relative">
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
-                                            สะดวกนำ Tablet มาไหม (เช่น iPad, Samsung Galaxy Tab S series, ฯลฯ)
+                                            สะดวกนำ Tablet มาไหม
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
@@ -1857,9 +1857,7 @@ function Step3() {
                             )}
                         />
                         <p className="md:col-span-2 text-xs text-[#94a3b8]">
-                            <div className="relative">
                                 เขียนอธิบายวิธีการมาค่ายของน้อง ทั้งนี้เพื่อให้พี่ค่ายสามารถวางแผนการอำนวยความสะดวกให้น้องได้อย่างเต็มที่
-                            </div>
                             <br/>
                             <br/>
                             ตัวอย่าง เดินทางจากบ้านพักด้วยรถโดยสารประจำทางสาย 75 ลงป้ายหน้ามหาวิทยาลัยฯ

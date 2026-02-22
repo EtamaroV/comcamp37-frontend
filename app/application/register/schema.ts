@@ -3,7 +3,7 @@ import { z } from "zod";
 // --- Helper สำหรับตรวจสอบเบอร์โทร (10 หลัก) ---
 const phoneRegex = /^0\d{9}$/;
 
-const thaiRegex = /^[ก-๙\s]+$/;
+const thaiRegex = /^[ก-ฮะ-์\s]+$/;
 
 // --- Step 1: ข้อมูลส่วนตัว ---
 export const Step1Schema = z.object({
