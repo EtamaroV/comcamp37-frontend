@@ -152,9 +152,9 @@ export default function questionRegis() {
                                 <FontAwesomeIcon icon={faTents} />
                             </div>
                             <h2 className="text-xl font-bold text-white">ด่านตรวจเข้าเมือง</h2>
-                            <div className="absolute right-0 hidden md:block px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-center text-sm text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม</div>
+                            <div className="absolute right-0 hidden md:block px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-center text-sm text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         </div>
-                        <div className="block md:hidden -my-3 px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-start text-xs text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม</div>
+                        <div className="block md:hidden -my-3 px-4 py-2 bg-twilight-indigo-800/70 rounded-lg self-start text-xs text-white opacity-55">ห้ามใช้ AI ในการตอบคำถาม ให้ตอบตามความเข้าใจของน้อง</div>
                         <div className="grid gap-10">
                             {questions.map((question) => (
                                 <FormField
