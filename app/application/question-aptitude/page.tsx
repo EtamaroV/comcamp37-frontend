@@ -352,12 +352,18 @@ export default function questionAptitude() {
                                     control={form.control}
                                     name={question.field as any}
                                     render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="flex flex-col items-start text-base">
-                                                <div className="flex flex-row items-start gap-x-2">
-                                                    <div className="leading-relaxed text-pretty">{question.description}</div>
+                                        <FormItem className="w-full min-w-0">
+                                            {/* 2. บังคับ FormLabel ให้กว้างไม่เกิน FormItem */}
+                                            <FormLabel className="flex flex-col items-start text-base w-full min-w-0">
+                                                <div className="flex flex-row items-start gap-x-2 w-full min-w-0">
+                                                    {/* 3. จุดที่คลุมตาราง ต้องมี min-w-0 ด้วย ตารางถึงจะยอม Scroll */}
+                                                    <div className="leading-relaxed text-pretty w-full min-w-0">
+                                                        {question.description}
+                                                    </div>
                                                 </div>
-                                                <div className={`text-pretty ${question.question === "" ? "hidden" : "block"}`}>{question.question}</div>
+                                                <div className={`text-pretty ${question.question === "" ? "hidden" : "block mt-4"}`}>
+                                                    {question.question}
+                                                </div>
                                             </FormLabel>
                                             <div className={`text-pretty ${question.placeholder === "" ? "hidden" : "block"} my-2`}>
                                                 <div className="resize-none max text-pretty bg-twilight-indigo-600/20 rounded-xl md:rounded-xl border border-twilight-indigo-800 shadow-sm overflow-hidden drop-shadow-xl drop-shadow-black/20">
@@ -367,7 +373,7 @@ export default function questionAptitude() {
                                             <FormControl>
                                                 <Textarea
                                                     // placeholder={question.placeholder}
-                                                    className="resize-none rounded-xl py-3 px-4 h-40"
+                                                    className="resize-none rounded-xl py-3 px-4 h-40 w-full"
                                                     rows={7}
                                                     {...field}
                                                     disabled={loading}
