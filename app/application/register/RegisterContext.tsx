@@ -470,7 +470,7 @@ function Step1() {
                                                 selected={field.value}
                                                 onSelect={field.onChange}
                                                 disabled={(date) =>
-                                                    date > new Date() || date < new Date("1826-01-01")
+                                                    date > new Date("2012-12-31") || date < new Date("2006-01-01")
                                                 }
                                                 locale={th}
                                                 captionLayout="dropdown"
@@ -596,6 +596,7 @@ function Step1() {
                                                 // Add 'pl-10' to make room for the icon on the left
                                                 className="py-6 pl-4 pr-10 rounded-xl"
                                                 placeholder="0XX-XXX-XXXX"
+                                                
                                                 {...field}
                                                 value={formatPhoneNumber(field.value)}
                                                 onChange={(e) => {
@@ -604,6 +605,7 @@ function Step1() {
                                                         field.onChange(rawValue);
                                                     }
                                                 }}
+                                               
                                             />
                                         </div>
                                     </FormControl>
@@ -1158,9 +1160,9 @@ function Step2() {
                                         </FormLabel>
                                         <FormControl>
                                             {item.area ? (
-                                                <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field}/>
+                                                <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field} maxLength={100} />
                                             ) : (
-                                                <Input className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field}/>
+                                                <Input className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field} maxLength={100} />
                                             )}
                                         </FormControl>
                                         <FormMessage />
