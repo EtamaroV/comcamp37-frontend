@@ -361,7 +361,7 @@ function Step1() {
                                         </FormControl>
                                         <SelectContent className="rounded-xl">
                                             <SelectItem className="py-3 px-4" value="เด็กชาย">เด็กชาย</SelectItem>
-                                            <SelectItem className="py-3 px-4" value="เด็กหญิง">เด็กชาย</SelectItem>
+                                            <SelectItem className="py-3 px-4" value="เด็กหญิง">เด็กหญิง</SelectItem>
                                             <SelectItem className="py-3 px-4" value="นาย">นาย</SelectItem>
                                             <SelectItem className="py-3 px-4" value="นาง">นาง</SelectItem>
                                             <SelectItem className="py-3 px-4" value="นางสาว">นางสาว</SelectItem>
