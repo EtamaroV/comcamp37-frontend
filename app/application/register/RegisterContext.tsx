@@ -1153,7 +1153,7 @@ function Step2() {
                                             {!item.notreq ?
                                                 (<div className="relative"><span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>{item.label}</div>
                                             ) : (
-                                                    <div>item.label<span className="opacity-40">(ถ้ามี)</span></div>
+                                                    <div>{item.label} <span className="opacity-40">(ถ้ามี)</span></div>
                                             )}
                                         </FormLabel>
                                         <FormControl>
