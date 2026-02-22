@@ -1764,7 +1764,7 @@ function Step3() {
                                 control={form.control}
                                 name="availability_laptopOS"
                                 render={({ field }) => (
-                                    <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
+                                    <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่น ๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
                                         <FormLabel><div className="relative">
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
                                             ระบบปฏิบัติการ (OS)

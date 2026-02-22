@@ -33,7 +33,7 @@ export const Step1Schema = z.object({
 export const Step2Schema = z.object({
     academic_level: z.string().min(1, "กรุณาเลือกระดับชั้น"),
     academic_program: z.string().min(1, "กรุณาเลือกแผนการเรียน"),
-    academic_program_other: z.string().optional(), // อาจจะว่างได้ถ้าไม่ได้เลือกอื่นๆ
+    academic_program_other: z.string().optional(), // อาจจะว่างได้ถ้าไม่ได้เลือกอื่น ๆ
     academic_school: z.string().min(1, "กรุณาระบุชื่อโรงเรียน"),
 
     grade_gpax: z.string().min(1, { message: "กรุณากรอกเกรดเฉลี่ย" })
@@ -73,8 +73,8 @@ export const Step2Schema = z.object({
     health_dietaryRestrictions: z.string().min(1, "กรุณาระบุ (ถ้าไม่มีให้ขีด -)"),
     health_more: z.string().optional(), // ไม่บังคับ
 }).superRefine((data, ctx) => {
-    // Logic: ถ้าแผนการเรียนเป็น "อื่นๆ" ต้องกรอกช่อง academic_program_other
-    if (data.academic_program === "อื่นๆ" && !data.academic_program_other) {
+    // Logic: ถ้าแผนการเรียนเป็น "อื่น ๆ" ต้องกรอกช่อง academic_program_other
+    if (data.academic_program === "อื่น ๆ" && !data.academic_program_other) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "กรุณาระบุแผนการเรียน",
@@ -142,9 +142,9 @@ export const Step3Schema = z.object({
         });
     }
 
-    // ถ้า OS เป็น Linux หรือ อื่นๆ ต้องระบุเพิ่ม
+    // ถ้า OS เป็น Linux หรือ อื่น ๆ ต้องระบุเพิ่ม
     if (
-        (data.availability_laptopOS === "Linux" || data.availability_laptopOS === "อื่นๆ") &&
+        (data.availability_laptopOS === "Linux" || data.availability_laptopOS === "อื่น ๆ") &&
         !data.availability_laptopOS_other
     ) {
         ctx.addIssue({
