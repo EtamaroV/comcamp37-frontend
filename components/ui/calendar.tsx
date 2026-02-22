@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {addYears, format} from "date-fns"
 
 function Calendar({
   className,
@@ -40,8 +41,16 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+          formatYearCaption: (date) => {
+              return (date.getFullYear() + 543).toString();
+          },
+          // แก้ไข dropdown เดือน (ถ้าต้องการให้มีปี พ.ศ. ต่อท้าย)
+          formatMonthDropdown: (date) =>
+              date.toLocaleString("th-TH", { month: "short" }),
+          // แก้ไขหัวข้อปฏิทิน (Caption) กรณีไม่ได้ใช้ dropdown
+          formatCaption: (date, options) => {
+              return format(addYears(date, 543), "MMMM yyyy", { locale: options?.locale });
+          },
         ...formatters,
       }}
       classNames={{

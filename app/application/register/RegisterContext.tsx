@@ -49,7 +49,7 @@ import {SchoolInput} from "@/components/ui/schoolInput";
 import { toast } from "sonner"
 
 import {th} from "date-fns/locale";
-import { format } from "date-fns"
+import {addYears, format } from "date-fns"
 import {useStudent, StudentInfo} from "@/contexts/StudentContext";
 import {faApple, faLinux, faMicrosoft, faWindows} from "@fortawesome/free-brands-svg-icons";
 import {useUser} from "@/contexts/UserContext";
@@ -120,7 +120,6 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
                 "วิทยาศาสตร์-คณิตศาสตร์",
                 "คณิตศาสตร์-คอมพิวเตอร์",
                 "วิทยาศาสตร์-คอมพิวเตอร์",
-                "คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)",
                 "ปวช. สาขาคอมพิวเตอร์ธุรกิจ",
                 "ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)",
                 "ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์"
@@ -132,7 +131,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
             if (standardPrograms.includes(dbPlan)) {
                 academicProgram = dbPlan;
             } else if (dbPlan) {
-                academicProgram = "อื่นๆ";
+                academicProgram = "อื่น ๆ";
                 academicProgramOther = dbPlan;
             }
 
@@ -153,9 +152,9 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
             if (laptopOS.startsWith("Linux")) {
                 laptopOSOther = laptopOS.replace("Linux (", "").replace(")", "");
                 laptopOS = "Linux";
-            } else if (laptopOS.startsWith("อื่นๆ:")) {
-                laptopOSOther = laptopOS.replace("อื่นๆ: ", "");
-                laptopOS = "อื่นๆ";
+            } else if (laptopOS.startsWith("อื่น ๆ:")) {
+                laptopOSOther = laptopOS.replace("อื่น ๆ: ", "");
+                laptopOS = "อื่น ๆ";
             }
 
             return {
@@ -232,8 +231,8 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         }
     }, [allData, step, isLoaded]);
 
-    const next = () => setStep(s => s + 1);
-    const prev = () => setStep(s => s - 1);
+    const next = () => {setStep(s => s + 1); window.scrollTo(0, 0);};
+    const prev = () => {setStep(s => s - 1); window.scrollTo(0, 0);};
 
     if (!isLoaded) return <div className="p-10 text-center text-white">Loading...</div>;
 
@@ -438,7 +437,7 @@ function Step1() {
                                                     )}
                                                 >
                                                     {field.value ? (
-                                                        format(field.value, "d MMMM yyyy", { locale: th })
+                                                        format(addYears(field.value, 543), "d MMMM yyyy", { locale: th })
                                                     ) : (
                                                         <span className="pl-1">เลือกวันที่</span>
                                                     )}
@@ -452,7 +451,7 @@ function Step1() {
                                                 selected={field.value}
                                                 onSelect={field.onChange}
                                                 disabled={(date) =>
-                                                    date > new Date() || date < new Date("2006-01-01")
+                                                    date > new Date() || date < new Date("1826-01-01")
                                                 }
                                                 locale={th}
                                                 captionLayout="dropdown"
@@ -542,7 +541,7 @@ function Step1() {
                                             <SelectItem className="py-3 px-4" value="คริสต์"><FontAwesomeIcon icon={faCross} />คริสต์</SelectItem>
                                             <SelectItem className="py-3 px-4" value="อิสลาม"><FontAwesomeIcon icon={faStarAndCrescent} />อิสลาม</SelectItem>
                                             <SelectItem className="py-3 px-4" value="ฮินดู"><FontAwesomeIcon icon={faOm} />ฮินดู</SelectItem>
-                                            <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                            <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             <SelectItem className="py-3 px-4" value="ไม่นับถือ">ไม่นับถือ</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -792,7 +791,7 @@ function Step2() {
                                 control={form.control}
                                 name="academic_program"
                                 render={({ field }) => (
-                                    <FormItem className={form.watch("academic_program") === "อื่นๆ" ? "w-auto" : "w-full"}>
+                                    <FormItem className={form.watch("academic_program") === "อื่น ๆ" ? "w-auto" : "w-full"}>
                                         <FormLabel>แผนการเรียน</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
@@ -804,19 +803,18 @@ function Step2() {
                                                 <SelectItem className="py-3 px-4" value="วิทยาศาสตร์-คณิตศาสตร์">วิทยาศาสตร์-คณิตศาสตร์</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="คณิตศาสตร์-คอมพิวเตอร์">คณิตศาสตร์-คอมพิวเตอร์</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="วิทยาศาสตร์-คอมพิวเตอร์">วิทยาศาสตร์-คอมพิวเตอร์</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)">คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)</SelectItem>
 
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาคอมพิวเตอร์ธุรกิจ">ปวช. สาขาคอมพิวเตอร์ธุรกิจ</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)">ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์">ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            {form.watch("academic_program") === "อื่นๆ" && (
+                            {form.watch("academic_program") === "อื่น ๆ" && (
                                 <FormField
                                     control={form.control}
                                     name="academic_program_other"
@@ -1077,7 +1075,7 @@ function Step2() {
                             )}
                         />
 
-                        {/* ข้อมูลทางการแพทย์อื่นๆ */}
+                        {/* ข้อมูลทางการแพทย์อื่น ๆ */}
                         {[
                             { id: "health_medicalRights", label: "สิทธิการรักษาพยาบาล", placeholder: "เช่น บัตรทอง" },
                             { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้กรอก \"-\")", area: true },
@@ -1229,7 +1227,7 @@ function Step3() {
                     phone_number: allData.info_phone,
                     education_level: allData.academic_level,
                     education_institute: allData.academic_school,
-                    education_plan: allData.academic_program === "อื่นๆ" ? allData.academic_program_other : allData.academic_program,
+                    education_plan: allData.academic_program === "อื่น ๆ" ? allData.academic_program_other : allData.academic_program,
                     grade_gpax: allData.grade_gpax,
                     grade_math: allData.grade_math,
                     grade_sci: allData.grade_sci,
@@ -1252,8 +1250,8 @@ function Step3() {
                         ? "ไม่สะดวกนำมา"
                         : allData.availability_laptopOS === "Linux"
                             ? `Linux (${allData.availability_laptopOS_other})`
-                            : allData.availability_laptopOS === "อื่นๆ"
-                                ? `อื่นๆ: ${allData.availability_laptopOS_other}`
+                            : allData.availability_laptopOS === "อื่น ๆ"
+                                ? `อื่น ๆ: ${allData.availability_laptopOS_other}`
                                 : allData.availability_laptopOS,
                     have_tablet: toBool(allData.availability_tablet),
                     have_mouse: toBool(allData.availability_mouse)
@@ -1676,7 +1674,7 @@ function Step3() {
                                 control={form.control}
                                 name="availability_laptopOS"
                                 render={({ field }) => (
-                                    <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
+                                    <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่น ๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
                                         <FormLabel>ระบบปฏิบัติการ Laptop (OS)</FormLabel>
                                         <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
@@ -1689,14 +1687,14 @@ function Step3() {
                                                 <SelectItem className="py-3 px-4" value="Windows 10"><FontAwesomeIcon icon={faWindows} />Windows 10</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="macOS"><FontAwesomeIcon icon={faApple} />macOS</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="Linux"><FontAwesomeIcon icon={faLinux} />Linux</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            {((form.watch("availability_laptop") === "true")&&(form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) && (
+                            {((form.watch("availability_laptop") === "true")&&(form.watch("availability_laptopOS") === "อื่น ๆ" || form.watch("availability_laptopOS") === "Linux")) && (
                                 <FormField
                                     control={form.control}
                                     name="availability_laptopOS_other"
