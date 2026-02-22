@@ -25,7 +25,7 @@ export const Step1Schema = z.object({
     }),
     info_religion: z.string().min(1, "กรุณาเลือกศาสนา"),
 
-    info_phone: z.string().regex(phoneRegex, "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก"),
+    info_phone: z.string().regex(phoneRegex, "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลักและต้องขึ้นต้นด้วยเลข 0"),
     info_address: z.string().min(1, "กรุณากรอกที่อยู่"),
 });
 
@@ -125,7 +125,7 @@ export const Step3Schema = z.object({
     availability_laptopOS_other: z.string().optional(),
 
     availability_travelPlan: z.string().min(1, "กรุณาระบุวิธีการเดินทาง"),
-    apparel_size: z.string().min(1, "กรุณาเลือกไซส์เสื้อ"),
+    apparel_size: z.string().min(1, "กรุณาเลือกไซซ์เสื้อ"),
 
     // File fields (ถ้าจะ Validate ไฟล์ต้องทำ Custom แต่เบื้องต้นใส่ไว้กัน Type Error)
     file_facePhoto: z.any().optional(),
