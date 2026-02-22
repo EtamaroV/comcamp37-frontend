@@ -47,7 +47,7 @@ const FOLDER_DATA = [
         btnBorder: "border-[#AEFF3E]/20",
         fillColor: "#AEFF3E",
         title: "Microcontroller",
-        description: "มาเรียนรู้วิธีการเติมชีวิตให้สิ่งของผ่านบอร์ด micro:bit และทำความเข้าใจระบบฝังตัว (Embedded System) น้อง ๆ จะได้สวมบทบาทวิศวกร ฝึกเขียน Block Coding ควบคุมไฟ LED และหุ่นยนต์ผ่าน Challenge สุดท้าทาย เพื่อสร้าง Mini Project ที่จะเปลี่ยนเมืองทั้งเมืองให้เป็นระบบอัตโนมัติ!",
+        description: "มาเรียนรู้วิธีการเติมชีวิตให้สิ่งของผ่านบอร์ด micro:bit และทำความเข้าใจระบบฝังตัว (Embedded System) น้อง ๆ จะได้สวมบทบาทวิศวกร ฝึกเขียน Block Coding ควบคุมไฟ LED และหุ่นยนต์ผ่าน Challenge สุดท้าทาย เพื่อสร้าง Mini Project ที่จะเปลี่ยนเมืองทั้งเมืองให้เป็นระบบอัตโนมัติ !",
         logo: (<svg viewBox="0 0 321 320" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_i_511_1205)">
                     <path d="M246.326 108.431V117.594H275.773V108.431H246.326Z" fill="#A6A6A6"/>

@@ -49,7 +49,7 @@ import {SchoolInput} from "@/components/ui/schoolInput";
 import { toast } from "sonner"
 
 import {th} from "date-fns/locale";
-import { format } from "date-fns"
+import {addYears, format } from "date-fns"
 import {useStudent, StudentInfo} from "@/contexts/StudentContext";
 import {faApple, faLinux, faMicrosoft, faWindows} from "@fortawesome/free-brands-svg-icons";
 import {useUser} from "@/contexts/UserContext";
@@ -120,7 +120,6 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
                 "วิทยาศาสตร์-คณิตศาสตร์",
                 "คณิตศาสตร์-คอมพิวเตอร์",
                 "วิทยาศาสตร์-คอมพิวเตอร์",
-                "คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)",
                 "ปวช. สาขาคอมพิวเตอร์ธุรกิจ",
                 "ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)",
                 "ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์"
@@ -132,7 +131,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
             if (standardPrograms.includes(dbPlan)) {
                 academicProgram = dbPlan;
             } else if (dbPlan) {
-                academicProgram = "อื่นๆ";
+                academicProgram = "อื่น ๆ";
                 academicProgramOther = dbPlan;
             }
 
@@ -153,9 +152,9 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
             if (laptopOS.startsWith("Linux")) {
                 laptopOSOther = laptopOS.replace("Linux (", "").replace(")", "");
                 laptopOS = "Linux";
-            } else if (laptopOS.startsWith("อื่นๆ:")) {
-                laptopOSOther = laptopOS.replace("อื่นๆ: ", "");
-                laptopOS = "อื่นๆ";
+            } else if (laptopOS.startsWith("อื่น ๆ:")) {
+                laptopOSOther = laptopOS.replace("อื่น ๆ: ", "");
+                laptopOS = "อื่น ๆ";
             }
 
             return {
@@ -232,8 +231,8 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         }
     }, [allData, step, isLoaded]);
 
-    const next = () => setStep(s => s + 1);
-    const prev = () => setStep(s => s - 1);
+    const next = () => {setStep(s => s + 1); window.scrollTo(0, 0);};
+    const prev = () => {setStep(s => s - 1); window.scrollTo(0, 0);};
 
     if (!isLoaded) return <div className="p-10 text-center text-white">Loading...</div>;
 
@@ -345,14 +344,19 @@ function Step1() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลส่วนตัว</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* คำนำหน้า */}
                         <FormField
                             control={form.control}
                             name="name_prefix"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-2">
-                                    <FormLabel>คำนำหน้าชื่อ</FormLabel>
+                                    <FormLabel>
+                                        <div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            คำนำหน้าชื่อ
+                                            </div>
+                                            </FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -361,9 +365,9 @@ function Step1() {
                                         </FormControl>
                                         <SelectContent className="rounded-xl">
                                             <SelectItem className="py-3 px-4" value="เด็กชาย">เด็กชาย</SelectItem>
-                                            <SelectItem className="py-3 px-4" value="เด็กหญิง">เด็กชาย</SelectItem>
+                                            <SelectItem className="py-3 px-4" value="เด็กหญิง">เด็กหญิง</SelectItem>
                                             <SelectItem className="py-3 px-4" value="นาย">นาย</SelectItem>
-                                            <SelectItem className="py-3 px-4" value="นาง">นาง</SelectItem>
+                                            {/*<SelectItem className="py-3 px-4" value="นาง">นาง</SelectItem>*/}
                                             <SelectItem className="py-3 px-4" value="นางสาว">นางสาว</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -378,7 +382,12 @@ function Step1() {
                             name="name_first"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-5">
-                                    <FormLabel>ชื่อจริง</FormLabel>
+                                    <FormLabel>
+                                        <div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ชื่อจริง
+                                            </div>
+                                            </FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field} />
                                     </FormControl>
@@ -393,7 +402,10 @@ function Step1() {
                             name="name_last"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-5">
-                                    <FormLabel>นามสกุล</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            นามสกุล
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field} />
                                     </FormControl>
@@ -404,14 +416,17 @@ function Step1() {
                     </div>
 
                     { /* แถวสอง */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* ชื่อเล่น */}
                         <FormField
                             control={form.control}
                             name="name_nick"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>ชื่อเล่น</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ชื่อเล่น
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} />
                                     </FormControl>
@@ -426,7 +441,10 @@ function Step1() {
                             name="info_dob" // ชื่อ field ใน schema (zod)
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>วันเดือนปีเกิด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            วันเดือนปีเกิด
+                                            </div></FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -438,7 +456,7 @@ function Step1() {
                                                     )}
                                                 >
                                                     {field.value ? (
-                                                        format(field.value, "d MMMM yyyy", { locale: th })
+                                                        format(addYears(field.value, 543), "d MMMM yyyy", { locale: th })
                                                     ) : (
                                                         <span className="pl-1">เลือกวันที่</span>
                                                     )}
@@ -452,7 +470,7 @@ function Step1() {
                                                 selected={field.value}
                                                 onSelect={field.onChange}
                                                 disabled={(date) =>
-                                                    date > new Date() || date < new Date("2006-01-01")
+                                                    date > new Date() || date < new Date("1826-01-01")
                                                 }
                                                 locale={th}
                                                 captionLayout="dropdown"
@@ -466,7 +484,7 @@ function Step1() {
                     </div>
 
                     { /* แถวสาม */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                         {/* เพศ */}
                         <FormField
                             control={form.control}
@@ -474,7 +492,10 @@ function Step1() {
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
 
-                                    <FormLabel>เพศกำเนิด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            เพศกำเนิด
+                                            </div></FormLabel>
                                     {/* ส่วนตัวเลือก Radio */}
                                     <FormControl>
                                         <RadioGroup
@@ -530,7 +551,10 @@ function Step1() {
                             name="info_religion"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>ศาสนา</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ศาสนา
+                                            </div></FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -542,7 +566,7 @@ function Step1() {
                                             <SelectItem className="py-3 px-4" value="คริสต์"><FontAwesomeIcon icon={faCross} />คริสต์</SelectItem>
                                             <SelectItem className="py-3 px-4" value="อิสลาม"><FontAwesomeIcon icon={faStarAndCrescent} />อิสลาม</SelectItem>
                                             <SelectItem className="py-3 px-4" value="ฮินดู"><FontAwesomeIcon icon={faOm} />ฮินดู</SelectItem>
-                                            <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                            <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             <SelectItem className="py-3 px-4" value="ไม่นับถือ">ไม่นับถือ</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -553,7 +577,7 @@ function Step1() {
                     </div>
 
                     { /* แถวสี่ */ }
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
 
                         {/* เบอร์โทรศัพท์ */}
                         <FormField
@@ -561,7 +585,10 @@ function Step1() {
                             name="info_phone"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            เบอร์โทรศัพท์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
@@ -591,7 +618,10 @@ function Step1() {
                             name="info_email"
                             render={({ field }) => (
                                 <FormItem className="col-span-1 md:col-span-6">
-                                    <FormLabel>อีเมล</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            อีเมล
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon
@@ -612,13 +642,16 @@ function Step1() {
                         />
                     </div>
 
-                    <div className="grid grid-cols-1">
+                    <div className="grid grid-cols-1 items-start">
                         <FormField
                             control={form.control}
                             name="info_address"
                             render={({ field }) => (
                                 <FormItem className="md:col-span-2">
-                                    <FormLabel>ที่อยู่ปัจจุบัน</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ที่อยู่ปัจจุบัน
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="ที่อยู่"
@@ -760,14 +793,17 @@ function Step2() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลการศึกษา</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* ระดับชั้นการศึกษา */}
                         <FormField
                             control={form.control}
                             name="academic_level"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ระดับชั้นการศึกษา <span className="opacity-40">(ปีการศึกษา 2568)</span></FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ระดับชั้นการศึกษา
+                                            </div> <span className="opacity-40">(ปีการศึกษา 2568)</span></FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -787,13 +823,16 @@ function Step2() {
                         />
 
                         {/* สายการเรียน */}
-                        <div className="flex flex-row gap-5">
+                        <div className="flex flex-row gap-5 items-start">
                             <FormField
                                 control={form.control}
                                 name="academic_program"
                                 render={({ field }) => (
-                                    <FormItem className={form.watch("academic_program") === "อื่นๆ" ? "w-auto" : "w-full"}>
-                                        <FormLabel>แผนการเรียน</FormLabel>
+                                    <FormItem className={form.watch("academic_program") === "อื่น ๆ" ? "w-auto" : "w-full"}>
+                                        <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            แผนการเรียน
+                                            </div></FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -804,19 +843,18 @@ function Step2() {
                                                 <SelectItem className="py-3 px-4" value="วิทยาศาสตร์-คณิตศาสตร์">วิทยาศาสตร์-คณิตศาสตร์</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="คณิตศาสตร์-คอมพิวเตอร์">คณิตศาสตร์-คอมพิวเตอร์</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="วิทยาศาสตร์-คอมพิวเตอร์">วิทยาศาสตร์-คอมพิวเตอร์</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)">คณิตศาสตร์-ภาษาอังกฤษ (ศิลป์-คำนวณ)</SelectItem>
 
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาคอมพิวเตอร์ธุรกิจ">ปวช. สาขาคอมพิวเตอร์ธุรกิจ</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)">ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์">ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            {form.watch("academic_program") === "อื่นๆ" && (
+                            {form.watch("academic_program") === "อื่น ๆ" && (
                                 <FormField
                                     control={form.control}
                                     name="academic_program_other"
@@ -843,7 +881,10 @@ function Step2() {
                             name="academic_school"
                             render={({ field }) => (
                                 <FormItem className="md:col-span-2">
-                                    <FormLabel>ชื่อสถาบันการศึกษา</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ชื่อสถาบันการศึกษา
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                         <SchoolInput
@@ -861,16 +902,21 @@ function Step2() {
                     </div>
 
                     <div className="items-center gap-3 mt-10">
-                        <h2 className="col-span-1 text-lg font-bold text-white">ผลการเรียน</h2>
+                        <h2 className="col-span-1 text-lg font-bold text-white">
+                                            ผลการเรียน
+                                            </h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-3 items-start">
                         {/* GPAX */}
                         <FormField
                             control={form.control}
                             name="grade_gpax"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>ผลการเรียนเฉลี่ยสะสม (GPAX)</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ผลการเรียนเฉลี่ยสะสม (GPAX)
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -912,7 +958,10 @@ function Step2() {
                             name="grade_math"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>คณิตศาสตร์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            คณิตศาสตร์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -954,7 +1003,10 @@ function Step2() {
                             name="grade_sci"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>วิทยาศาสตร์</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            วิทยาศาสตร์
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -996,7 +1048,10 @@ function Step2() {
                             name="grade_eng"
                             render={({ field }) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>ภาษาอังกฤษ</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ภาษาอังกฤษ
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input
                                             className="py-6 pl-4 pr-10 rounded-xl"
@@ -1052,7 +1107,10 @@ function Step2() {
                             name="health_bloodType"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
-                                    <FormLabel>หมู่เลือด</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            หมู่เลือด
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1077,7 +1135,7 @@ function Step2() {
                             )}
                         />
 
-                        {/* ข้อมูลทางการแพทย์อื่นๆ */}
+                        {/* ข้อมูลทางการแพทย์อื่น ๆ */}
                         {[
                             { id: "health_medicalRights", label: "สิทธิการรักษาพยาบาล", placeholder: "เช่น บัตรทอง" },
                             { id: "health_chronicDiseases", label: "โรคประจำตัว", placeholder: "ระบุโรคประจำตัวของคุณ (หากไม่มีให้กรอก \"-\")", area: true },
@@ -1091,7 +1149,13 @@ function Step2() {
                                 name={item.id as any}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>{item.label} {item.notreq ? (<span className="opacity-40">(ถ้ามี)</span>) : ''}</FormLabel>
+                                        <FormLabel>
+                                            {!item.notreq ?
+                                                (<div className="relative"><span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>{item.label}</div>
+                                            ) : (
+                                                    <div>item.label<span className="opacity-40">(ถ้ามี)</span></div>
+                                            )}
+                                        </FormLabel>
                                         <FormControl>
                                             {item.area ? (
                                                 <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field}/>
@@ -1229,7 +1293,7 @@ function Step3() {
                     phone_number: allData.info_phone,
                     education_level: allData.academic_level,
                     education_institute: allData.academic_school,
-                    education_plan: allData.academic_program === "อื่นๆ" ? allData.academic_program_other : allData.academic_program,
+                    education_plan: allData.academic_program === "อื่น ๆ" ? allData.academic_program_other : allData.academic_program,
                     grade_gpax: allData.grade_gpax,
                     grade_math: allData.grade_math,
                     grade_sci: allData.grade_sci,
@@ -1252,8 +1316,8 @@ function Step3() {
                         ? "ไม่สะดวกนำมา"
                         : allData.availability_laptopOS === "Linux"
                             ? `Linux (${allData.availability_laptopOS_other})`
-                            : allData.availability_laptopOS === "อื่นๆ"
-                                ? `อื่นๆ: ${allData.availability_laptopOS_other}`
+                            : allData.availability_laptopOS === "อื่น ๆ"
+                                ? `อื่น ๆ: ${allData.availability_laptopOS_other}`
                                 : allData.availability_laptopOS,
                     have_tablet: toBool(allData.availability_tablet),
                     have_mouse: toBool(allData.availability_mouse)
@@ -1309,14 +1373,17 @@ function Step3() {
                         <h2 className="text-xl font-bold text-white">ข้อมูลติดต่อผู้ปกครอง</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* ชื่อผู้ปกครอง */}
                         <FormField
                             control={form.control}
                             name="guardian_name"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>ชื่อผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ชื่อผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="" {...field} />
                                     </FormControl>
@@ -1331,7 +1398,10 @@ function Step3() {
                             name="guardian_relationship"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>ความสัมพันธ์กับผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ความสัมพันธ์กับผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} />
                                     </FormControl>
@@ -1342,14 +1412,17 @@ function Step3() {
                     </div>
 
                     { /* แถวสอง */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         {/* เบอร์โทรศัพท์ผู้ปกครอง */}
                         <FormField
                             control={form.control}
                             name="guardian_phone"
                             render={({ field }) => (
                                 <FormItem className="col-span-1">
-                                    <FormLabel>เบอร์ติดต่อผู้ปกครอง</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            เบอร์ติดต่อผู้ปกครอง
+                                            </div></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
@@ -1383,7 +1456,7 @@ function Step3() {
                         <h2 className="text-xl font-bold">ความพร้อมและการเดินทาง</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10 items-start">
                         {/* เคยเข้า ComCamp ไหม */}
                         <FormField
                             control={form.control}
@@ -1391,7 +1464,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>เคยเข้าร่วม ComCamp ไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            เคยเข้าร่วม ComCamp ไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1448,7 +1524,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกเข้าร่วมทุกวันไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            สะดวกพักค้างคืนตลอดโครงการไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1498,62 +1577,6 @@ function Step3() {
                             )}
                         />
 
-                        { /* สะดวกนำ laptop มาไหม */}
-                        <FormField
-                            control={form.control}
-                            name="availability_laptop"
-                            render={({field}) => (
-                                <FormItem className="col-span-1">
-
-                                    <FormLabel>สะดวกนำ Laptop มาไหม</FormLabel>
-                                    <FormControl>
-                                        <RadioGroup
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            className="flex flex-row gap-10 items-center mt-1"
-                                        >
-                                            {/* ใช่ */}
-                                            <FormItem>
-                                                <label
-                                                    htmlFor="availability_laptop-yes"
-                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer w-18"
-                                                >
-                                                    <FormControl>
-                                                        <RadioGroupItem
-                                                            className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="true" id="availability_laptop-yes"/>
-                                                    </FormControl>
-                                                    <span
-                                                        className="flex-1 relative items-center text-sm transition-colors">
-                                                      <span>สะดวก</span>
-                                                    </span>
-                                                </label>
-                                            </FormItem>
-
-                                            {/* ไม่ใช่ */}
-                                            <FormItem>
-                                                <label
-                                                    htmlFor="availability_laptop-no"
-                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer"
-                                                >
-                                                    <FormControl>
-                                                        <RadioGroupItem
-                                                            className="cursor-pointer brightness-200 w-5 h-5"
-                                                            value="false" id="availability_laptop-no"/>
-                                                    </FormControl>
-                                                    <span
-                                                        className="flex-1 relative items-center text-sm transition-colors">
-                                                      <span>ไม่สะดวก</span>
-                                                    </span>
-                                                </label>
-                                            </FormItem>
-
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
                         { /* สะดวกนำ iPad/Tablet มาไหม */}
                         <FormField
                             control={form.control}
@@ -1561,7 +1584,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำ iPad/Tablet มาไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            สะดวกนำ Laptop มาไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1610,6 +1636,67 @@ function Step3() {
                                 </FormItem>
                             )}
                         />
+
+                        { /* สะดวกนำ laptop มาไหม */}
+                        <FormField
+                            control={form.control}
+                            name="availability_laptop"
+                            render={({field}) => (
+                                <FormItem className="col-span-1">
+
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            สะดวกนำ Laptop มาไหม
+                                            </div></FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-row gap-10 items-center mt-1"
+                                        >
+                                            {/* ใช่ */}
+                                            <FormItem>
+                                                <label
+                                                    htmlFor="availability_laptop-yes"
+                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer w-18"
+                                                >
+                                                    <FormControl>
+                                                        <RadioGroupItem
+                                                            className="cursor-pointer brightness-200 w-5 h-5"
+                                                            value="true" id="availability_laptop-yes"/>
+                                                    </FormControl>
+                                                    <span
+                                                        className="flex-1 relative items-center text-sm transition-colors">
+                                                      <span>สะดวก</span>
+                                                    </span>
+                                                </label>
+                                            </FormItem>
+
+                                            {/* ไม่ใช่ */}
+                                            <FormItem>
+                                                <label
+                                                    htmlFor="availability_laptop-no"
+                                                    className="group flex items-center space-x-3 space-y-0 cursor-pointer"
+                                                >
+                                                    <FormControl>
+                                                        <RadioGroupItem
+                                                            className="cursor-pointer brightness-200 w-5 h-5"
+                                                            value="false" id="availability_laptop-no"/>
+                                                    </FormControl>
+                                                    <span
+                                                        className="flex-1 relative items-center text-sm transition-colors">
+                                                      <span>ไม่สะดวก</span>
+                                                    </span>
+                                                </label>
+                                            </FormItem>
+
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+
                         { /* สะดวกนำเมาส์มาไหม */}
                         <FormField
                             control={form.control}
@@ -1617,7 +1704,10 @@ function Step3() {
                             render={({field}) => (
                                 <FormItem className="col-span-1">
 
-                                    <FormLabel>สะดวกนำเมาส์มาไหม</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            สะดวกนำเมาส์มาไหม
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -1669,13 +1759,16 @@ function Step3() {
 
                         { /* Laptop OS */ }
                         {form.watch("availability_laptop") === "true" && (
-                        <div className="flex flex-row gap-5">
+                        <div className="flex flex-row gap-5 items-start">
                             <FormField
                                 control={form.control}
                                 name="availability_laptopOS"
                                 render={({ field }) => (
                                     <FormItem className={(form.watch("availability_laptop") === "true") && ((form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) ? "w-auto" : "w-full"}>
-                                        <FormLabel>ระบบปฏิบัติการ (OS)</FormLabel>
+                                        <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            ระบบปฏิบัติการ (OS)
+                                            </div></FormLabel>
                                         <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
@@ -1687,14 +1780,14 @@ function Step3() {
                                                 <SelectItem className="py-3 px-4" value="Windows 10"><FontAwesomeIcon icon={faWindows} />Windows 10</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="macOS"><FontAwesomeIcon icon={faApple} />macOS</SelectItem>
                                                 <SelectItem className="py-3 px-4" value="Linux"><FontAwesomeIcon icon={faLinux} />Linux</SelectItem>
-                                                <SelectItem className="py-3 px-4" value="อื่นๆ">อื่นๆ</SelectItem>
+                                                <SelectItem className="py-3 px-4" value="อื่น ๆ">อื่น ๆ</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            {((form.watch("availability_laptop") === "true")&&(form.watch("availability_laptopOS") === "อื่นๆ" || form.watch("availability_laptopOS") === "Linux")) && (
+                            {((form.watch("availability_laptop") === "true")&&(form.watch("availability_laptopOS") === "อื่น ๆ" || form.watch("availability_laptopOS") === "Linux")) && (
                                 <FormField
                                     control={form.control}
                                     name="availability_laptopOS_other"
@@ -1723,7 +1816,10 @@ function Step3() {
                             name="availability_travelPlan"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>วิธีการเดินทางมาค่าย</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            วิธีการเดินทางมาค่าย
+                                            </div></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="โปรดระบุวิธีการเดินทางมายังค่าย"
@@ -1737,7 +1833,9 @@ function Step3() {
                             )}
                         />
                         <p className="md:col-span-2 text-xs text-[#94a3b8]">
-                            เขียนอธิบายวิธีการมาค่ายของน้อง ทั้งนี้เพื่อให้พี่ค่ายสามารถวางแผนการอำนวยความสะดวกให้น้องได้อย่างเต็มที่
+                            <div className="relative">
+                                เขียนอธิบายวิธีการมาค่ายของน้อง ทั้งนี้เพื่อให้พี่ค่ายสามารถวางแผนการอำนวยความสะดวกให้น้องได้อย่างเต็มที่
+                            </div>
                             <br/>
                             <br/>
                             ตัวอย่าง เดินทางจากบ้านพักด้วยรถโดยสารประจำทางสาย 75 ลงป้ายหน้ามหาวิทยาลัยฯ
@@ -1791,7 +1889,10 @@ function Step3() {
                             name="apparel_size"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col gap-4">
-                                    <FormLabel>เลือกขนาดเสื้อค่าย</FormLabel>
+                                    <FormLabel><div className="relative">
+                                            <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            เลือกขนาดเสื้อค่าย
+                                            </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}

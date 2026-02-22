@@ -111,7 +111,7 @@ export default function RootLayout({
                     {children}
 
                     <div className="w-full text-center py-3 md:px-20 text-sm leading-5 text-slate-600 flex flex-col gap-x-3">
-                        <span className="mt-2 self-center">©2026 ComCamp37. All rights reserved.<br className="md:hidden"/> Made with 🧡 by CPE39.</span>
+                        <span className="mt-2 self-center">©2026 ComCamp 37. All rights reserved.<br className="md:hidden"/> Made with 🧡 by CPE39.</span>
                         <GetAppId/>
                     </div>
                 </AuthGate>

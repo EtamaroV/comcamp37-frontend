@@ -199,7 +199,7 @@ function ApplicationCardMD({ status, loading, onSubmit }: ApplicationCardProps) 
         },
         SUBMITTED: {
             title: 'ส่งใบสมัครเรียบร้อยแล้ว',
-            description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย!',
+            description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย !',
             buttonText: 'ส่งข้อมูลสำเร็จ',
             buttonClass: 'hidden',
             isDisabled: true,
@@ -355,7 +355,7 @@ export default function applicationHome() {
                                     className="mt-1 w-5 h-5 rounded border-twilight-indigo-500 text-primary cursor-pointer focus:ring-primary focus:ring-offset-twilight-indigo-900 bg-twilight-indigo-900"
                                 />
                                 <span className="text-twilight-indigo-200 select-none text-sm md:text-base leading-relaxed">
-                        ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอก และเอกสารที่แนบมาทั้งหมดในการสมัคร ComCamp37 เป็นความจริงทุกประการ
+                        ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอก และเอกสารที่แนบมาทั้งหมดในการสมัคร ComCamp 37 เป็นความจริงทุกประการ
                     </span>
                             </label>
 
