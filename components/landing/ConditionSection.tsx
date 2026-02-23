@@ -85,9 +85,12 @@ function ConditionSection() {
                         <span className="inline-block whitespace-nowrap">
                             (ปีการศึกษา 2568)
                         </span>
-                        <span>หรือเทียบเท่า</span>
+                        <span className="inline-block whitespace-nowrap">หรือเทียบเท่า</span>
                         <span className="inline-block whitespace-nowrap">
-                            โดยมี GPAX ตั้งแต่ 3.00 ขึ้นไป
+                            โดยมี GPAX
+                        </span>
+                        <span className="inline-block">
+                            และผลการเรียนเฉลี่ยรายวิชา<span className="inline-block whitespace-nowrap">วิทย์ คณิต อังกฤษ ไม่ต่ำกว่า 3.00</span>
                         </span>
                     </div>
                 </motion.div>
