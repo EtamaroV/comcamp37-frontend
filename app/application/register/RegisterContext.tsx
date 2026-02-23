@@ -98,7 +98,7 @@ export interface RegisterFormValues {
     health_more: string;
     health_drugAllergies: string;
     health_dietaryRestrictions: string;
-    health_bloodType: "A" | "B" | "AB" | "O";
+    health_bloodType: "A" | "B" | "AB" | "O" | "ไม่ทราบ";
 
     availability_haveAttended: "true" | "false";
     availability_laptop: "true" | "false";
@@ -1374,7 +1374,7 @@ function Step2() {
                                             defaultValue={field.value}
                                             className="flex flex-wrap gap-4"
                                         >
-                                            {["A", "B", "O", "AB"].map((type) => (
+                                            {["A", "B", "O", "AB", "ไม่ทราบ"].map((type) => (
                                                 <div key={type} className="flex items-center">
                                                     <RadioGroupItem value={type} id={`blood-${type}`} className="peer sr-only" />
                                                     <Label
