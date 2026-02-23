@@ -819,7 +819,8 @@ function Step1() {
                             name="info_province"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>จังหวัด</FormLabel>
+                                    <FormLabel><div className="relative"><span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                        จังหวัด</div></FormLabel>
                                     {availableProvinces.length > 1 ? (
                                         <Select
                                             onValueChange={(val) => {
@@ -855,7 +856,9 @@ function Step1() {
                             name="info_district"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>{districtLabel}</FormLabel>
+                                    <FormLabel>
+                                        <div className="relative"><span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                            {districtLabel}</div></FormLabel>
                                     {availableDistricts.length > 1 ? (
                                         <Select
                                             onValueChange={(val) => {
@@ -891,7 +894,8 @@ function Step1() {
                             name="info_sub_district"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>{subDistrictLabel}</FormLabel>
+                                    <FormLabel><div className="relative"><span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
+                                        {subDistrictLabel}</div></FormLabel>
 
                                     {availableSubDistricts.length > 1 ? (
                                         <Select onValueChange={field.onChange} value={field.value || ""}>
