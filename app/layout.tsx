@@ -9,8 +9,6 @@ import MicrosoftClarity from "@/app/metrics/MicrosoftClarity";
 import {UserProvider} from "@/contexts/UserContext";
 import {headers} from "next/headers";
 
-export const runtime = 'edge';
-
 const zootopiaFont = localFont({
     variable: "--font-zootopia",
     src: './zootopia-font.woff2',
