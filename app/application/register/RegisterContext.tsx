@@ -951,7 +951,7 @@ function Step1() {
                 </div>
 
                 {/* Navigation Buttons */}
-                <div className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col-reverse sm:flex-row-reverse justify-between gap-4">
+                <div className="p-6 md:p-8 border-t border-twilight-indigo-800 bg-twilight-indigo-900/50 flex flex-col sm:flex-row-reverse justify-between gap-4">
                     <Button
                         type="submit"
                         className="px-8 py-5 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
