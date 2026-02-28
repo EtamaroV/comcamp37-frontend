@@ -24,15 +24,16 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
     const { isExpired } = useCountdown(REGIS_EXPIRED_DATE);
 
+    const [isAuthorized, setIsAuthorized] = useState(false);
+
     const isPublicRoute = pathname === "/signin" || pathname === "/privacy";
 
     useEffect(() => {
+
         if (!isLoading && !user && !isPublicRoute) {
             router.replace('/signin');
+            return;
         }
-    }, [user, isLoading, router, pathname, isPublicRoute]);
-
-    useEffect(() => {
 
         const restrictedPaths = [
             "/application/file",
@@ -51,13 +52,17 @@ function AuthGate({ children }: { children: React.ReactNode }) {
             router.replace('/application/register');
         }
 
-    }, [studentStatus, pathname]);
+        setIsAuthorized(true);
 
-    if ((isLoading || isLoadingApp) && !isPublicRoute) {
+    }, [user, isLoading, studentStatus, pathname, isExpired, ApplicationStatus]);
+
+    if ((isLoading || isLoadingApp || !isAuthorized) && !isPublicRoute) {
         return <LoadingScreen/>;
     }
 
-    return <>{children}</>;
+    return <>
+        {children}
+    </>;
 }
 
 function GetAppId() {
