@@ -44,7 +44,7 @@ function Navbar() {
 
     const renderCTAButton = (isMobile: boolean) => {
         const baseClass = isMobile
-            ? "cursor-pointer font-bold px-10 py-3 mt-2 border border-white rounded-2xl"
+            ? "cursor-pointer font-bold px-10 py-3 mt-2 border border-white rounded-2xl "
             : "cursor-pointer font-bold px-6 xl:px-8 pt-1 bg-transparent border border-white h-full rounded-2xl ";
 
         const motionProps:any = {
