@@ -329,7 +329,7 @@ export default function applicationHome() {
 
     const [clickCount, setClickCount] = useState(0);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const textToCopy = `[แจ้งปัญหาการสมัคร] \n\nรหัสใบสมัคร: ${applicationId} \nรหัสนี้ใช้สำหรับประสานงานกับทางทีมงานเพื่อแก้ไขข้อมูล\n\nComCamp 37`;
+    const textToCopy = `[แจ้งปัญหาการสมัคร] \n\n${studentInfo?.std_info_prefix}${studentInfo?.std_info_first_name} ${studentInfo?.std_info_last_name}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n\nโปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\nComCamp 37`;
 
     const handleMultiClick = () => {
         const newCount = clickCount + 1;
