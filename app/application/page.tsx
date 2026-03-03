@@ -516,6 +516,7 @@ export default function applicationHome() {
 
                     <div className={`w-35 h-35 rounded-full shadow-sm relative`}>
                         <img
+                            data-clarity-mask="true"
                             onClick={handleMultiClick}
 
                             src={studentFaceImage || user?.image || "https://storage.comcamp.io/web-assets/gooseNick.png"}
@@ -533,29 +534,29 @@ export default function applicationHome() {
                         />
                     </div>
                     <div className="text-center">
-                        <div className="text-xl font-bold">{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")} ({decodeURIComponent(studentInfo?.std_info_nick_name || "")})</div>
-                        <div className="text-lg font-medium">{decodeURIComponent(studentInfo?.std_info_education_institute || "")}</div>
+                        <div data-clarity-mask="true" className="text-xl font-bold">{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")} ({decodeURIComponent(studentInfo?.std_info_nick_name || "")})</div>
+                        <div data-clarity-mask="true" className="text-lg font-medium">{decodeURIComponent(studentInfo?.std_info_education_institute || "")}</div>
                     </div>
                     <div className="w-full flex flex-col md:flex-row justify-between">
                         <div className="font-bold">อีเมล</div>
-                        <div className="font-medium">{user?.email}</div>
+                        <div data-clarity-mask="true" className="font-medium">{user?.email}</div>
                     </div>
                     <div className="w-full flex flex-col md:flex-row justify-between">
                         <div className="font-bold">เบอร์โทรศัพท์</div>
-                        <div className="font-medium">{formatPhoneNumber(studentInfo?.std_info_phone_number || "")}</div>
+                        <div data-clarity-mask="true" className="font-medium">{formatPhoneNumber(studentInfo?.std_info_phone_number || "")}</div>
                     </div>
 
                     <div className="w-full flex flex-col md:flex-row justify-between">
                         <div className="font-bold">ระดับชั้นการศึกษา</div>
-                        <div className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_level || "")}</div>
+                        <div data-clarity-mask="true" className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_level || "")}</div>
                     </div>
                     <div className="w-full flex flex-col md:flex-row justify-between">
                         <div className="font-bold">แผนการเรียน</div>
-                        <div className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_plan || "")}</div>
+                        <div data-clarity-mask="true" className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_plan || "")}</div>
                     </div>
                     <div className="w-full flex flex-col md:flex-row justify-between">
                         <div className="font-bold">วันเกิด</div>
-                        <div className="font-medium">{studentInfo?.std_info_birthdate ? format(addYears(studentInfo?.std_info_birthdate, 543), "d MMMM yyyy", { locale: th }) : ""}</div>
+                        <div data-clarity-mask="true" className="font-medium">{studentInfo?.std_info_birthdate ? format(addYears(studentInfo?.std_info_birthdate, 543), "d MMMM yyyy", { locale: th }) : ""}</div>
                     </div>
 
                 </div>

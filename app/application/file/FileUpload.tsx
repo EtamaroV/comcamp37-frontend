@@ -371,6 +371,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                     // กรณีเป็น PDF (หรือโหลดรูปไม่ผ่าน) -> ใช้ iframe/embed
                                     // Browser จะจัดการพื้นหลังให้เอง (มักจะเป็นสีเทาเข้ม)
                                     <iframe
+                                        data-clarity-mask="true"
+
                                         key={`pdf-${previewUrl}`}
                                         src={previewUrl}
                                         className="w-full h-full border-none"
@@ -379,6 +381,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                 ) : (
                                     // กรณีปกติ -> ลองโหลดเป็นรูปก่อน
                                     <img
+                                        data-clarity-mask="true"
+
                                         key={`pdf-${previewUrl}`}
                                         src={previewUrl}
                                         alt="Preview"

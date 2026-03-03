@@ -222,6 +222,8 @@ export default function questionAcademic() {
                                             </FormLabel>
                                             <FormControl>
                                                 <Textarea
+                                                    data-clarity-mask="true"
+                                                    
                                                     placeholder={question.placeholder}
                                                     className="resize-none rounded-xl py-3 px-4 h-40"
                                                     rows={7}

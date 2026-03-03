@@ -144,6 +144,8 @@ function NoApp() {
                 <div className="relative">
                     <div className="w-28 h-28 rounded-full">
                         <img
+                            data-clarity-mask="true"
+
                             src={user?.image || "https://storage.comcamp.io/web-assets/gooseNick.png"}
                             alt=""
                             className="w-full h-full rounded-full object-cover bg-twilight-indigo-700 border-4 border-twilight-indigo-700"
@@ -152,8 +154,8 @@ function NoApp() {
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-white">ยินดีต้อนรับ<br/>{user?.name}</h2>
-                    <p className="text-slate-400 text-base">
+                    <h2 data-clarity-mask="true" className="text-2xl font-bold text-white">ยินดีต้อนรับ<br/>{user?.name}</h2>
+                    <p data-clarity-mask="true" className="text-slate-400 text-base">
                         {user?.email}
                     </p>
 

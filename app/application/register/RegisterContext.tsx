@@ -478,7 +478,7 @@ function Step1() {
                                             คำนำหน้าชื่อ
                                             </div>
                                             </FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select data-clarity-mask="true" onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
                                                 <SelectValue placeholder="เลือก" />
@@ -510,11 +510,11 @@ function Step1() {
                                             </div>
                                             </FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field}
+                                        <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder="ชื่อจริง" {...field}
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            const value = e.target.value.replace(/\d/g, "");
                                             field.onChange(value);
-                                        }}  
+                                        }}
                                         maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
@@ -533,11 +533,11 @@ function Step1() {
                                             นามสกุล
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field}
+                                        <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder="นามสกุล" {...field}
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            const value = e.target.value.replace(/\d/g, "");
                                             field.onChange(value);
-                                        }} 
+                                        }}
                                         maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
@@ -559,7 +559,7 @@ function Step1() {
                                             ชื่อเล่น
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} maxLength={100}/>
+                                        <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder="ชื่อเล่น" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -630,6 +630,7 @@ function Step1() {
                                     {/* ส่วนตัวเลือก Radio */}
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="grid grid-cols-2 gap-4 items-center"
@@ -686,7 +687,7 @@ function Step1() {
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
                                             ศาสนา
                                             </div></FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select data-clarity-mask="true" onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
                                                 <SelectValue placeholder="เลือกศาสนา" />
@@ -724,10 +725,11 @@ function Step1() {
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
                                             <Input
+                                                data-clarity-mask="true"
                                                 // Add 'pl-10' to make room for the icon on the left
                                                 className="py-6 pl-4 pr-10 rounded-xl"
                                                 placeholder="0XX-XXX-XXXX"
-                                                
+
                                                 {...field}
                                                 value={formatPhoneNumber(field.value)}
                                                 onChange={(e) => {
@@ -736,7 +738,7 @@ function Step1() {
                                                         field.onChange(rawValue);
                                                     }
                                                 }}
-                                               
+
                                             />
                                         </div>
                                     </FormControl>
@@ -795,6 +797,8 @@ function Step1() {
                                         รหัสไปรษณีย์</div></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-clarity-mask="true"
+
                                             className="py-6 px-4 rounded-xl"
                                             placeholder="XXXXX"
                                             {...field}
@@ -823,6 +827,7 @@ function Step1() {
                                         จังหวัด</div></FormLabel>
                                     {availableProvinces.length > 1 ? (
                                         <Select
+                                            data-clarity-mask="true"
                                             onValueChange={(val) => {
                                                 field.onChange(val);
                                                 processDistricts(val, addressOptions);
@@ -842,7 +847,7 @@ function Step1() {
                                         </Select>
                                     ) : (
                                         <FormControl>
-                                            <Input {...field} value={field.value || ""} readOnly className="py-6 px-4 rounded-xl bg-gray-100" placeholder="กรุณาระบุรหัสไปรษณีย์ก่อน" />
+                                            <Input {...field} value={field.value || ""} readOnly data-clarity-mask="true" className="py-6 px-4 rounded-xl bg-gray-100" placeholder="กรุณาระบุรหัสไปรษณีย์ก่อน" />
                                         </FormControl>
                                     )}
                                     <FormMessage />
@@ -861,6 +866,7 @@ function Step1() {
                                             {districtLabel}</div></FormLabel>
                                     {availableDistricts.length > 1 ? (
                                         <Select
+                                            data-clarity-mask="true"
                                             onValueChange={(val) => {
                                                 field.onChange(val);
                                                 processSubDistricts(val, addressOptions.filter(d => d.province === form.watch("info_province")));
@@ -880,7 +886,7 @@ function Step1() {
                                         </Select>
                                     ) : (
                                         <FormControl>
-                                            <Input {...field} value={field.value || ""} readOnly className="py-6 px-4 rounded-xl bg-gray-100" placeholder={availableProvinces.length > 1 ? "กรุณาระบุจังหวัดก่อน" : "กรุณาระบุรหัสไปรษณีย์ก่อน"} />
+                                            <Input {...field} value={field.value || ""} readOnly data-clarity-mask="true" className="py-6 px-4 rounded-xl bg-gray-100" placeholder={availableProvinces.length > 1 ? "กรุณาระบุจังหวัดก่อน" : "กรุณาระบุรหัสไปรษณีย์ก่อน"} />
                                         </FormControl>
                                     )}
                                     <FormMessage />
@@ -898,7 +904,7 @@ function Step1() {
                                         {subDistrictLabel}</div></FormLabel>
 
                                     {availableSubDistricts.length > 1 ? (
-                                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                                        <Select data-clarity-mask="true" onValueChange={field.onChange} value={field.value || ""}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 w-full rounded-xl">
                                                     <SelectValue placeholder={`เลือก${subDistrictLabel}`} />
@@ -916,6 +922,7 @@ function Step1() {
                                                 {...field}
                                                 value={field.value || ""}
                                                 readOnly
+                                                data-clarity-mask="true"
                                                 className="py-6 px-4 rounded-xl bg-gray-100"
                                                 placeholder={`กรุณาระบุ${subDistrictLabel}ก่อน`}
                                             />
@@ -937,6 +944,8 @@ function Step1() {
                                     </div></FormLabel>
                                     <FormControl>
                                         <Textarea
+                                            data-clarity-mask="true"
+
                                             placeholder=""
                                             className="resize-none rounded-xl py-3 px-4 h-20"
                                             rows={3}
@@ -1092,7 +1101,7 @@ function Step2() {
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
                                             ระดับชั้นการศึกษา
                                             </div> <span className="opacity-40">(ปีการศึกษา 2568)</span></FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select data-clarity-mask="true" onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="py-6 px-4 rounded-xl w-full">
                                                 <SelectValue placeholder="เลือกระดับชั้น" />
@@ -1121,7 +1130,7 @@ function Step2() {
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
                                             แผนการเรียน
                                             </div></FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select data-clarity-mask="true" onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
                                                     <SelectValue placeholder="เลือก" />
@@ -1151,6 +1160,7 @@ function Step2() {
                                             <FormLabel>โปรดระบุแผนการเรียน</FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-clarity-mask="true"
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
                                                     placeholder="เช่น ศิลป์-คำนวณ"
                                                     {...field}
@@ -1177,11 +1187,12 @@ function Step2() {
                                     <FormControl>
                                         <div className="relative">
                                         <SchoolInput
+                                            data-clarity-mask="true"
                                             className="py-6 px-4 pr-10 rounded-xl"
                                             {...field}
-                                            
+
                                             placeholder="ชื่อสถาบันการศึกษาของคุณ"
-                                            
+
                                         />
                                         <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faSchool} />
                                         </div>
@@ -1210,6 +1221,7 @@ function Step2() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-clarity-mask="true"
                                             className="py-6 pl-4 pr-10 rounded-xl"
                                             placeholder="0.00"
                                             inputMode="decimal"
@@ -1238,7 +1250,7 @@ function Step2() {
                                                     field.onChange(formatted || digits);
                                                 }
                                             }}
-                                            
+
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -1257,6 +1269,7 @@ function Step2() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-clarity-mask="true"
                                             className="py-6 pl-4 pr-10 rounded-xl"
                                             placeholder="0.00"
                                             inputMode="decimal"
@@ -1302,6 +1315,7 @@ function Step2() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-clarity-mask="true"
                                             className="py-6 pl-4 pr-10 rounded-xl"
                                             placeholder="0.00"
                                             inputMode="decimal"
@@ -1347,6 +1361,7 @@ function Step2() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-clarity-mask="true"
                                             className="py-6 pl-4 pr-10 rounded-xl"
                                             placeholder="0.00"
                                             inputMode="decimal"
@@ -1406,6 +1421,7 @@ function Step2() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-wrap gap-4"
@@ -1451,9 +1467,9 @@ function Step2() {
                                         </FormLabel>
                                         <FormControl>
                                             {item.area ? (
-                                                <Textarea className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field} maxLength={210} />
+                                                <Textarea data-clarity-mask="true" className="py-3 px-4 rounded-xl" placeholder={item.placeholder} rows={2} {...field} maxLength={210} />
                                             ) : (
-                                                <Input className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field} maxLength={105} />
+                                                <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder={item.placeholder} {...field} maxLength={105} />
                                             )}
                                         </FormControl>
                                         <FormMessage />
@@ -1684,9 +1700,9 @@ function Step3() {
                                             ชื่อผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="นายห่านน้อย คอยรัก" {...field}
+                                        <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder="นายห่านน้อย คอยรัก" {...field}
                                         onChange={(e) => {
-                                            const value = e.target.value.replace(/\d/g, ""); 
+                                            const value = e.target.value.replace(/\d/g, "");
                                             field.onChange(value);
                                         }}
                                         maxLength={100}
@@ -1708,7 +1724,7 @@ function Step3() {
                                             ความสัมพันธ์กับผู้ปกครอง
                                             </div></FormLabel>
                                     <FormControl>
-                                        <Input className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} maxLength={100}/>
+                                        <Input data-clarity-mask="true" className="py-6 px-4 rounded-xl" placeholder="เช่น บิดา มารดา" {...field} maxLength={100}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -1732,6 +1748,7 @@ function Step3() {
                                         <div className="relative">
                                             <FontAwesomeIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" icon={faPhone} />
                                             <Input
+                                                data-clarity-mask="true"
                                                 // Add 'pl-10' to make room for the icon on the left
                                                 className="py-6 pl-4 pr-10 rounded-xl"
                                                 placeholder="0XX-XXX-XXXX"
@@ -1775,6 +1792,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-row gap-10 items-center mt-1"
@@ -1835,6 +1853,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-row gap-10 items-center mt-1"
@@ -1895,6 +1914,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-row gap-10 items-center mt-1"
@@ -1955,6 +1975,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-row gap-10 items-center mt-1"
@@ -2015,6 +2036,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="flex flex-row gap-10 items-center mt-1"
@@ -2074,7 +2096,7 @@ function Step3() {
                                             <span className="absolute text-red-500 text-xs -left-[8px] -top-[0.5px]">*</span>
                                             ระบบปฏิบัติการ (OS)
                                             </div></FormLabel>
-                                        <Select disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select data-clarity-mask="true" disabled={form.watch("availability_laptop") === "false"} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="py-6 px-4 rounded-xl w-full">
                                                     <SelectValue placeholder="เลือก" />
@@ -2101,6 +2123,8 @@ function Step3() {
                                             <FormLabel>{form.watch("availability_laptopOS") === "Linux" ? "Distro" : "โปรดระบุ"}</FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-clarity-mask="true"
+
                                                     className="py-6 px-4 rounded-xl border-blue-400 focus:ring-blue-500"
                                                     placeholder=""
                                                     {...field}
@@ -2128,6 +2152,8 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <Textarea
+                                            data-clarity-mask="true"
+
                                             placeholder="โปรดระบุวิธีการเดินทางมายังค่าย"
                                             className="resize-none rounded-xl py-3 px-4 h-20"
                                             rows={3}
@@ -2199,6 +2225,7 @@ function Step3() {
                                             </div></FormLabel>
                                     <FormControl>
                                         <RadioGroup
+                                            data-clarity-mask="true"
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="grid grid-cols-5 gap-3"
