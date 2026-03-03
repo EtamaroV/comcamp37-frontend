@@ -1232,7 +1232,7 @@ function Step2() {
                                                     formatted = `${capped[0]}.${capped.slice(1)}`;
                                                 }
 
-                                                if (parseFloat(formatted) > 4.00) {
+                                                if (parseFloat(formatted) > 4.00 || (digits[0] === "4" && !isDeleting)) {
                                                     field.onChange("4.00");
                                                 } else {
                                                     field.onChange(formatted || digits);
@@ -1278,7 +1278,7 @@ function Step2() {
                                                     formatted = `${capped[0]}.${capped.slice(1)}`;
                                                 }
 
-                                                if (parseFloat(formatted) > 4.00) {
+                                                if (parseFloat(formatted) > 4.00 || (digits[0] === "4" && !isDeleting)) {
                                                     field.onChange("4.00");
                                                 } else {
                                                     field.onChange(formatted || digits);
@@ -1323,7 +1323,7 @@ function Step2() {
                                                     formatted = `${capped[0]}.${capped.slice(1)}`;
                                                 }
 
-                                                if (parseFloat(formatted) > 4.00) {
+                                                if (parseFloat(formatted) > 4.00 || (digits[0] === "4" && !isDeleting)) {
                                                     field.onChange("4.00");
                                                 } else {
                                                     field.onChange(formatted || digits);
@@ -1368,7 +1368,7 @@ function Step2() {
                                                     formatted = `${capped[0]}.${capped.slice(1)}`;
                                                 }
 
-                                                if (parseFloat(formatted) > 4.00) {
+                                                if (parseFloat(formatted) > 4.00 || (digits[0] === "4" && !isDeleting)) {
                                                     field.onChange("4.00");
                                                 } else {
                                                     field.onChange(formatted || digits);

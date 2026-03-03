@@ -23,11 +23,11 @@ export default function fileUploadPage() {
     const {applicationId, refreshApplication} = useStudent();
 
     const fileUploadData = [
-        { type: "file_face", accept: ".png,.jpg,.jpeg", label: "รูปถ่ายหน้าตรง", description: "เป็นไฟล์รูปภาพที่เห็นใบหน้าชัดเจน", fileSize: 3, icon: faFaceLaughBeam},
-        { type: "file_national_id", accept: ".png,.jpg,.jpeg,.pdf", label: "สำเนาบัตรประชาชน", description: (<>สามารถใช้สำเนาบัตรนักเรียนแทนได้ <b>(เซ็นสำเนาถูกต้อง)</b></>), fileSize: 3, icon: faIdCard},
-        { type: "file_pp_1", accept: ".png,.jpg,.jpeg,.pdf", label: "สำเนาระเบียนแสดงผลการเรียน (ปพ.1)", description: (<>สามารถใช้เอกสารแสดงผลการเรียนภาคการศึกษาล่าสุดแทนได้ <b>(เซ็นสำเนาถูกต้อง - ต้องมีผลการเรียน GPAX)</b></>), fileSize: 3, icon: faFileLines},
-        { type: "file_pp_7", accept: ".png,.jpg,.jpeg,.pdf", label: "สำเนาใบรับรองสถานภาพการเป็นนักเรียน (ปพ.7)", description: (<>สามารถใช้เอกสารรับรองการเป็นนักเรียนแทนได้ เช่น สำเนาบัตรนักเรียน <b>(เซ็นสำเนาถูกต้อง)</b></>), fileSize: 3, icon: faGraduationCap},
-        { type: "file_parent_permission", accept: ".png,.jpg,.jpeg,.pdf", label: "เอกสารขออนุญาตผู้ปกครอง", description: (<a className="underline" href="https://storage.comcamp.io/web-assets/เอกสารขออนุญาตผู้ปกครอง.pdf" download="เอกสารขออนุญาตผู้ปกครอง.pdf" target="_blank"><FontAwesomeIcon icon={faDownload} /><b>กดที่นี่เพื่อดาวน์โหลดไฟล์เอกสารขออนุญาตผู้ปกครอง</b></a>), fileSize: 3, icon: faPersonBreastfeeding}
+        { type: "file_face", accept: "image/*", label: "รูปถ่ายหน้าตรง", description: "เป็นไฟล์รูปภาพที่เห็นใบหน้าชัดเจน", fileSize: 3, icon: faFaceLaughBeam},
+        { type: "file_national_id", accept: "image/*,.pdf", label: "สำเนาบัตรประชาชน", description: (<>สามารถใช้สำเนาบัตรนักเรียนแทนได้ <b>(เซ็นสำเนาถูกต้อง)</b></>), fileSize: 3, icon: faIdCard},
+        { type: "file_pp_1", accept: "image/*,.pdf", label: "สำเนาระเบียนแสดงผลการเรียน (ปพ.1)", description: (<>สามารถใช้เอกสารแสดงผลการเรียนภาคการศึกษาล่าสุดแทนได้ <b>(เซ็นสำเนาถูกต้อง - ต้องมีผลการเรียน GPAX)</b></>), fileSize: 3, icon: faFileLines},
+        { type: "file_pp_7", accept: "image/*,.pdf", label: "สำเนาใบรับรองสถานภาพการเป็นนักเรียน (ปพ.7)", description: (<>สามารถใช้เอกสารรับรองการเป็นนักเรียนแทนได้ เช่น สำเนาบัตรนักเรียน <b>(เซ็นสำเนาถูกต้อง)</b></>), fileSize: 3, icon: faGraduationCap},
+        { type: "file_parent_permission", accept: "image/*,.pdf", label: "เอกสารขออนุญาตผู้ปกครอง", description: (<a className="underline" href="https://storage.comcamp.io/web-assets/เอกสารขออนุญาตผู้ปกครอง.pdf" download="เอกสารขออนุญาตผู้ปกครอง.pdf" target="_blank"><FontAwesomeIcon icon={faDownload} /><b>กดที่นี่เพื่อดาวน์โหลดไฟล์เอกสารขออนุญาตผู้ปกครอง</b></a>), fileSize: 3, icon: faPersonBreastfeeding}
     ]
 
     return (

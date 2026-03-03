@@ -79,28 +79,28 @@ export const Step2Schema = z.object({
     academic_school: z.string().min(1, "กรุณาระบุชื่อโรงเรียน"),
 
     grade_gpax: z.string().min(1, { message: "กรุณาระบุเกรดเฉลี่ย" })
-        .regex(/^\d(\.\d{0,2})?$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
+        .regex(/^\d\.\d{2}$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
         .refine((val) => {
             const num = parseFloat(val);
             return num >= 0 && num <= 4.00;
     }, { message: "เกรดเฉลี่ยต้องอยู่ระหว่าง 0.00 - 4.00" }),
 
     grade_math: z.string().min(1, { message: "กรุณาระบุเกรดเฉลี่ย" })
-        .regex(/^\d(\.\d{0,2})?$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
+        .regex(/^\d\.\d{2}$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
         .refine((val) => {
             const num = parseFloat(val);
             return num >= 0 && num <= 4.00;
         }, { message: "เกรดเฉลี่ยต้องอยู่ระหว่าง 0.00 - 4.00" }),
 
     grade_sci: z.string().min(1, { message: "กรุณาระบุเกรดเฉลี่ย" })
-        .regex(/^\d(\.\d{0,2})?$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
+        .regex(/^\d\.\d{2}$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
         .refine((val) => {
             const num = parseFloat(val);
             return num >= 0 && num <= 4.00;
         }, { message: "เกรดเฉลี่ยต้องอยู่ระหว่าง 0.00 - 4.00" }),
 
     grade_eng: z.string().min(1, { message: "กรุณาระบุเกรดเฉลี่ย" })
-        .regex(/^\d(\.\d{0,2})?$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
+        .regex(/^\d\.\d{2}$/, { message: "รูปแบบเกรดไม่ถูกต้อง" })
         .refine((val) => {
             const num = parseFloat(val);
             return num >= 0 && num <= 4.00;

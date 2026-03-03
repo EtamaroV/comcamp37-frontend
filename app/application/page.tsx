@@ -329,7 +329,13 @@ export default function applicationHome() {
 
     const [clickCount, setClickCount] = useState(0);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const textToCopy = `[แจ้งปัญหาการสมัคร] \n\n${studentInfo?.std_info_prefix}${studentInfo?.std_info_first_name} ${studentInfo?.std_info_last_name}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n\nโปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\nComCamp 37`;
+
+    const getLatestCookie = (name:String) => {
+        const cookies = document.cookie.split('; ');
+        const matches = cookies.filter(c => c.startsWith(`${name}=`));
+
+        return matches.length > 0 ? matches[0].split('=')[1] : null;
+    };
 
     const handleMultiClick = () => {
         const newCount = clickCount + 1;
@@ -349,6 +355,7 @@ export default function applicationHome() {
     };
 
     const copyToClipboard = async () => {
+        const textToCopy = `[แจ้งปัญหาการสมัคร] \n\n${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n\n${getLatestCookie("_clck")?.slice(0,6)}\n\nโปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\nComCamp 37\n${new Date().toLocaleString()}`;
         try {
             await navigator.clipboard.writeText(textToCopy);
             toast.success("คัดลอกรหัสใบสมัครแล้ว");

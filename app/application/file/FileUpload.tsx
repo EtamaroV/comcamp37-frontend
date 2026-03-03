@@ -136,6 +136,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
     // ... (Validate Function เดิม) ...
     const validateFileType = (file: File, acceptString: string): boolean => {
+
         if (!acceptString || acceptString === '*') return true;
         const acceptedTypes = acceptString.split(',').map(type => type.trim().toLowerCase());
         const fileName = file.name.toLowerCase();
@@ -155,6 +156,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
             setError(`ไม่รองรับไฟล์ประเภทนี้ กรุณาอัปโหลด: ${accept}`);
             return;
         }
+        console.log(selectedFile.size)
         if (selectedFile.size > maxSizeMB * 1024 * 1024) {
             setError(`ขนาดไฟล์เกิน ${maxSizeMB}MB`);
             return;
@@ -206,6 +208,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
             setIsUploading(false);
         }
     };
+
+    const displayAccept:string = accept.split(',').map(item => {
+        const type = item.trim();
+        if (type === 'image/*') return 'รูปภาพทุกชนิด';
+        if (type === '.pdf') return 'PDF';
+        return type.replace('.', '').toUpperCase(); // กรณีอื่นๆ ให้ตัดจุดออกแล้วทำเป็นตัวพิมพ์ใหญ่
+    }).join(', ');
 
     // ... (Drag & Drop handlers เดิม) ...
     const handleDrag = (e: DragEvent) => {
@@ -325,7 +334,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                 </div>
                                 {accept && (
                                     <span className="text-[10px] text-twilight-indigo-500 bg-twilight-indigo-900/50 px-2 py-1 rounded-md max-w-[200px] truncate">
-                                        ไฟล์ที่รองรับ: {accept.replace(/,/g, ', ')}
+                                        ไฟล์ที่รองรับ: {displayAccept}
                                     </span>
                                 )}
                             </div>
