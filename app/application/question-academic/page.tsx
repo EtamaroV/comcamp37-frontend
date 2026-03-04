@@ -2,8 +2,8 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faFloppyDisk, faPersonHiking,
-    faTents,
+    faCloud,
+    faFloppyDisk, faHardDrive, faPersonHiking,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useStudent } from "@/contexts/StudentContext";
@@ -15,9 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { questionAcademicSchema } from "@/app/application/question-academic/schema";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import {format, formatDistanceToNow} from "date-fns";
+import {th} from "date-fns/locale";
+import {motion} from "motion/react";
 
 const prefixQuestion = "academic"
 const postURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/question/academic/answer`
@@ -115,6 +118,13 @@ export default function questionAcademic() {
     const { applicationId, refreshApplication, studentAcademicAnswer } = useStudent();
     const [loading, setLoading] = useState(false);
 
+    const [dbData, setDbData] = useState<any>(null);
+    const [isDataSelected, setIsDataSelected] = useState<boolean>(false);
+    const [showConflictModal, setShowConflictModal] = useState<boolean>(false);
+    const [pendingLocalData, setPendingLocalData] = useState<any>(null);
+    const [localDataTime, setLocalDataTime] = useState<any>(null);
+    const [cloudDataTime, setCloudDataTime] = useState<any>(null);
+
     const form = useForm({
         resolver: zodResolver(questionAcademicSchema),
         defaultValues: {
@@ -134,20 +144,60 @@ export default function questionAcademic() {
     });
 
     useEffect(() => {
+        let mappedValues: Record<string, string> = {};
+        let latestDbTime = 0;
+        let hasDbData = false;
+
         if (studentAcademicAnswer && studentAcademicAnswer.length > 0) {
-
-            const mappedValues = studentAcademicAnswer.reduce((acc, item) => {
-
+            hasDbData = true;
+            mappedValues = studentAcademicAnswer.reduce((acc, item: any) => {
                 const index = item.std_academic_answer_section.split('_')[1];
-                const key = `question${index}`;
+                acc[`question${index}`] = item.std_academic_answer;
 
-                acc[key] = item.std_academic_answer;
+                if (item.updated_at) {
+                    const time = new Date(item.updated_at).getTime();
+                    if (time > latestDbTime) latestDbTime = time;
+                }
                 return acc;
             }, {} as Record<string, string>);
+            setDbData(mappedValues);
+        }
 
+        let localParsed: any = null;
+        let localTime = 0;
+        const savedData = localStorage.getItem("comcamp37_question_academic_draft");
+
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+
+                if (parsed.application_id === applicationId) {
+                    localParsed = parsed;
+                    localTime = new Date(localParsed.updated_at).getTime();
+
+                } else {
+                    localStorage.removeItem("comcamp37_question_academic_draft");
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        setCloudDataTime(latestDbTime);
+        setLocalDataTime(localTime);
+
+        if (localParsed && !hasDbData) {
+            form.reset(localParsed.values);
+        }
+        else if (localParsed && hasDbData && localTime > latestDbTime) {
+            setPendingLocalData(localParsed.values);
+            setShowConflictModal(true);
             form.reset(mappedValues);
         }
-    }, [studentAcademicAnswer, form.reset]);
+        else if (hasDbData) {
+            form.reset(mappedValues);
+            if (localParsed) localStorage.removeItem("comcamp37_question_academic_draft");
+        }
+        setIsDataSelected(true);
+    }, [studentAcademicAnswer, form, applicationId]);
 
     const onSubmit = async (data: any) => {
         setLoading(true);
@@ -175,6 +225,8 @@ export default function questionAcademic() {
                 { withCredentials: true }
             );
 
+            localStorage.removeItem("comcamp37_question_academic_draft");
+
             await refreshApplication();
 
             toast.success("บันทึกคำตอบเรียบร้อยแล้ว");
@@ -188,6 +240,101 @@ export default function questionAcademic() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const { unsubscribe } = form.watch((values, { type }) => {
+            if (type) {
+                localStorage.setItem(
+                    "comcamp37_question_academic_draft",
+                    JSON.stringify({ values, application_id: applicationId, updated_at: new Date() })
+                );
+            }
+        });
+        return unsubscribe;
+    }, [form.watch, applicationId]);
+
+    const getRelativeTime = (date: Date | string | number) => {
+        if (!date) return "ไม่ทราบเวลา";
+        return formatDistanceToNow(new Date(date), {
+            addSuffix: true,
+            locale: th
+        });
+    };
+
+    const getFullDateTime = (date: Date | string | number) => {
+        if (!date) return "ไม่ระบุเวลา";
+        return format(new Date(date), 'd MMM yyyy HH:mm น.', {
+            locale: th
+        });
+    };
+
+    const handleUseLocal = () => {
+        if (pendingLocalData) form.reset(pendingLocalData);
+        setShowConflictModal(false);
+        setIsDataSelected(true);
+    };
+
+    const handleUseCloud = () => {
+        if (dbData) form.reset(dbData);
+        setShowConflictModal(false);
+        localStorage.removeItem("comcamp37_question_academic_draft");
+        setIsDataSelected(true);
+    };
+
+    if (showConflictModal) return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                className="relative w-full max-w-xl bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6"
+            >
+                <div>
+                    <h2 className="text-xl font-bold text-white mb-2">พบข้อมูลที่ใหม่กว่าบนอุปกรณ์นี้</h2>
+                    <p className="text-twilight-indigo-300">
+                        คุณมีการแก้ไขล่าสุดบนอุปกรณ์นี้ที่ยังไม่ได้บันทึกลงระบบ ต้องการทำต่อจากที่ค้างไว้ หรือใช้ข้อมูลเดิมจากระบบ
+                    </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 mt-4 sm:mt-0 justify-between">
+                    <div className="flex-1">
+                        <Button
+                            type="button"
+                            onClick={handleUseLocal}
+                            className="py-6 w-full font-bold transition-all cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black border border-transparent"
+                        >
+                            ทำต่อจากที่ค้างไว้ <FontAwesomeIcon icon={faHardDrive}/>
+                        </Button>
+                        <div className="text-sm text-center text-twilight-indigo-300 opacity-80 pt-2">
+                            แก้ไขเมื่อ {getRelativeTime(localDataTime)}
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <Button
+                            variant="outline"
+                            type="button"
+                            onClick={handleUseCloud}
+                            className="py-6 w-full font-bold transition-all cursor-pointer text-white "
+                        >
+                            ใช้ข้อมูลเดิมจากระบบ <FontAwesomeIcon icon={faCloud}/>
+                        </Button>
+                        <div className="text-sm text-center text-twilight-indigo-300 opacity-80 pt-2">
+                            บันทึกล่าสุด {getFullDateTime(cloudDataTime)}
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    )
 
     return (
         <Form {...form}>

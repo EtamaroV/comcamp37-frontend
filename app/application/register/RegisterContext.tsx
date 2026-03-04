@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { useRouter } from 'next/navigation'
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -11,10 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faArrowLeft,
     faArrowRight, faBoxArchive,
-    faBriefcaseMedical, faCakeCandles, faCalendar, faChild, faChildDress, faCross, faDharmachakra, faEnvelope,
+    faBriefcaseMedical, faCakeCandles, faCalendar, faChild, faChildDress, faCloud, faCross, faDharmachakra, faEnvelope,
     faFloppyDisk,
     faFolderOpen,
-    faGraduationCap, faHouse, faOm, faPersonBreastfeeding, faPhone, faSchool, faShirt, faStarAndCrescent, faUser
+    faGraduationCap,
+    faHardDrive, faHouse, faOm, faPersonBreastfeeding, faPhone, faSchool, faShirt, faStarAndCrescent, faUser
 } from '@fortawesome/free-solid-svg-icons';
 
 import { cn } from "@/lib/utils";
@@ -49,10 +50,11 @@ import {SchoolInput} from "@/components/ui/schoolInput";
 import { toast } from "sonner"
 
 import {th} from "date-fns/locale";
-import {addYears, format } from "date-fns"
+import {addYears, format, formatDistanceToNow } from "date-fns"
 import {useStudent, StudentInfo} from "@/contexts/StudentContext";
 import {faApple, faLinux, faMicrosoft, faWindows} from "@fortawesome/free-brands-svg-icons";
 import {useUser} from "@/contexts/UserContext";
+import {motion} from "motion/react";
 
 interface AddressResponse {
     postal: number;
@@ -117,166 +119,303 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     const [step, setStep] = useState(1);
     const [allData, setAllData] = useState<Partial<FormData>>({});
     const [isLoaded, setIsLoaded] = useState(false);
-    const { studentInfo } = useStudent();
+    const { studentInfo, applicationId } = useStudent();
     const { user } = useUser();
 
+    const [isDataSelected, setIsDataSelected] = useState<boolean>(false);
+    const [showConflictModal, setShowConflictModal] = useState<boolean>(false);
+    const [pendingLocalData, setPendingLocalData] = useState<any>(null);
+    const [localDataTime, setLocalDataTime] = useState<any>(null);
+    const [cloudDataTime, setCloudDataTime] = useState<any>(null);
+
+    const safeDecode = (value: any) => {
+        if (!value || typeof value !== 'string') return value || "";
+        try { return decodeURIComponent(value); } catch (e) { return value; }
+    };
+
+    const mapDbToForm = (info: StudentInfo): Partial<RegisterFormValues> => {
+        const dbPlan = safeDecode(info.std_info_education_plan);
+
+        const rawAddress = safeDecode(info.std_info_address);
+
+        let parsedAddress = rawAddress;
+        let parsedSubDistrict = "";
+        let parsedDistrict = "";
+        let parsedProvince = "";
+        let parsedZipcode = "";
+
+        // Regex นี้รองรับทั้งคำว่า แขวง/ตำบล และ เขต/อำเภอ (เผื่อเซฟมาต่างกัน)
+        const addressRegex = /^(.*?)\s*(?:แขวง|ตำบล)(.*?)\s*(?:เขต|อำเภอ)(.*?)\s*จังหวัด(.*?)\s*(\d{5})$/;
+        const addressMatch = rawAddress.match(addressRegex);
+
+        if (addressMatch) {
+            parsedAddress = addressMatch[1].trim();
+            parsedSubDistrict = addressMatch[2].trim();
+            parsedDistrict = addressMatch[3].trim();
+            parsedProvince = addressMatch[4].trim();
+            parsedZipcode = addressMatch[5].trim();
+        }
+
+        const standardPrograms = [
+            "วิทยาศาสตร์-คณิตศาสตร์",
+            "คณิตศาสตร์-คอมพิวเตอร์",
+            "วิทยาศาสตร์-คอมพิวเตอร์",
+            "ปวช. สาขาคอมพิวเตอร์ธุรกิจ",
+            "ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)",
+            "ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์"
+        ];
+
+        let academicProgram = "";
+        let academicProgramOther = "";
+
+        if (standardPrograms.includes(dbPlan)) {
+            academicProgram = dbPlan;
+        } else if (dbPlan) {
+            academicProgram = "อื่น ๆ";
+            academicProgramOther = dbPlan;
+        }
+
+        const fullChronicString = safeDecode(info.std_info_chronic_disease);
+        let chronicDisease = fullChronicString;
+        let chronicMore = "";
+        const separator = ' รายละเอียดเพิ่มเติม "';
+
+        if (fullChronicString.includes(separator)) {
+            const parts = fullChronicString.split(separator);
+            chronicDisease = parts[0];
+            if (parts.length > 1) chronicMore = parts[1].replace(/"$/, '');
+        }
+
+        let laptopOS = safeDecode(info.std_info_laptop_os);
+        let laptopOSOther = "";
+
+        if (laptopOS.startsWith("Linux")) {
+            laptopOSOther = laptopOS.replace("Linux (", "").replace(")", "");
+            laptopOS = "Linux";
+        } else if (laptopOS.startsWith("อื่น ๆ:")) {
+            laptopOSOther = laptopOS.replace("อื่น ๆ: ", "");
+            laptopOS = "อื่น ๆ";
+        }
+
+        return {
+            name_prefix: safeDecode(info.std_info_prefix),
+            name_first: safeDecode(info.std_info_first_name),
+            name_last: safeDecode(info.std_info_last_name),
+            name_nick: safeDecode(info.std_info_nick_name),
+            info_dob: info.std_info_birthdate ? new Date(info.std_info_birthdate) : undefined,
+            info_gender: safeDecode(info.std_info_gender) as "male" | "female",
+            info_religion: safeDecode(info.std_info_religion),
+            info_phone: safeDecode(info.std_info_phone_number),
+
+            info_address: parsedAddress,
+            info_sub_district: parsedSubDistrict,
+            info_district: parsedDistrict,
+            info_province: parsedProvince,
+            info_zipcode: parsedZipcode,
+
+            academic_level: safeDecode(info.std_info_education_level),
+            academic_school: safeDecode(info.std_info_education_institute),
+
+            academic_program: academicProgram,
+            academic_program_other: academicProgramOther,
+
+            grade_gpax: info.std_info_grade_gpax,
+            grade_math: info.std_info_grade_math,
+            grade_sci: info.std_info_grade_sci,
+            grade_eng: info.std_info_grade_eng,
+
+            guardian_name: safeDecode(info.std_info_parent_fullname),
+            guardian_relationship: safeDecode(info.std_info_parent_relation),
+            guardian_phone: safeDecode(info.std_info_parent_phone_number),
+
+            health_medicalRights: safeDecode(info.std_info_medical_insurance),
+            health_chronicDiseases: chronicDisease,
+            health_more: chronicMore,
+            health_drugAllergies: safeDecode(info.std_info_drug_allergy),
+            health_dietaryRestrictions: safeDecode(info.std_info_food_allergy),
+            health_bloodType: safeDecode(info.std_info_blood_group),
+
+            availability_haveAttended: String(info.std_info_have_participated) as "true" | "false",
+            availability_laptop: String(info.std_info_have_laptop) as "true" | "false",
+            availability_attendAllDays: String(info.std_info_can_participate_every_day) as "true" | "false",
+            availability_tablet: String(info.std_info_have_tablet) as "true" | "false",
+            availability_mouse: String(info.std_info_have_mouse) as "true" | "false",
+
+            availability_travelPlan: safeDecode(info.std_info_travel_plan),
+            availability_laptopOS: laptopOS,
+            availability_laptopOS_other: laptopOSOther,
+            apparel_size: safeDecode(info.std_info_shirt_size),
+        };
+    };
+
+    const loadData = () => {
+        const savedData = localStorage.getItem("comcamp37_reg_input");
+        let localParsed = null;
+
+        if (savedData) {
+            try {
+                localParsed = JSON.parse(savedData);
+            } catch (e) { console.error(e); }
+        }
+
+        if (studentInfo?.std_application_id === applicationId && localParsed && localParsed.application_id === applicationId) {
+            const localTime = new Date(localParsed.updated_at).getTime();
+            const dbTime = studentInfo.updated_at ? new Date(studentInfo.updated_at).getTime() : 0;
+            setCloudDataTime(dbTime);
+            setLocalDataTime(localTime);
+
+            if (localTime > dbTime) {
+                setPendingLocalData(localParsed);
+                setShowConflictModal(true);
+                setIsLoaded(true);
+                return;
+            }
+        }
+
+        if (studentInfo && studentInfo.std_info_first_name) {
+            setAllData(prev => ({ ...prev, ...mapDbToForm(studentInfo) }));
+        } else if (localParsed && localParsed.email === user?.email) {
+            if (localParsed.allData) setAllData(localParsed.allData);
+            if (localParsed.step) setStep(localParsed.step);
+        }
+
+        setIsLoaded(true);
+        setIsDataSelected(true)
+    };
+
     useEffect(() => {
-        const safeDecode = (value: any) => {
-            if (!value || typeof value !== 'string') return value || "";
-            try { return decodeURIComponent(value); } catch (e) { return value; }
-        };
-
-        const mapDbToForm = (info: StudentInfo): Partial<RegisterFormValues> => {
-            const dbPlan = safeDecode(info.std_info_education_plan);
-
-            const rawAddress = safeDecode(info.std_info_address);
-
-            let parsedAddress = rawAddress;
-            let parsedSubDistrict = "";
-            let parsedDistrict = "";
-            let parsedProvince = "";
-            let parsedZipcode = "";
-
-            // Regex นี้รองรับทั้งคำว่า แขวง/ตำบล และ เขต/อำเภอ (เผื่อเซฟมาต่างกัน)
-            const addressRegex = /^(.*?)\s*(?:แขวง|ตำบล)(.*?)\s*(?:เขต|อำเภอ)(.*?)\s*จังหวัด(.*?)\s*(\d{5})$/;
-            const addressMatch = rawAddress.match(addressRegex);
-
-            if (addressMatch) {
-                parsedAddress = addressMatch[1].trim();
-                parsedSubDistrict = addressMatch[2].trim();
-                parsedDistrict = addressMatch[3].trim();
-                parsedProvince = addressMatch[4].trim();
-                parsedZipcode = addressMatch[5].trim();
-            }
-
-            const standardPrograms = [
-                "วิทยาศาสตร์-คณิตศาสตร์",
-                "คณิตศาสตร์-คอมพิวเตอร์",
-                "วิทยาศาสตร์-คอมพิวเตอร์",
-                "ปวช. สาขาคอมพิวเตอร์ธุรกิจ",
-                "ปวช. สาขาช่างไฟฟ้ากำลัง (อิเล็กทรอนิกส์)",
-                "ปวช. สาขาเมคคาทรอนิกส์และหุ่นยนต์"
-            ];
-
-            let academicProgram = "";
-            let academicProgramOther = "";
-
-            if (standardPrograms.includes(dbPlan)) {
-                academicProgram = dbPlan;
-            } else if (dbPlan) {
-                academicProgram = "อื่น ๆ";
-                academicProgramOther = dbPlan;
-            }
-
-            const fullChronicString = safeDecode(info.std_info_chronic_disease);
-            let chronicDisease = fullChronicString;
-            let chronicMore = "";
-            const separator = ' รายละเอียดเพิ่มเติม "';
-
-            if (fullChronicString.includes(separator)) {
-                const parts = fullChronicString.split(separator);
-                chronicDisease = parts[0];
-                if (parts.length > 1) chronicMore = parts[1].replace(/"$/, '');
-            }
-
-            let laptopOS = safeDecode(info.std_info_laptop_os);
-            let laptopOSOther = "";
-
-            if (laptopOS.startsWith("Linux")) {
-                laptopOSOther = laptopOS.replace("Linux (", "").replace(")", "");
-                laptopOS = "Linux";
-            } else if (laptopOS.startsWith("อื่น ๆ:")) {
-                laptopOSOther = laptopOS.replace("อื่น ๆ: ", "");
-                laptopOS = "อื่น ๆ";
-            }
-
-            return {
-                name_prefix: safeDecode(info.std_info_prefix),
-                name_first: safeDecode(info.std_info_first_name),
-                name_last: safeDecode(info.std_info_last_name),
-                name_nick: safeDecode(info.std_info_nick_name),
-                info_dob: info.std_info_birthdate ? new Date(info.std_info_birthdate) : undefined,
-                info_gender: safeDecode(info.std_info_gender) as "male" | "female",
-                info_religion: safeDecode(info.std_info_religion),
-                info_phone: safeDecode(info.std_info_phone_number),
-
-                info_address: parsedAddress,
-                info_sub_district: parsedSubDistrict,
-                info_district: parsedDistrict,
-                info_province: parsedProvince,
-                info_zipcode: parsedZipcode,
-
-                academic_level: safeDecode(info.std_info_education_level),
-                academic_school: safeDecode(info.std_info_education_institute),
-
-                academic_program: academicProgram,
-                academic_program_other: academicProgramOther,
-
-                grade_gpax: info.std_info_grade_gpax,
-                grade_math: info.std_info_grade_math,
-                grade_sci: info.std_info_grade_sci,
-                grade_eng: info.std_info_grade_eng,
-
-                guardian_name: safeDecode(info.std_info_parent_fullname),
-                guardian_relationship: safeDecode(info.std_info_parent_relation),
-                guardian_phone: safeDecode(info.std_info_parent_phone_number),
-
-                health_medicalRights: safeDecode(info.std_info_medical_insurance),
-                health_chronicDiseases: chronicDisease,
-                health_more: chronicMore,
-                health_drugAllergies: safeDecode(info.std_info_drug_allergy),
-                health_dietaryRestrictions: safeDecode(info.std_info_food_allergy),
-                health_bloodType: safeDecode(info.std_info_blood_group),
-
-                availability_haveAttended: String(info.std_info_have_participated) as "true" | "false",
-                availability_laptop: String(info.std_info_have_laptop) as "true" | "false",
-                availability_attendAllDays: String(info.std_info_can_participate_every_day) as "true" | "false",
-                availability_tablet: String(info.std_info_have_tablet) as "true" | "false",
-                availability_mouse: String(info.std_info_have_mouse) as "true" | "false",
-
-                availability_travelPlan: safeDecode(info.std_info_travel_plan),
-                availability_laptopOS: laptopOS,
-                availability_laptopOS_other: laptopOSOther,
-                apparel_size: safeDecode(info.std_info_shirt_size),
-            };
-        };
-
-        const loadData = () => {
-            if (studentInfo && studentInfo.std_info_first_name) {
-                setAllData(prev => ({ ...prev, ...mapDbToForm(studentInfo) }));
-            } else {
-                const savedData = localStorage.getItem("comcamp37_reg_input");
-                if (savedData) {
-                    try {
-                        const parsed = JSON.parse(savedData);
-                        if (parsed.email == user?.email) {
-                            if (parsed.allData) setAllData(parsed.allData);
-                            if (parsed.step) setStep(parsed.step);
-                        }
-                    } catch (e) { console.error(e); }
-                }
-            }
-            setIsLoaded(true);
-        };
-
         loadData();
-
     }, [studentInfo]);
 
-    useEffect(() => {
-        if (isLoaded) {
-            localStorage.setItem("comcamp37_reg_input", JSON.stringify({ step, allData, email: user?.email }));
-        }
-    }, [allData, step, isLoaded]);
+    const saveToLocal = (dataToSave: any, stepToSave: number) => {
+        if (!user?.email || !applicationId) return;
 
-    const next = () => {setStep(s => s + 1); window.scrollTo(0, 0);};
-    const prev = () => {setStep(s => s - 1); window.scrollTo(0, 0);};
+        localStorage.setItem(
+            "comcamp37_reg_input",
+            JSON.stringify({
+                step: stepToSave,
+                allData: dataToSave,
+                email: user.email,
+                application_id: applicationId,
+                updated_at: new Date()
+            })
+        );
+    };
+
+    const handleUseLocal = () => {
+        if (pendingLocalData.allData) setAllData(pendingLocalData.allData);
+        if (pendingLocalData.step) setStep(pendingLocalData.step);
+        setShowConflictModal(false);
+        setIsDataSelected(true);
+    };
+
+    const handleUseCloud = () => {
+        if (studentInfo == null) return;
+        setAllData(prev => ({ ...prev, ...mapDbToForm(studentInfo) }));
+        localStorage.removeItem("comcamp37_reg_input");
+        setShowConflictModal(false);
+        setIsDataSelected(true);
+    };
+
+    const next = () => {
+        setStep(s => {
+            const nextStep = s + 1;
+            setAllData(currentData => {
+                saveToLocal(currentData, nextStep);
+                return currentData;
+            });
+            return nextStep;
+        });
+        window.scrollTo(0, 0);
+    };
+
+    const prev = () => {
+        setStep(s => {
+            const prevStep = s - 1;
+            setAllData(currentData => {
+                saveToLocal(currentData, prevStep);
+                return currentData;
+            });
+            return prevStep;
+        });
+        window.scrollTo(0, 0);
+    };
+
+    const getRelativeTime = (date: Date | string | number) => {
+        if (!date) return "ไม่ทราบเวลา";
+        return formatDistanceToNow(new Date(date), {
+            addSuffix: true,
+            locale: th
+        });
+    };
+
+    const getFullDateTime = (date: Date | string | number) => {
+        if (!date) return "ไม่ระบุเวลา";
+        return format(new Date(date), 'd MMM yyyy HH:mm น.', {
+            locale: th
+        });
+    };
 
     if (!isLoaded) return <div className="p-10 text-center text-white">Loading...</div>;
 
     return (
-        <RegisterCtx.Provider value={{ step, setStep, next, prev, allData, setAllData }}>
-            {children}
+        <RegisterCtx.Provider value={{ step, setStep, next, prev, allData, setAllData, saveToLocal }}>
+            {showConflictModal ? (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    />
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                        className="relative w-full max-w-xl bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6"
+                    >
+                        <div>
+                            <h2 className="text-xl font-bold text-white mb-2">พบข้อมูลที่ใหม่กว่าบนอุปกรณ์นี้</h2>
+                            <p className="text-twilight-indigo-300">
+                                คุณมีการแก้ไขล่าสุดบนอุปกรณ์นี้ที่ยังไม่ได้บันทึกลงระบบ ต้องการทำต่อจากที่ค้างไว้ หรือใช้ข้อมูลเดิมจากระบบ
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 mt-4 sm:mt-0 justify-between">
+                            <div className="flex-1">
+                                <Button
+                                    type="button"
+                                    onClick={handleUseLocal}
+                                    className="py-6 w-full font-bold transition-all cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black border border-transparent"
+                                >
+                                    ทำต่อจากที่ค้างไว้ <FontAwesomeIcon icon={faHardDrive}/>
+                                </Button>
+                                <div className="text-sm text-center text-twilight-indigo-300 opacity-80 pt-2">
+                                    แก้ไขเมื่อ {getRelativeTime(localDataTime)}
+                                </div>
+                            </div>
+                            <div className="flex-1">
+                                <Button
+                                    variant="outline"
+                                    type="button"
+                                    onClick={handleUseCloud}
+                                    className="py-6 w-full font-bold transition-all cursor-pointer text-white "
+                                >
+                                    ใช้ข้อมูลเดิมจากระบบ <FontAwesomeIcon icon={faCloud}/>
+                                </Button>
+                                <div className="text-sm text-center text-twilight-indigo-300 opacity-80 pt-2">
+                                    บันทึกล่าสุด {getFullDateTime(cloudDataTime)}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            ) : children
+            }
+
         </RegisterCtx.Provider>
     );
 }
@@ -293,7 +432,7 @@ export default function RegisterContent() {
 }
 
 function Step1() {
-    const { next, setAllData, allData } = useContext(RegisterCtx)
+    const { next, setAllData, allData, saveToLocal, step } = useContext(RegisterCtx)
     const { user } = useUser();
     const { studentStatus } = useStudent();
     const router = useRouter()
@@ -430,11 +569,56 @@ function Step1() {
     };
 
     useEffect(() => {
-        const { unsubscribe } = form.watch((values) => {
-            setAllData((prev: any) => ({ ...prev, ...values }));
+        const { unsubscribe } = form.watch((values, { type }) => {
+            setAllData((prev: any) => {
+                const newData = { ...prev, ...values }
+
+                if (type) {
+                    saveToLocal(newData, step)
+                }
+
+                return newData;
+            });
         });
         return unsubscribe;
-    }, [form.watch, setAllData]);
+    }, [form.watch, setAllData, step, saveToLocal]);
+
+    useEffect(() => {
+        if (allData?.info_zipcode && String(allData.info_zipcode).length === 5) {
+
+            const loadSavedAddress = async () => {
+                setIsLoading(true);
+                try {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/util/address?postal=${allData.info_zipcode}`);
+                    const data: AddressResponse[] = await res.json();
+
+                    if (data && data.length > 0) {
+                        setAddressOptions(data);
+
+                        const uniqueProvinces = Array.from(new Set(data.map(d => d.province)));
+                        setAvailableProvinces(uniqueProvinces);
+
+                        if (allData.info_province) {
+                            const filteredByProvince = data.filter(d => d.province === allData.info_province);
+                            const uniqueDistricts = Array.from(new Set(filteredByProvince.map(d => d.district)));
+                            setAvailableDistricts(uniqueDistricts);
+
+                            if (allData.info_district) {
+                                const subs = filteredByProvince.filter(d => d.district === allData.info_district).map(d => d.subdistrict);
+                                setAvailableSubDistricts(subs);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Failed to load address data:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            loadSavedAddress();
+        }
+    }, []);
 
     const onSubmit = (data: any) => {
         setAllData((prev: any) => ({...prev, ...data}));
@@ -987,7 +1171,7 @@ function Step1() {
 }
 
 function Step2() {
-    const {prev, next, setAllData, allData} = useContext(RegisterCtx);
+    const {prev, next, setAllData, allData, step, saveToLocal} = useContext(RegisterCtx);
     const { user } = useUser();
 
     const form = useForm<RegisterFormValues>({
@@ -1044,11 +1228,19 @@ function Step2() {
     })
 
     useEffect(() => {
-        const { unsubscribe } = form.watch((values) => {
-            setAllData((prev: any) => ({ ...prev, ...values }));
+        const { unsubscribe } = form.watch((values, { type }) => {
+            setAllData((prev: any) => {
+                const newData = { ...prev, ...values }
+
+                if (type) {
+                    saveToLocal(newData, step)
+                }
+
+                return newData;
+            });
         });
         return unsubscribe;
-    }, [form.watch, setAllData]);
+    }, [form.watch, setAllData, step, saveToLocal]);
 
     const onSubmit = (data: any) => {
         setAllData((prev: any) => ({...prev, ...data}));
@@ -1520,7 +1712,7 @@ function calculateAge(birthDateString: string | Date) {
 }
 
 function Step3() {
-    const {prev, next, setAllData, allData} = useContext(RegisterCtx);
+    const {prev, next, setAllData, allData, step, saveToLocal} = useContext(RegisterCtx);
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
 
@@ -1583,11 +1775,19 @@ function Step3() {
     })
 
     useEffect(() => {
-        const { unsubscribe } = form.watch((values) => {
-            setAllData((prev: any) => ({ ...prev, ...values }));
+        const { unsubscribe } = form.watch((values, { type }) => {
+            setAllData((prev: any) => {
+                const newData = { ...prev, ...values }
+
+                if (type) {
+                    saveToLocal(newData, step)
+                }
+
+                return newData;
+            });
         });
         return unsubscribe;
-    }, [form.watch, setAllData]);
+    }, [form.watch, setAllData, step, saveToLocal]);
 
     const onSubmit = async () => {
         console.log("ส่งข้อมูลทั้งหมดไป API:", allData);

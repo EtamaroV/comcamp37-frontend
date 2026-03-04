@@ -64,6 +64,9 @@ export interface StudentInfo {
     std_info_laptop_os: string,
     std_info_have_tablet: boolean,
     std_info_have_mouse: boolean,
+
+    created_at: string,
+    updated_at: string
 }
 
 interface StudentRegisAnswer {
