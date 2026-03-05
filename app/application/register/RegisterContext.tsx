@@ -249,6 +249,8 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     };
 
     const loadData = () => {
+        if (isDataSelected) return;
+
         const savedData = localStorage.getItem("comcamp37_reg_input");
         let localParsed = null;
 
@@ -280,7 +282,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         }
 
         setIsLoaded(true);
-        setIsDataSelected(true)
+        setIsDataSelected(true);
     };
 
     useEffect(() => {
