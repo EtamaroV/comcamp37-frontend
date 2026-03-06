@@ -57,7 +57,7 @@ const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => 
         EXPIRED: 'หมดเขตรับสมัครแล้ว',
     };
 
-    const text = overlayContent[status];
+    const text: string | null = overlayContent[status];
 
     if (!text) return null;
 
@@ -70,7 +70,7 @@ const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => 
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute z-32 rounded-xl left-0 top-0 backdrop-blur-lg backdrop-brightness-75 inset-0 flex items-center justify-center"
+                    className={`absolute z-40 rounded-xl left-0 top-0 backdrop-blur-lg backdrop-brightness-75 inset-0 flex items-center justify-center`}
                 >
                     <motion.span
                         // ตั้งค่าแอนิเมชันของตัวหนังสือ (เด้งดึ๋งนิดๆ ตอนโผล่มา)
@@ -141,7 +141,7 @@ const statusConfig = {
     },
     SUBMITTED: {
         title: 'ส่งใบสมัครเรียบร้อยแล้ว',
-        description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย!',
+        description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย !',
         buttonText: 'ส่งข้อมูลสำเร็จ',
         buttonClass: 'hidden',
         isDisabled: true,
@@ -505,21 +505,38 @@ export default function applicationHome() {
             </AnimatePresence>
         <main className="flex-1 w-full max-w-[1280px] mx-auto py-3 px-3 md:px-6 flex flex-col gap-3 md:gap-5 mt-5 md:mt-0">
 
-            <div className="order-2 md:order-1 ">
+            <div className="order-2 md:order-1">
 
                 <div className="absolute w-full justify-center left-0 z-20 hidden md:flex">
-                    <HorizontalMissionPath missions={myMissions}/>
+                    <HorizontalMissionPath missions={myMissions} />
                 </div>
-                <div className={`md:h-[250px] w-full relative bg-twilight-indigo-900 rounded-xl shadow-sm px-7 py-5 drop-shadow-xl drop-shadow-black/20 ${isIncompleteError ? "border-2 border-red-600" : ""}`}>
-                    <MissionOverlay status={currentStatus} />
-                    <div className="text-2xl font-bold z-30 absolute bg-twilight-indigo-900 pb-3">ภารกิจของคุณ <FontAwesomeIcon icon={faMapLocationDot} /></div>
-                    <div className="block md:hidden">
+
+                <div className="relative w-full md:h-[250px] px-7 py-5">
+
+                    <div className={`absolute inset-0 rounded-xl shadow-sm drop-shadow-xl drop-shadow-black/20 z-10 ${isIncompleteError ? "border-2 border-red-600" : ""}`}>
+                        <div className="bg-twilight-indigo-900 absolute left-0 top-0 w-full h-full rounded-xl"></div>
+                    </div>
+
+                    <div className="text-2xl font-bold absolute bg-twilight-indigo-900 pb-3 z-30">
+                        ภารกิจของคุณ <FontAwesomeIcon icon={faMapLocationDot} />
+                    </div>
+
+                    <div className="block md:hidden relative z-30">
                         <div className="rounded-2xl pt-10 pb-6">
                             <VerticalMissionPath missions={myMissions} />
                         </div>
                     </div>
-                    <CountdownLabel status={statusExpired}/>
-                    {isIncompleteError && (<div className="absolute bottom-3 left-5 text-sm text-red-600">กรุณาทำภารกิจทั้งหมด</div>)}
+
+                    <CountdownLabel status={statusExpired} />
+
+                    {isIncompleteError && (
+                        <div className="absolute bottom-3 left-5 text-sm text-red-600 z-30">
+                            กรุณาทำภารกิจทั้งหมด
+                        </div>
+                    )}
+
+                    <MissionOverlay status={currentStatus} />
+
                 </div>
 
             </div>
