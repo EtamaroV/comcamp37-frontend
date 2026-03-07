@@ -9,6 +9,7 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useUser} from "@/contexts/UserContext";
 import {Spinner} from "@/components/ui/spinner";
+import {initializeClarity} from "@/app/metrics/MicrosoftClarity";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -17,6 +18,12 @@ export default function SignInPage() {
     const [isLoading, setIsLoading] = useState(false);
 
     const loginWithGoogle = async () => {
+        const consent = localStorage.getItem("comcamp37-cookie-consent")
+        if (!(consent === "true")) {
+            localStorage.setItem("comcamp37-cookie-consent", "true")
+            initializeClarity();
+        }
+
         try {
             setIsLoading(true); // เริ่มโหลด
             await authClient.signIn.social({
@@ -167,7 +174,7 @@ export default function SignInPage() {
                     เมื่อเข้าสู่ระบบ ถือว่าคุณได้ยอมรับ <br className="sm:hidden"/>
                     <a href="/privacy" className="text-orange-400 hover:text-orange-300 underline underline-offset-4 transition-colors">
                         นโยบายความเป็นส่วนตัว
-                    </a> ของเราแล้ว
+                    </a> และการใช้คุกกี้เพื่อวิเคราะห์และปรับปรุงบริการ
                 </motion.p>
 
             </motion.div>
