@@ -400,16 +400,17 @@ export default function applicationHome() {
         setIsSendingToStaff(true);
 
         try {
-            const systemMessage = `${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}
-อีเมล: ${user?.email || "-"}
-เบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number || "-"}
-รหัสใบสมัคร: ${applicationId || "-"}
-
-Clarity: ${getLatestCookie("_clck")?.slice(0, 6) || ""}
-
-${new Date().toLocaleString()}
-
-รายละเอียด
+            const systemMessage = `${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\n
+อีเมล: ${user?.email || "-"}\n
+เบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number || "-"}\n
+รหัสใบสมัคร: ${applicationId || "-"}\n
+\n
+Clarity: ${getLatestCookie("_clck")?.slice(0, 6) || ""}\n
+\n
+ComCamp 37\n
+${new Date().toLocaleString()}\n
+\n
+รายละเอียด\n
 ${SendToStaffAdditionalInfo.trim() || "-"}`;
 
             const body = {
