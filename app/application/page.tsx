@@ -7,10 +7,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faBellConcierge,
     faCopy,
-    faFloppyDisk,
     faFolderOpen,
     faMapLocationDot, faPaperPlane, faPersonHiking,
-    faSignsPost, faSpinner,
+    faSignsPost,
     faTents,
     faUser
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +20,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 import {useStudent} from "@/contexts/StudentContext";
 import {Button} from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import axios from "axios";
 import {Spinner} from "@/components/ui/spinner";
 import {REGIS_EXPIRED_DATE, TimerStatus, useCountdown} from "@/app/application/countdown";
@@ -31,11 +29,8 @@ import {addYears, format} from "date-fns";
 import {th} from "date-fns/locale";
 import {
     Field,
-    FieldDescription,
     FieldGroup,
     FieldLabel,
-    FieldLegend,
-    FieldSeparator,
     FieldSet,
 } from "@/components/ui/field"
 import { Textarea } from "@/components/ui/textarea"
@@ -366,15 +361,15 @@ export default function applicationHome() {
         return matches.length > 0 ? matches[0].split('=')[1] : null;
     };
 
-    const handleMultiClick = () => {
+    const handleMultiClick = async () => {
         const newCount = clickCount + 1;
         setClickCount(newCount);
 
         if (timerRef.current) clearTimeout(timerRef.current);
 
         if (newCount === 5) {
-            copyToClipboard();
             setClickCount(0);
+            await copyToClipboard();
             return;
         }
 
@@ -384,7 +379,7 @@ export default function applicationHome() {
     };
 
     const copyToClipboard = async () => {
-        const textToCopy = `โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\n${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n${getLatestCookie("_clck")?.slice(0,6)}\n\nComCamp 37\n${new Date().toLocaleString()}`;
+        const textToCopy = `โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\n${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n\n${getLatestCookie("_clck")?.split('%')[0]}\n\nComCamp 37\n${new Date().toLocaleString()}`;
         try {
             await navigator.clipboard.writeText(textToCopy);
             toast.success("คัดลอกรหัสใบสมัครแล้ว");
@@ -405,7 +400,7 @@ export default function applicationHome() {
 เบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number || "-"}\n
 รหัสใบสมัคร: ${applicationId || "-"}\n
 \n
-Clarity: ${getLatestCookie("_clck")?.slice(0, 6) || ""}\n
+Clarity: ${getLatestCookie("_clck")?.split('%')[0] || ""}\n
 \n
 ComCamp 37\n
 ${new Date().toLocaleString()}\n
@@ -599,7 +594,7 @@ ${SendToStaffAdditionalInfo.trim() || "-"}`;
                             </div>
 
                             <div className="bg-twilight-indigo-700 p-3 select-all rounded-lg">
-                                {decodeURIComponent(studentInfo?.std_info_prefix || "")}{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")}<br/>อีเมล: {user?.email}<br/>เบอร์โทรศัพท์: {studentInfo?.std_info_phone_number}<br/>รหัสใบสมัคร: {applicationId}<br/><br/>{getLatestCookie("_clck")?.slice(0,6)}<br/><br/>โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน<br/><br/>ComCamp 37<br/>{getTimeStamp}
+                                {decodeURIComponent(studentInfo?.std_info_prefix || "")}{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")}<br/>อีเมล: {user?.email}<br/>เบอร์โทรศัพท์: {studentInfo?.std_info_phone_number}<br/>รหัสใบสมัคร: {applicationId}<br/><br/>{getLatestCookie("_clck")?.split('%')[0]}<br/><br/>โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน<br/><br/>ComCamp 37<br/>{getTimeStamp}
                             </div>
 
                             <div className="flex flex-col-reverse md:flex-row gap-3 justify-end mt-4">
