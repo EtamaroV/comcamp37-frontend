@@ -44,13 +44,16 @@ const bgVariant:Variants = {
 function HeroSection() {
     const router = useRouter();
     const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+    const [isRegistrationEnd, setIsRegistrationEnd] = useState(false);
 
     const REGISTRATION_START_DATE = new Date(process.env.NEXT_PUBLIC_TIME_START_REGIS || "2026-02-23T00:00:00+07:00");
+    const REGISTRATION_END_DATE = new Date(process.env.NEXT_PUBLIC_TIME_END_REGIS || "2026-03-10T23:59:59+07:00");
 
     useEffect(() => {
         const checkTime = () => {
             const now = new Date();
             setIsRegistrationOpen(now >= REGISTRATION_START_DATE);
+            setIsRegistrationEnd(now >= REGISTRATION_END_DATE);
         };
 
         checkTime();
@@ -124,7 +127,7 @@ function HeroSection() {
                             className="z-20 group bg-white hover:bg-gray-300 w-full max-w-[340px] flex items-center justify-center h-15 md:h-15 px-4 rounded-xl shadow-lg shadow-black/50 cursor-pointer transition-colors border-none"
                         >
                     <span className="text-black font-bold text-xl md:leading-15.5 leading-13.5 tracking-tight font-(family-name:Roboto) h-full">
-                        สมัครเลย!
+                        {isRegistrationEnd ? "เข้าสู่ระบบ" : "สมัครเลย !"}
                     </span>
                         </motion.button>
                     ) :

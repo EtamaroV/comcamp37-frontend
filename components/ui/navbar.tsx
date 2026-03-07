@@ -14,15 +14,19 @@ function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+    const [isRegistrationEnd, setIsRegistrationEnd] = useState(false);
 
     const { user, signOut } = useUser();
 
     const REGISTRATION_START_DATE = new Date(process.env.NEXT_PUBLIC_TIME_START_REGIS || "2026-02-23T00:00:00+07:00");
+    const REGISTRATION_END_DATE = new Date(process.env.NEXT_PUBLIC_TIME_END_REGIS || "2026-03-10T23:59:59+07:00");
+
 
     useEffect(() => {
         const checkTime = () => {
             const now = new Date();
             setIsRegistrationOpen(now >= REGISTRATION_START_DATE);
+            setIsRegistrationEnd(now >= REGISTRATION_END_DATE);
         };
 
         checkTime();
@@ -98,7 +102,7 @@ function Navbar() {
                     onClick={() => { router.push('/signin'); if(isMobile) closeMenu(); }}
                     className={baseClass + (isMobile ? "drop-shadow-black/50 drop-shadow-lg font-bai_jamjuree bg-white/10 " : "drop-shadow-black/50 drop-shadow-lg")}
                 >
-                    สมัครเลย!
+                    {isRegistrationEnd ? "เข้าสู่ระบบ" : "สมัครเลย !"}
                 </motion.button>
             );
         }

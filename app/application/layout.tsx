@@ -130,6 +130,27 @@ function NoApp() {
     const { hasApplication, createApplication  } = useStudent();
     const { user, signOut } = useUser();
     const router = useRouter();
+
+    const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+    const [isRegistrationEnd, setIsRegistrationEnd] = useState(false);
+
+    const REGISTRATION_START_DATE = new Date(process.env.NEXT_PUBLIC_TIME_START_REGIS || "2026-02-23T00:00:00+07:00");
+    const REGISTRATION_END_DATE = new Date(process.env.NEXT_PUBLIC_TIME_END_REGIS || "2026-03-10T23:59:59+07:00");
+
+
+    useEffect(() => {
+        const checkTime = () => {
+            const now = new Date();
+            setIsRegistrationOpen(now >= REGISTRATION_START_DATE);
+            setIsRegistrationEnd(now >= REGISTRATION_END_DATE);
+        };
+
+        checkTime();
+
+        const timer = setInterval(checkTime, 60000);
+        return () => clearInterval(timer);
+    }, []);
+
     if ( !hasApplication ) {
     return (
         <div className="w-full h-full fixed top-0 bg-black/20 backdrop-blur-xl flex flex-col justify-center items-center z-100">
@@ -165,12 +186,23 @@ function NoApp() {
                 </div>
 
                 <div className="space-y-2 w-full">
-                    <Button
-                        onClick={() => createApplication()}
-                        className="cursor-pointer relative w-full px-8 py-6 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
-                    >
-                        สร้างใบสมัคร
-                    </Button>
+
+                    { isRegistrationEnd ? (
+                        <Button
+                            disabled
+                            className="cursor-pointer relative w-full px-8 py-6 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
+                        >
+                            หมดเขตรับสมัครแล้ว
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={() => createApplication()}
+                            className="cursor-pointer relative w-full px-8 py-6 font-bold rounded-xl bg-primary hover:bg-primary/90 focus:ring-offset-twilight-indigo-900"
+                        >
+                            สร้างใบสมัคร
+                        </Button>
+                    )}
+
                 </div>
             </motion.div>
         </div>
