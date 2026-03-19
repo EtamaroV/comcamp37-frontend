@@ -82,15 +82,25 @@ export function fixThaiLayout(text: string): string {
     return result;
 }
 
-export async function GET(req: NextRequest) {
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
 
-    const fontData = await fetch(
-        new URL('./NotoSansThai-OG.ttf', import.meta.url)
-    ).then((res) => res.arrayBuffer());
+export async function GET(req: NextRequest) {
+    const [fontData, bgBuffer] = await Promise.all([
+        fetch(new URL('./NotoSansThai-OG.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
+        fetch('https://storage.comcamp.io/web-assets/result/storyTemplate.png').then((res) => res.arrayBuffer())
+    ]);
+
+    const bgBase64 = `data:image/png;base64,${arrayBufferToBase64(bgBuffer)}`;
 
     const { searchParams } = new URL(req.url);
-    console.log(searchParams)
-    const title = fixThaiLayout(searchParams.get('name') ?? "")
+    const title = fixThaiLayout(searchParams.get('name') ?? "");
 
     return new ImageResponse(
         (
@@ -101,10 +111,22 @@ export async function GET(req: NextRequest) {
                     width: '100%',
                     position: 'relative',
                     backgroundColor: 'white',
-                    backgroundImage: 'url(https://storage.comcamp.io/web-assets/result/storyTemplate.png)',
                     fontFamily: 'NotoSansThai',
                 }}
             >
+                {/* ใช้ img tag แทน backgroundImage */}
+                <img
+                    src={bgBase64}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '1080px',
+                        height: '1920px',
+                        objectFit: 'cover',
+                    }}
+                />
+
                 <div
                     style={{
                         display: 'flex',
@@ -126,8 +148,7 @@ export async function GET(req: NextRequest) {
                     {title}
                 </div>
             </div>
-
-),
+        ),
         {
             width: 1080,
             height: 1920,
