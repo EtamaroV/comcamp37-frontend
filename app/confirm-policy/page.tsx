@@ -7,7 +7,7 @@ export default function Privacy() {
       <div className='w-full h-full bg-theme-primary-darken text-white scroll-smooth'>
         {/* <div className='bg-[#212738] flex justify-center font-bold py-8 sticky top-0 z-1'>banner</div> */}
         <div className='flex justify-center'>
-            <div className='font-zootopia text-center w-full flex flex-col items-center justify-center font-bold text-5xl px-15 pt-26 pb-3 bg-gradient-to-b from-theme-primary to-twilight-indigo-800'>
+            <div className='text-center w-full flex flex-col items-center justify-center font-bold text-5xl px-15 pt-26 pb-3 bg-gradient-to-b from-theme-primary to-twilight-indigo-800'>
             ข้อกำหนดในการยืนยันสิทธิเข้าร่วมโครงการ<br />
             <span className='text-center font-bai_jamjuree text-sm mt-5 opacity-70'>โครงการฝึกอบรมเชิงปฏิบัติการคอมพิวเตอร์เบื้องต้น ครั้งที่ 37 ขอชี้แจงข้อกำหนดในการยืนยันสิทธิเข้าร่วมโครงการ ดังนี้</span>
             </div>

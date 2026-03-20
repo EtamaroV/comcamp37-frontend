@@ -19,13 +19,15 @@ export interface StudentStatus {
     std_status_payment_done: boolean;
 }
 
+export type resultStatus = 'fail' | 'pass' | 'reserve' | 'waiting_for_announcement';
+
 export interface ApplicationStatus {
     std_application_id: string;
     std_application_submit: boolean;
     std_application_confirm: boolean;
     std_application_abort_reason: null;
     std_application_pass: false;
-    std_application_result: string;
+    std_application_result: resultStatus;
 }
 
 export interface StudentInfo {
@@ -142,7 +144,7 @@ export const StudentProvider = ({ children }: { children: ReactNode }) => {
             if (isMockMode) {
                 // --- จังหวะ Mock ---
                 console.log("🛠️ StudentContext: Using Mock Data");
-                await new Promise(resolve => setTimeout(resolve, 800)); // จำลองดีเลย์
+                await new Promise(resolve => setTimeout(resolve, Number(process.env.NEXT_PUBLIC_MOCK_LOADINGTIME) || 0)); // จำลองดีเลย์
                 res = { data :mockStudentApplication };
             } else {
                 res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/student/application`, { withCredentials: true });

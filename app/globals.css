@@ -15,6 +15,30 @@
     --color-pallete-3: #4C3B33;
     --color-pallete-4: #4C3B33;
 
+    --color-toasted-almond-50: #fcf0e8;
+    --color-toasted-almond-100: #fae1d1;
+    --color-toasted-almond-200: #f4c3a4;
+    --color-toasted-almond-300: #efa476;
+    --color-toasted-almond-400: #ea8648;
+    --color-toasted-almond-500: #e4681b;
+    --color-toasted-almond-600: #b75315;
+    --color-toasted-almond-700: #893e10;
+    --color-toasted-almond-800: #5b2a0b;
+    --color-toasted-almond-900: #2e1505;
+    --color-toasted-almond-950: #200f04;
+
+    --color-cinnamon-wood-50: #faf1eb;
+    --color-cinnamon-wood-100: #f4e2d7;
+    --color-cinnamon-wood-200: #e9c5af;
+    --color-cinnamon-wood-300: #dea887;
+    --color-cinnamon-wood-400: #d38b5f;
+    --color-cinnamon-wood-500: #c86f37;
+    --color-cinnamon-wood-600: #a0582c;
+    --color-cinnamon-wood-700: #784221;
+    --color-cinnamon-wood-800: #502c16;
+    --color-cinnamon-wood-900: #28160b;
+    --color-cinnamon-wood-950: #1c0f08;
+
     --color-twilight-indigo-50: #ebeefa;
     --color-twilight-indigo-100: #d6ddf5;
     --color-twilight-indigo-200: #adbceb;
@@ -26,6 +50,18 @@
     --color-twilight-indigo-800: #142352;
     --color-twilight-indigo-900: #0a1129;
     --color-twilight-indigo-950: #070c1d;
+
+    --color-cobalt-blue-50: #e6f0ff;
+    --color-cobalt-blue-100: #cce1ff;
+    --color-cobalt-blue-200: #9ac4fe;
+    --color-cobalt-blue-300: #67a6fe;
+    --color-cobalt-blue-400: #3488fe;
+    --color-cobalt-blue-500: #016afe;
+    --color-cobalt-blue-600: #0155cb;
+    --color-cobalt-blue-700: #014098;
+    --color-cobalt-blue-800: #012b65;
+    --color-cobalt-blue-900: #001533;
+    --color-cobalt-blue-950: #000f24;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -188,8 +224,12 @@
 
 }
 
-body:has(#application-root) {
+body:has(#application-root):not(:has(#application-result)) {
     background-color: #001E47 !important;
+}
+
+body:has(#application-result) {
+    background-color: #7c5e3d !important;
 }
 
 html {

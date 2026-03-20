@@ -82,6 +82,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const router = useRouter();
+    const pathname = usePathname();
     /*useEffect(() => {
         const appColor = "#001E47";
         const originalAppColor = "#014AAD";
@@ -107,6 +108,8 @@ export default function RootLayout({
             document.body.classList.add(...originalBodyClasses);
         };
     }, []);*/
+    const isResult = pathname === '/application/result';
+
     return (
         <span id="application-root">
         <UserProvider>
@@ -115,10 +118,12 @@ export default function RootLayout({
                     <NoApp/>
                     {children}
 
+                    {!isResult && (
                     <div className="w-full text-center py-3 md:px-20 text-sm leading-5 text-slate-600 flex flex-col gap-x-3">
                         <span className="mt-2 self-center">©2026 ComCamp 37. All rights reserved.<br className="md:hidden"/> Made with 🧡 by CPE39.</span>
                         <GetAppId/>
                     </div>
+                    )}
                 </AuthGate>
             </StudentProvider>
         </UserProvider>

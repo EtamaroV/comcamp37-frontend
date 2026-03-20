@@ -63,9 +63,11 @@ const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => 
         READY: null,
         SUBMITTED: 'ส่งใบสมัครเรียบร้อยแล้ว',
         EXPIRED: 'หมดเขตรับสมัครแล้ว',
+        PRERESULT: 'ส่งใบสมัครเรียบร้อยแล้ว',
+        RESULT: 'ส่งใบสมัครเรียบร้อยแล้ว',
     };
 
-    const text: string | null = overlayContent[status];
+    const text: string | boolean | null = overlayContent[status];
 
     if (!text) return null;
 
@@ -88,7 +90,7 @@ const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => 
                         transition={{ type: "spring", bounce: 0.4, duration: 0.5, delay: 0.1 }}
                         className="font-bold text-white text-2xl shadow-xs drop-shadow-md drop-shadow-black"
                     >
-                        {text}
+                        {typeof(text) === "string" ? text : ""}
                     </motion.span>
                 </motion.div>
             )}
@@ -105,7 +107,7 @@ const formatPhoneNumber = (value: string) => {
     return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
 };
 
-export type ApplicationStatus = 'INCOMPLETE' | 'READY' | 'SUBMITTED' | 'EXPIRED';
+export type ApplicationStatus = 'INCOMPLETE' | 'READY' | 'SUBMITTED' | 'EXPIRED' | 'PRERESULT' | 'RESULT';
 
 interface ApplicationCardProps {
     status: ApplicationStatus;
@@ -183,10 +185,43 @@ const statusConfig = {
             '                        [mask-composite:intersect]',
         MBimgBackDropClass: 'hidden',
     },
+    PRERESULT: {
+        title: 'นับถอยหลัง',
+        description: 'การประกาศผลการคัดเลือกค่าย ComCamp 37 ใกล้มาถึงแล้ว !',
+        buttonText: 'มานับถอยหลังไปด้วยกัน',
+        buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
+        isDisabled: false,
+        imgClass: 'scale-150',
+        imgBackDropClass: 'hidden',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_result.webp`,
+        cardClass: "bg-cover bg-top bg-[url(https://storage.comcamp.io/web-assets/result/background.webp)]",
+        textTitle: "drop-shadow drop-shadow-black/35",
+        textDescription: "drop-shadow drop-shadow-black/40 font-bold",
+
+        MBimgClass: 'scale-110',
+        MBimgBackDropClass: 'hidden',
+    },
+    RESULT: {
+        title: 'ประกาศผล',
+        description: 'ประกาศผลการคัดเลือกค่าย ComCamp 37 มาแล้ว !',
+        buttonText: 'คลิกเพื่อลุ้นผลประกาศ',
+        buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
+        isDisabled: false,
+        imgClass: 'scale-150',
+        imgBackDropClass: 'hidden',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_result.webp`,
+        cardClass: "bg-cover bg-top bg-[url(https://storage.comcamp.io/web-assets/result/background.webp)]",
+        textTitle: "drop-shadow drop-shadow-black/35",
+        textDescription: "drop-shadow drop-shadow-black/40 font-bold",
+
+        MBimgClass: 'scale-110',
+        MBimgBackDropClass: 'hidden',
+    },
 };
 
 function ApplicationCard({ status, loading, onSubmit, setIncompleteError }: ApplicationCardProps) {
 
+    const router = useRouter();
     const current = statusConfig[status];
 
     return (
@@ -240,6 +275,9 @@ function ApplicationCard({ status, loading, onSubmit, setIncompleteError }: Appl
                     whileTap={!(current.isDisabled || loading) ? { scale: 0.95 } : "disabledClick"}
 
                     onClick={() => {
+                        if (status === 'PRERESULT' || status === 'RESULT') {
+                            router.push('/application/result');
+                        }
                         if (status === 'INCOMPLETE') {
                             if (setIncompleteError) {
                                 setIncompleteError(true);
@@ -263,6 +301,7 @@ function ApplicationCard({ status, loading, onSubmit, setIncompleteError }: Appl
 
 function ApplicationCardMD({ status, loading, onSubmit, setIncompleteError }: ApplicationCardProps) {
 
+    const router = useRouter();
     const current = statusConfig[status];
 
     return (
@@ -316,6 +355,9 @@ function ApplicationCardMD({ status, loading, onSubmit, setIncompleteError }: Ap
                     whileTap={!(current.isDisabled || loading) ? { scale: 0.95 } : "disabledClick"}
 
                     onClick={() => {
+                        if (status === 'PRERESULT' || status === 'RESULT') {
+                            router.push('/application/result');
+                        }
                         if (status === 'INCOMPLETE') {
                             if (setIncompleteError) {
                                 setIncompleteError(true);
@@ -434,10 +476,19 @@ ${SendToStaffAdditionalInfo.trim() || "-"}`;
     };
 
     const statusExpired = useCountdown(REGIS_EXPIRED_DATE);
+    const statusShowPreResult = useCountdown(process.env.NEXT_PUBLIC_TIME_SHOW_PRERESULT || "2026-03-19T00:00:00+07:00");
+    const statusShowResult = useCountdown(process.env.NEXT_PUBLIC_TIME_SHOW_RESULT || "2026-03-21T00:00:00+07:00");
     let currentStatus: ApplicationStatus = 'INCOMPLETE';
 
     if (ApplicationStatus?.std_application_submit == true) {
-        currentStatus = "SUBMITTED"
+        if (statusShowResult.isExpired) {
+            currentStatus = "RESULT"
+        } else if (statusShowPreResult.isExpired) {
+            currentStatus = "PRERESULT"
+        } else {
+            currentStatus = "SUBMITTED"
+        }
+
     } else if (statusExpired.isExpired) {
         currentStatus = 'EXPIRED';
     } else if (
