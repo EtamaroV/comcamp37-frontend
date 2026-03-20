@@ -7,6 +7,7 @@ import {
     LearningDescription,
     LearningLogo
 } from './LearningFolders';
+import {LearningFolderMobile} from "@/components/landing/LearningFoldersMobile";
 
 // ข้อมูลเหมือนเดิม (ละไว้เพื่อความกระชับ)
 const FOLDER_DATA = [
@@ -18,7 +19,7 @@ const FOLDER_DATA = [
         btnBorder: "border-[#F4D471]/20",
         fillColor: "#F4D471",
         title: "C Programming",
-        description: "ร่วมเจาะลึกกลไกการทำงานของคอมพิวเตอร์ผ่าน ภาษา C เรียนรู้การวางตรรกะ การเขียน Clean Code และการแก้ปัญหา (Debugging) อย่างเป็นระบบ ปิดท้ายภารกิจด้วยการสร้าง Terminal Game ของตัวเองจากรากฐานที่น้องๆ สร้างมากับมือ",
+        description: "ร่วมเจาะลึกกลไกการทำงานของคอมพิวเตอร์ผ่าน ภาษา C เรียนรู้การวางตรรกะ การเขียน Clean Code และการแก้ปัญหา (Debugging) อย่างเป็นระบบ ปิดท้ายภารกิจด้วยการสร้าง Terminal Game ของตัวเองจากรากฐานที่น้อง ๆ สร้างมากับมือ",
         logo: (<svg viewBox="0 0 172 190" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_i_434_128)">
                 <path fillRule="evenodd" clipRule="evenodd" d="M80.7403 1.28553C83.8076 -0.42851 87.5514 -0.42851 90.6186 1.28553C105.774 9.76552 151.332 35.3408 166.442 43.8208C169.51 45.5348 171.404 48.6923 171.404 52.1655C171.404 69.1706 171.404 120.276 171.404 137.281C171.404 140.709 169.51 143.912 166.442 145.626C151.332 154.106 105.774 179.681 90.6186 188.161C87.5514 189.875 83.8076 189.875 80.7403 188.161C65.6297 179.636 20.0723 154.061 4.9617 145.581C1.89447 143.867 0 140.709 0 137.236C0 120.231 0 69.1255 0 52.1204C0 48.6923 1.89447 45.4897 4.9617 43.7757C20.0723 35.3408 65.6297 9.76552 80.7403 1.28553ZM85.702 31.5519C120.569 31.5519 148.851 59.8336 148.851 94.7008C148.851 129.568 120.569 157.85 85.702 157.85C50.8348 157.85 22.5532 129.568 22.5532 94.7008C22.5532 59.8336 50.8348 31.5519 85.702 31.5519ZM85.702 63.1263C103.113 63.1263 117.276 77.2897 117.276 94.7008C117.276 112.112 103.113 126.275 85.702 126.275C68.291 126.275 54.1276 112.112 54.1276 94.7008C54.1276 77.2897 68.291 63.1263 85.702 63.1263Z" fill="#A7A7A7"/>
@@ -46,7 +47,7 @@ const FOLDER_DATA = [
         btnBorder: "border-[#AEFF3E]/20",
         fillColor: "#AEFF3E",
         title: "Microcontroller",
-        description: "มาเรียนรู้วิธีการเติมชีวิตให้สิ่งของผ่านบอร์ด micro:bit และทำความเข้าใจระบบฝังตัว (Embedded System) น้องๆ จะได้สวมบทบาทวิศวกร ฝึกเขียน Block Coding ควบคุมไฟ LED และหุ่นยนต์ผ่าน Challenge สุดท้าทาย เพื่อสร้าง Mini Project ที่จะเปลี่ยนเมืองทั้งเมืองให้เป็นระบบอัตโนมัติ!",
+        description: "มาเรียนรู้วิธีการเติมชีวิตให้สิ่งของผ่านบอร์ด micro:bit และทำความเข้าใจระบบฝังตัว (Embedded System) น้อง ๆ จะได้สวมบทบาทวิศวกร ฝึกเขียน Block Coding ควบคุมไฟ LED และหุ่นยนต์ผ่าน Challenge สุดท้าทาย เพื่อสร้าง Mini Project ที่จะเปลี่ยนเมืองทั้งเมืองให้เป็นระบบอัตโนมัติ !",
         logo: (<svg viewBox="0 0 321 320" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_i_511_1205)">
                     <path d="M246.326 108.431V117.594H275.773V108.431H246.326Z" fill="#A6A6A6"/>
@@ -98,7 +99,7 @@ const FOLDER_DATA = [
         btnGradient: "from-[#3EBFFF]/10 to-[#3EBFFF]/15",
         btnBorder: "border-[#3EBFFF]/20",
         fillColor: "#3EBFFF",
-        title: "Artificial Intelligent",
+        title: "Artificial Intelligence",
         description: "สัมผัสโลกของปัญญาประดิษฐ์ในแบบที่เข้าใจง่ายผ่านเครื่องมือ No-Code ไม่ต้องมีพื้นฐานก็สนุกได้! น้อง ๆ จะได้ลองเตรียมข้อมูล ฝึกสอนโมเดล (Model Training) และเชื่อมต่อ AI เข้ากับระบบอัตโนมัติเพื่อแก้ปัญหารอบตัว เหมือนมีผู้ช่วยอัจฉริยะที่คอยดูแลความเรียบร้อยให้ชาวเมือง",
         logo: (<svg viewBox="0 0 320 251" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_i_614_501)">
@@ -136,7 +137,7 @@ const FOLDER_DATA = [
     }
 ];
 
-const AUTO_PLAY_DURATION = 8000; // 4 วินาที
+const AUTO_PLAY_DURATION = 18000;
 
 const FolderSwitcher = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -174,7 +175,7 @@ const FolderSwitcher = () => {
 
     return (
         <div className="flex flex-row justify-evenly w-full bg-theme-primary-darken overflow-hidden z-10">
-            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:p-20 overflow-hidden max-w-[1600px] gap-y-3">
+            <div className="flex flex-col md:flex-row justify-evenly w-full bg-theme-primary-darken md:pt-5 md:p-20 overflow-hidden max-w-[1600px] gap-y-3 ">
             {/* === Left: Buttons === */}
             <div className="flex md:flex-col justify-evenly items-center flex-1 gap-6 z-12 order-2 md:order-1">
                 {FOLDER_DATA.map((item, index) => {
@@ -245,7 +246,7 @@ const FolderSwitcher = () => {
                         animate="animate"
                         exit="exit"
                         transition={{ duration: 0.5, ease: "easeInOut" }}
-                        className="w-full h-full" // Ensure wrapping div fills space
+                        className="block w-full h-full" // Ensure wrapping div fills space
                     >
                         <LearningFolder
                             color1={activeData.colors.c1}
@@ -265,6 +266,37 @@ const FolderSwitcher = () => {
                                 {activeData.logo}
                             </LearningLogo>
                         </LearningFolder>
+                    </motion.div>
+                </AnimatePresence>
+
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeData.id} // สำคัญมาก! เปลี่ยน key = trigger animation
+                        variants={folderVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        className="hidden w-full h-full" // Ensure wrapping div fills space
+                    >
+                        <LearningFolderMobile
+                            color1={activeData.colors.c1}
+                            color2={activeData.colors.c2}
+                            color3={activeData.colors.c3}
+                        >
+                            <LearningContent>
+                                <div>
+                                    <LearningTitle>{activeData.title}</LearningTitle>
+                                    <LearningDescription>
+                                        {activeData.description}
+                                    </LearningDescription>
+                                </div>
+                            </LearningContent>
+
+                            <LearningLogo>
+                                {activeData.logo}
+                            </LearningLogo>
+                        </LearningFolderMobile>
                     </motion.div>
                 </AnimatePresence>
             </div>

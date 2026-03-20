@@ -1,0 +1,829 @@
+"use client";
+
+import Image from 'next/image';
+import {AnimatePresence, motion} from "motion/react"
+
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {
+    faBellConcierge,
+    faCopy,
+    faFolderOpen,
+    faMapLocationDot, faPaperPlane, faPersonHiking,
+    faSignsPost,
+    faTents,
+    faUser
+} from "@fortawesome/free-solid-svg-icons";
+import {HorizontalMissionPath, VerticalMissionPath, Mission} from "@/app/application/MissionPath";
+
+import { useUser } from "@/contexts/UserContext";
+
+import { useRouter } from "next/navigation";
+import {useStudent} from "@/contexts/StudentContext";
+import {Button} from "@/components/ui/button";
+import React, {useRef, useState} from "react";
+import axios from "axios";
+import {Spinner} from "@/components/ui/spinner";
+import {REGIS_EXPIRED_DATE, TimerStatus, useCountdown} from "@/app/application/countdown";
+import {toast} from "sonner";
+import {addYears, format} from "date-fns";
+import {th} from "date-fns/locale";
+import {
+    Field,
+    FieldGroup,
+    FieldLabel,
+    FieldSet,
+} from "@/components/ui/field"
+import { Textarea } from "@/components/ui/textarea"
+
+interface CountdownLabelProps {
+    status: TimerStatus;
+}
+
+const CountdownLabel: React.FC<CountdownLabelProps> = ({ status }) => {
+    if (status.isExpired) return null; // หมดเวลาแล้วไม่ต้องโชว์ตัวเลข
+
+    return (
+        <div className={`absolute z-31 right-5 bottom-3 ${status.isUrgent ? 'text-red-600 font-bold' : 'opacity-60'}`}>
+            {status.isUrgent ? (
+                <span>
+                    จะสิ้นสุดในอีก {String(status.hours).padStart(2, '0')}:
+                    {String(status.minutes).padStart(2, '0')}:
+                    {String(status.seconds).padStart(2, '0')}
+                </span>
+            ) : (
+                <span>จะสิ้นสุดการรับสมัครในอีก {status.days} วัน</span>
+            )}
+        </div>
+    );
+};
+
+const MissionOverlay: React.FC<{ status: ApplicationStatus }> = ({ status }) => {
+    const overlayContent = {
+        INCOMPLETE: null,
+        READY: null,
+        SUBMITTED: 'ส่งใบสมัครเรียบร้อยแล้ว',
+        EXPIRED: 'หมดเขตรับสมัครแล้ว',
+    };
+
+    const text: string | null = overlayContent[status];
+
+    if (!text) return null;
+
+    return (
+        <AnimatePresence>
+            {text && (
+                <motion.div
+                    // ตั้งค่าแอนิเมชันของพื้นหลัง (Fade in/out)
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`absolute z-40 rounded-xl left-0 top-0 backdrop-blur-lg backdrop-brightness-75 inset-0 flex items-center justify-center`}
+                >
+                    <motion.span
+                        // ตั้งค่าแอนิเมชันของตัวหนังสือ (เด้งดึ๋งนิดๆ ตอนโผล่มา)
+                        initial={{ scale: 0.8, opacity: 0, y: 10 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.8, opacity: 0, y: 10 }}
+                        transition={{ type: "spring", bounce: 0.4, duration: 0.5, delay: 0.1 }}
+                        className="font-bold text-white text-2xl shadow-xs drop-shadow-md drop-shadow-black"
+                    >
+                        {text}
+                    </motion.span>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
+const formatPhoneNumber = (value: string) => {
+    if (!value) return "";
+    const digits = value.replace(/\D/g, "");
+
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+};
+
+export type ApplicationStatus = 'INCOMPLETE' | 'READY' | 'SUBMITTED' | 'EXPIRED';
+
+interface ApplicationCardProps {
+    status: ApplicationStatus;
+    loading: boolean;
+    onSubmit?: () => void;
+    setIncompleteError?: (hasError: boolean) => void;
+}
+
+const statusConfig = {
+    INCOMPLETE: {
+        title: 'ภารกิจยังไม่สำเร็จ',
+        description: 'คุณยังกรอกข้อมูลหรือแนบเอกสารไม่ครบถ้วน',
+        buttonText: 'รอการดำเนินการ',
+        buttonClass: 'bg-slate-600 cursor-not-allowed opacity-70',
+        isDisabled: true,
+        imgClass: 'scale-190 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_75%)]',
+        imgBackDropClass: 'scale-220',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_incomplete.webp`,
+        cardClass: "",
+        textTitle: "",
+        textDescription: "",
+
+        MBimgClass: 'scale-130 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_75%)]',
+        MBimgBackDropClass: 'scale-150',
+    },
+    READY: {
+        title: 'ภารกิจเสร็จสิ้น',
+        description: 'ใบสมัครของคุณพร้อมแล้ว โปรดตรวจสอบข้อมูลก่อนกดส่งใบสมัคร',
+        buttonText: 'ส่งใบสมัคร',
+        buttonClass: 'bg-white text-black hover:bg-gray-300 cursor-pointer',
+        isDisabled: false,
+        imgClass: 'scale-170 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_70%)]',
+        imgBackDropClass: 'scale-120',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_ready.webp`,
+        cardClass: "",
+        textTitle: "",
+        textDescription: "",
+
+        MBimgClass: 'scale-130 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_70%)]',
+        MBimgBackDropClass: 'scale-120',
+    },
+    SUBMITTED: {
+        title: 'ส่งใบสมัครเรียบร้อยแล้ว',
+        description: 'ระบบได้รับใบสมัครของคุณแล้ว รอติดตามผลการคัดเลือกได้เลย !',
+        buttonText: 'ส่งข้อมูลสำเร็จ',
+        buttonClass: 'hidden',
+        isDisabled: true,
+        imgClass: 'scale-150 [mask-image:radial-gradient(ellipse_at_center,black_68%,transparent_70%)] rounded-full',
+        imgBackDropClass: 'hidden',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_submitted.webp`,
+        cardClass: 'bg-[#fee59e]',
+        textTitle: 'text-slate-800',
+        textDescription: 'text-slate-700',
+
+        MBimgClass: 'scale-120 [mask-image:radial-gradient(ellipse_at_center,black_68%,transparent_70%)] rounded-full',
+        MBimgBackDropClass: 'hidden',
+    },
+    EXPIRED: {
+        title: 'หมดเวลารับสมัคร',
+        description: 'ขออภัย หมดเขตรับสมัครแล้ว',
+        buttonText: 'หมดเวลา',
+        buttonClass: 'hidden',
+        isDisabled: true,
+        imgClass: 'scale-155 rounded-3xl [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent),linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]' +
+            '                        [-webkit-mask-composite:source-in]' +
+            '                        [mask-composite:intersect]',
+        imgBackDropClass: 'hidden',
+        imgURL: `${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/application/state_expired.webp`,
+        cardClass: 'bg-[#5f0004]',
+        textTitle: "",
+        textDescription: "",
+
+        MBimgClass: 'scale-130 rounded-3xl [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent),linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]' +
+            '                        [-webkit-mask-composite:source-in]' +
+            '                        [mask-composite:intersect]',
+        MBimgBackDropClass: 'hidden',
+    },
+};
+
+function ApplicationCard({ status, loading, onSubmit, setIncompleteError }: ApplicationCardProps) {
+
+    const current = statusConfig[status];
+
+    return (
+        <div className={`hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 ${current.cardClass === "" ? "bg-twilight-indigo-900" : current.cardClass} rounded-xl shadow-sm px-10 py-8 justify-evenly align-middle items-center overflow-clip drop-shadow-xl drop-shadow-black/20`}>
+            <div className="relative flex items-center justify-center shrink-0">
+                <Image
+                    src={current.imgURL}
+                    alt=""
+                    loading="eager"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    unoptimized
+                    aria-hidden="true"
+                    className={`absolute inset-0 z-0 w-30 ${current.imgBackDropClass} aspect-square blur-3xl opacity-80 transition-all duration-300`}
+                />
+
+                <Image
+                    src={current.imgURL}
+                    alt=""
+                    loading="eager"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    unoptimized
+                    className={`relative z-10 w-30 aspect-square transition-all duration-300 ${current.imgClass}`}
+                />
+            </div>
+            <div className="flex-1 h-full flex flex-col justify-evenly gap-4 z-10">
+                <div>
+                    <div className={`text-2xl font-bold ${current.textTitle === "" ? "text-white" : current.textTitle} transition-colors duration-300`}>
+                        {current.title}
+                    </div>
+                    <div className={`text-lg ${current.textDescription === "" ? "text-slate-300" : current.textDescription} mt-2 transition-colors duration-300`}>
+                        {current.description}
+                    </div>
+                </div>
+                <motion.button
+                    type="button"
+                    variants={{
+                        // The normal state
+                        idle: { x: 0 },
+                        // The animation triggered on click when disabled
+                        disabledClick: {
+                            x: [-2, 2, -2, 2, 0],
+                            backgroundColor: "#ef4444", // Tailwind red-500
+                            transition: { duration: 0.4 }
+                        }
+                    }}
+                    whileHover={!(current.isDisabled || loading) ? { scale: 1.05, rotate: -1 } : {}}
+                    whileTap={!(current.isDisabled || loading) ? { scale: 0.95 } : "disabledClick"}
+
+                    onClick={() => {
+                        if (status === 'INCOMPLETE') {
+                            if (setIncompleteError) {
+                                setIncompleteError(true);
+                            }
+                        }
+                        if (current.isDisabled || loading) return;
+                        if (status === 'READY') {
+                            if (onSubmit) {
+                                onSubmit();
+                            }
+                        }
+                    }}
+                    className={`h-12 w-full text-lg font-bold rounded-xl ${current.buttonClass}`}
+                >
+                    {loading ? 'กำลังส่งใบสมัคร...' : current.buttonText}
+                </motion.button>
+            </div>
+        </div>
+    );
+}
+
+function ApplicationCardMD({ status, loading, onSubmit, setIncompleteError }: ApplicationCardProps) {
+
+    const current = statusConfig[status];
+
+    return (
+        <div className={`flex ${current.cardClass === "" ? "bg-twilight-indigo-900" : current.cardClass} rounded-xl shadow-sm p-6 flex-col items-center gap-y-10 overflow-clip drop-shadow-xl drop-shadow-black/20`}>
+            <div className="relative flex justify-center shrink-0">
+                <Image
+                    src={current.imgURL}
+                    alt=""
+                    loading="eager"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    unoptimized
+                    aria-hidden="true"
+                    className={`absolute mx-auto justify-self-center self-center inset-0 z-0 w-[50%] ${current.MBimgBackDropClass} aspect-square blur-3xl opacity-80 transition-all duration-300`}
+                />
+
+                <Image
+                    src={current.imgURL}
+                    alt=""
+                    loading="eager"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    unoptimized
+                    className={`relative z-10 w-[50%] aspect-square transition-all duration-300 ${current.MBimgClass}`}
+                />
+            </div>
+            <div className="w-full h-full flex flex-col justify-evenly gap-4 z-15">
+                <div>
+                    <div className={`text-2xl font-bold ${current.textTitle === "" ? "text-white" : current.textTitle} transition-colors duration-300`}>
+                        {current.title}
+                    </div>
+                    <div className={`text-lg ${current.textDescription === "" ? "text-slate-300" : current.textDescription} mt-2 transition-colors duration-300`}>
+                        {current.description}
+                    </div>
+                </div>
+                <motion.button
+                    type="button"
+                    variants={{
+                        // The normal state
+                        idle: { x: 0, backgroundColor: "" },
+                        // The animation triggered on click when disabled
+                        disabledClick: {
+                            x: [-2, 2, -2, 2, 0],
+                            backgroundColor: "#ef4444", // Tailwind red-500
+                            transition: { duration: 0.4 }
+                        }
+                    }}
+                    whileHover={!(current.isDisabled || loading) ? { scale: 1.05, rotate: -1 } : {}}
+                    whileTap={!(current.isDisabled || loading) ? { scale: 0.95 } : "disabledClick"}
+
+                    onClick={() => {
+                        if (status === 'INCOMPLETE') {
+                            if (setIncompleteError) {
+                                setIncompleteError(true);
+                            }
+                        }
+                        if (current.isDisabled || loading) return;
+                        if (status === 'READY') {
+                            if (onSubmit) {
+                                onSubmit();
+                            }
+                        }
+                    }}
+                    className={`h-14 w-full text-lg font-bold rounded-xl select-none ${current.buttonClass}`}
+                >
+                    {loading ? 'กำลังส่งใบสมัคร...' : current.buttonText}
+                </motion.button>
+            </div>
+        </div>
+    );
+}
+
+export default function applicationHome() {
+    const { user, isLoading } = useUser();
+    const router = useRouter();
+    const { studentStatus, studentInfo, studentFaceImage, ApplicationStatus, refreshApplication, applicationId } = useStudent();
+
+    const [isSubmitLoading, setSubmitLoading] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
+
+    const [clickCount, setClickCount] = useState(0);
+    const [getTimeStamp, setTimeStamp] = useState<String>("");
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [copyModalOpen, setCopyModalOpen] = useState<boolean>(false)
+    const [sendToStaffOpen, setSendToStaffOpen] = useState<boolean>(false)
+
+    const [isIncompleteError, setIncompleteError] = useState<boolean>(false);
+
+    const getLatestCookie = (name:String) => {
+        const cookies = document.cookie.split('; ');
+        const matches = cookies.filter(c => c.startsWith(`${name}=`));
+
+        return matches.length > 0 ? matches[0].split('=')[1] : null;
+    };
+
+    const handleMultiClick = async () => {
+        const newCount = clickCount + 1;
+        setClickCount(newCount);
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+
+        if (newCount === 5) {
+            setClickCount(0);
+            await copyToClipboard();
+            return;
+        }
+
+        timerRef.current = setTimeout(() => {
+            setClickCount(0);
+        }, 500);
+    };
+
+    const copyToClipboard = async () => {
+        const textToCopy = `โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน\n\n${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\nอีเมล: ${user?.email}\nเบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number}\nรหัสใบสมัคร: ${applicationId}\n\n${getLatestCookie("_clck")?.split('%')[0]}\n\nComCamp 37\n${new Date().toLocaleString()}`;
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            toast.success("คัดลอกรหัสใบสมัครแล้ว");
+        } catch (err) {
+            alert(textToCopy);
+        }
+    };
+
+    const [SendToStaffAdditionalInfo, setSendToStaffAdditionalInfo] = useState("");
+    const [isSendingToStaff, setIsSendingToStaff] = useState(false);
+
+    const handleSendToStaff = async () => {
+        setIsSendingToStaff(true);
+
+        try {
+            const systemMessage = `${decodeURIComponent(studentInfo?.std_info_prefix || "")}${decodeURIComponent(studentInfo?.std_info_first_name || "")} ${decodeURIComponent(studentInfo?.std_info_last_name || "")}\n
+อีเมล: ${user?.email || "-"}\n
+เบอร์โทรศัพท์: ${studentInfo?.std_info_phone_number || "-"}\n
+รหัสใบสมัคร: ${applicationId || "-"}\n
+\n
+Clarity: ${getLatestCookie("_clck")?.split('%')[0] || ""}\n
+\n
+ComCamp 37\n
+${new Date().toLocaleString()}\n
+\n
+รายละเอียด\n
+${SendToStaffAdditionalInfo.trim() || "-"}`;
+
+            const body = {
+                system_message: systemMessage,
+                user_message: SendToStaffAdditionalInfo.trim() || "-"
+            };
+
+            await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ticket/create`,
+                body,
+                {
+                    withCredentials: true
+                }
+            );
+
+            toast.success("ส่งข้อมูลให้ทีมงานสำเร็จ");
+
+            setSendToStaffAdditionalInfo("");
+            setSendToStaffOpen(false);
+        } catch (error) {
+            console.error("Ticket Creation Error:", error);
+            toast.error("เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองอีกครั้ง");
+        } finally {
+            setIsSendingToStaff(false);
+        }
+    };
+
+    const statusExpired = useCountdown(REGIS_EXPIRED_DATE);
+    let currentStatus: ApplicationStatus = 'INCOMPLETE';
+
+    if (ApplicationStatus?.std_application_submit == true) {
+        currentStatus = "SUBMITTED"
+    } else if (statusExpired.isExpired) {
+        currentStatus = 'EXPIRED';
+    } else if (
+        studentStatus?.std_status_info_done &&
+        studentStatus.std_status_file_done &&
+        studentStatus.std_status_regis_question_done &&
+        studentStatus.std_status_acdemic_question_done &&
+        studentStatus.std_status_academic_chaos_question_done
+    ) {
+        currentStatus = "READY"
+    }
+
+    const myMissions: Mission[] = [
+        { id: 1, status: `${ studentStatus?.std_status_info_done ? 'completed' : 'current' }`, label: 'ทะเบียนประวัติ', icon: faUser, action: () => {router.push('/application/register')} },
+        { id: 2, status: `${ studentStatus?.std_status_regis_question_done ? 'completed' : 'current' }`, label: 'ด่านตรวจเข้าเมือง', icon: faTents, action: () => {router.push('/application/question-regis')} },
+        { id: 3, status: `${ studentStatus?.std_status_acdemic_question_done ? 'completed' : 'current' }`, label: 'บททดสอบแห่งพงไพร', icon: faPersonHiking, action: () => {router.push('/application/question-academic')} },
+        { id: 4, status: `${ studentStatus?.std_status_academic_chaos_question_done ? 'completed' : 'current' }`, label: 'ถอดรหัสสัญชาตญาณ', icon: faSignsPost, action: () => {router.push('/application/question-aptitude')} },
+        { id: 5, status: `${ studentStatus?.std_status_file_done ? 'completed' : 'current' }`, label: 'ยื่นหลักฐานเข้าเมือง', icon: faFolderOpen, action: () => {router.push('/application/file')} },
+    ];
+
+    if (user == null && !isLoading ) {
+        return (<div></div>)
+    }
+
+    const handleSubmitApplication = async () => {
+        setSubmitLoading(true);
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/application/submit`,
+                {
+                    application_id: applicationId,
+                    confirm: true
+                },
+                { withCredentials: true }
+            );
+
+            await refreshApplication();
+            toast.success("ส่งเรียบร้อยแล้ว");
+
+            setIsConfirmModalOpen(false);
+
+        } catch (error: any) {
+            console.error(error);
+            toast.error("ส่งไม่สำเร็จ", {
+                description: error.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
+            });
+        } finally {
+            setSubmitLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <AnimatePresence>
+                {sendToStaffOpen && (
+                    <div className="fixed inset-0 z-1001 flex items-center justify-center p-4">
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSendToStaffOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                            className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-4 md:gap-6"
+                        >
+                            <div>
+                                <h2 className="text-2xl font-bold text-white mb-2">ส่งข้อมูลให้ทีมงาน</h2>
+                                <p className="text-twilight-indigo-300">
+                                    ระบบจะส่งข้อมูลที่จำเป็นให้กับทีมงานโดยอัตโนมัติ
+                                </p>
+                            </div>
+
+                            <FieldSet>
+                                <FieldGroup>
+
+                                    <Field className="">
+                                        <FieldLabel htmlFor="SendToStaffAdditionalInfo">
+                                            รายละเอียดเพิ่มเติม <span className="opacity-40">(ไม่จำเป็นต้องระบุ)</span>
+                                        </FieldLabel>
+                                        <Textarea
+                                            id="SendToStaffAdditionalInfo"
+                                            value={SendToStaffAdditionalInfo}
+                                            onChange={(e) => setSendToStaffAdditionalInfo(e.target.value)}
+                                            disabled={isSendingToStaff}
+                                            placeholder="เช่น ต้องการแก้ไขไฟล์ที่อัปโหลด"
+                                            className="resize-none max-h-25 !bg-twilight-indigo-700"
+                                            rows={5}
+                                        />
+                                    </Field>
+                                </FieldGroup>
+                            </FieldSet>
+
+                            <div className="flex flex-col-reverse md:flex-row gap-3 justify-end mt-4">
+                                {/* ปุ่มปิด */}
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setSendToStaffOpen(false)}
+                                    className="cursor-pointer w-full md:w-auto border-twilight-indigo-600 text-twilight-indigo-300 hover:bg-twilight-indigo-700 hover:text-white transition-colors"
+                                >
+                                    ปิด
+                                </Button>
+
+                                {/* ส่ง */}
+                                <Button
+                                    type="button"
+                                    onClick={handleSendToStaff}
+                                    disabled={isSendingToStaff}
+                                    className="w-full md:w-auto font-bold transition-all cursor-pointer bg-theme-secondary text-white hover:bg-theme-secondary-darken shadow-lg shadow-theme-secondary/20 border-none disabled:bg-theme-secondary-darken disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {isSendingToStaff ? (
+                                        <>
+                                            กำลังส่ง...<Spinner/>
+                                        </>
+                                    ) : (
+                                        <>
+                                            ส่งให้ทีมงาน <FontAwesomeIcon icon={faPaperPlane}/>
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+                {copyModalOpen && (
+                    <div className="fixed inset-0 z-1001 flex items-center justify-center p-4">
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setCopyModalOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                            className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-4 md:gap-6"
+                        >
+                            <div>
+                                <h2 className="text-2xl font-bold text-white mb-2">แจ้งปัญหาการสมัคร</h2>
+                                <p className="text-twilight-indigo-300">
+                                    โปรดใช้ข้อมูลนี้ในการประสานงานกับทางทีมงาน
+                                </p>
+                            </div>
+
+                            <div className="bg-twilight-indigo-700 p-3 select-all rounded-lg">
+                                {decodeURIComponent(studentInfo?.std_info_prefix || "")}{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")}<br/>อีเมล: {user?.email}<br/>เบอร์โทรศัพท์: {studentInfo?.std_info_phone_number}<br/>รหัสใบสมัคร: {applicationId}<br/><br/>{getLatestCookie("_clck")?.split('%')[0]}<br/><br/>โปรดใช้ข้อมูลนี้สำหรับประสานงานกับทางทีมงาน<br/><br/>ComCamp 37<br/>{getTimeStamp}
+                            </div>
+
+                            <div className="flex flex-col-reverse md:flex-row gap-3 justify-end mt-4">
+                                {/* ปุ่มปิด */}
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setCopyModalOpen(false)}
+                                    className="cursor-pointer w-full md:w-auto border-twilight-indigo-600 text-twilight-indigo-300 hover:bg-twilight-indigo-700 hover:text-white transition-colors"
+                                >
+                                    ปิด
+                                </Button>
+
+                                {/* ปุ่มคัดลอก */}
+                                <Button
+                                    type="button"
+                                    onClick={copyToClipboard}
+                                    className="w-full md:w-auto font-medium transition-all cursor-pointer bg-twilight-indigo-700 text-white hover:bg-twilight-indigo-600"
+                                >
+                                    คัดลอก<FontAwesomeIcon icon={faCopy} />
+                                </Button>
+
+                                {/* ปุ่มส่งให้ทีมงาน */}
+                                <Button
+                                    type="button"
+                                    onClick={()=>{
+                                        setCopyModalOpen(false);
+                                        setSendToStaffOpen(true);
+                                    }}
+                                    className="md:mb-0 mb-5 w-full md:w-auto font-bold transition-all cursor-pointer bg-theme-secondary text-white hover:bg-theme-secondary-darken shadow-lg shadow-theme-secondary/20"
+                                >
+                                    ส่งให้ทีมงาน<FontAwesomeIcon icon={faPaperPlane}/>
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+                {isConfirmModalOpen && (
+                    <div className="fixed inset-0 z-1001 flex items-center justify-center p-4">
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => !isSubmitLoading && setIsConfirmModalOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+
+                        {/* กล่อง Dialog */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                            className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-twilight-indigo-900 border border-twilight-indigo-700 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-4 md:gap-6"
+                        >
+                            <div>
+                                <h2 className="text-2xl font-bold text-white mb-2">ยืนยันการส่งใบสมัคร</h2>
+                                <p className="text-twilight-indigo-300">
+                                    โปรดตรวจสอบข้อมูลให้ครบถ้วนและถูกต้อง <br/>
+                                    <span className="text-red-400 font-medium">หากกดยืนยันแล้ว จะไม่สามารถกลับมาแก้ไขข้อมูลได้อีก</span>
+                                </p>
+                            </div>
+
+                            {/* กล่อง Checkbox ยืนยันความจริง */}
+                            <label className="flex items-start gap-3 p-4 bg-twilight-indigo-900/50 border border-twilight-indigo-700 rounded-xl cursor-pointer hover:bg-twilight-indigo-800 transition-colors">
+                                <input
+                                    type="checkbox"
+                                    checked={isAgreed}
+                                    onChange={(e) => setIsAgreed(e.target.checked)}
+                                    disabled={isSubmitLoading}
+                                    className="mt-1 w-5 h-5 rounded border-twilight-indigo-500 text-primary cursor-pointer focus:ring-primary focus:ring-offset-twilight-indigo-900 bg-twilight-indigo-900"
+                                />
+                                <span className="text-twilight-indigo-200 select-none text-sm md:text-base leading-relaxed">
+                        ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอก และเอกสารที่แนบมาทั้งหมดในการสมัคร ComCamp 37 เป็นความจริงทุกประการ
+                    </span>
+                            </label>
+
+                            {/* ปุ่มกดยกเลิก / ยืนยัน */}
+                            <div className="flex flex-col-reverse md:flex-row gap-3 justify-end mt-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setIsConfirmModalOpen(false)}
+                                    disabled={isSubmitLoading}
+                                    className="cursor-pointer w-full md:w-auto border-twilight-indigo-600 text-twilight-indigo-300 hover:bg-twilight-indigo-700 hover:text-white transition-colors"
+                                >
+                                    ยกเลิก
+                                </Button>
+                                <Button
+                                    type="button"
+                                    onClick={handleSubmitApplication}
+                                    // ปุ่มจะกดได้ก็ต่อเมื่อติ๊กถูกแล้ว และไม่ได้อยู่ในสถานะ Loading
+                                    disabled={!isAgreed || isSubmitLoading}
+                                    className={`w-full md:w-auto font-bold transition-all ${
+                                        isAgreed ? ' cursor-pointer bg-gray-100 text-black hover:bg-gray-300 hover:text-black' : 'bg-twilight-indigo-700 text-twilight-indigo-400 cursor-not-allowed'
+                                    }`}
+                                >
+                                    {isSubmitLoading ? 'กำลังส่งข้อมูล...' : 'ส่งใบสมัคร'}
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+        <main className="flex-1 w-full max-w-[1280px] mx-auto py-3 px-3 md:px-6 flex flex-col gap-3 md:gap-5 mt-5 md:mt-0">
+
+            <div className="order-2 md:order-1">
+
+                <div className="absolute w-full justify-center left-0 z-20 hidden md:flex">
+                    <HorizontalMissionPath missions={myMissions} />
+                </div>
+
+                <div className="relative w-full md:h-[250px] px-7 py-5">
+
+                    <div className={`absolute inset-0 rounded-xl shadow-sm drop-shadow-xl drop-shadow-black/20 z-10 ${isIncompleteError ? "border-2 border-red-600" : ""}`}>
+                        <div className="bg-twilight-indigo-900 absolute left-0 top-0 w-full h-full rounded-xl"></div>
+                    </div>
+
+                    <div className="text-2xl font-bold absolute bg-twilight-indigo-900 pb-3 z-30">
+                        ภารกิจของคุณ <FontAwesomeIcon icon={faMapLocationDot} />
+                    </div>
+
+                    <div className="block md:hidden relative z-30">
+                        <div className="rounded-2xl pt-10 pb-6">
+                            <VerticalMissionPath missions={myMissions} />
+                        </div>
+                    </div>
+
+                    <CountdownLabel status={statusExpired} />
+
+                    {isIncompleteError && (
+                        <div className="absolute bottom-3 left-5 text-sm text-red-600 z-30">
+                            กรุณาทำภารกิจทั้งหมด
+                        </div>
+                    )}
+
+                    <MissionOverlay status={currentStatus} />
+
+                </div>
+
+            </div>
+
+            <div className="grid grid-cols-1 grid-rows-none md:grid-cols-5 md:grid-rows-2 gap-y-5 md:gap-5 order-1 md:order-2 z-50">
+
+                <div className="relative col-span-1 md:col-span-2 md:row-span-2 bg-twilight-indigo-900 rounded-xl shadow-sm px-5 py-6 flex flex-col items-center gap-6 drop-shadow-xl drop-shadow-black/20">
+
+                    <motion.div
+                        whileHover={{
+                            scale: 1.05, backgroundColor: "#1f347a"
+                        }}
+                        onClick={() => {
+                            setCopyModalOpen(true);
+                            setTimeStamp(new Date().toLocaleString());
+                        }}
+                        className="absolute right-3 top-3 flex flex-col justify-center items-center aspect-square w-10 h-10 text-center bg-twilight-indigo-800 cursor-pointer rounded-lg">
+                        <FontAwesomeIcon icon={faBellConcierge}/>
+                    </motion.div>
+
+                    <div className={`w-35 h-35 rounded-full shadow-sm relative`}>
+                        <img
+                            data-clarity-mask="true"
+                            onClick={handleMultiClick}
+
+                            src={studentFaceImage || user?.image || "https://storage.comcamp.io/web-assets/gooseNick.png"}
+                            onError={(e) => { e.currentTarget.src = "https://storage.comcamp.io/web-assets/gooseNick.png"; }}
+                            alt=""
+                            className={`select-none relative z-10 w-full h-full bg-twilight-indigo-700 border-white border-5 rounded-full object-cover object-top`}
+                        />
+                        <Image
+                            src={`${process.env.NEXT_PUBLIC_STATIC_ASSETS_URL}/RabbitEars.png`}
+                            alt=""
+                            loading="eager"
+                            width={800}
+                            height={800}
+                            className="w-35 absolute -top-28.5 z-0"
+                        />
+                    </div>
+                    <div className="text-center">
+                        <div data-clarity-mask="true" className="text-xl font-bold">{decodeURIComponent(studentInfo?.std_info_first_name || "")} {decodeURIComponent(studentInfo?.std_info_last_name || "")} ({decodeURIComponent(studentInfo?.std_info_nick_name || "")})</div>
+                        <div data-clarity-mask="true" className="text-lg font-medium">{decodeURIComponent(studentInfo?.std_info_education_institute || "")}</div>
+                    </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">อีเมล</div>
+                        <div data-clarity-mask="true" className="font-medium">{user?.email}</div>
+                    </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">เบอร์โทรศัพท์</div>
+                        <div data-clarity-mask="true" className="font-medium">{formatPhoneNumber(studentInfo?.std_info_phone_number || "")}</div>
+                    </div>
+
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">ระดับชั้นการศึกษา</div>
+                        <div data-clarity-mask="true" className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_level || "")}</div>
+                    </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">แผนการเรียน</div>
+                        <div data-clarity-mask="true" className="font-medium">{decodeURIComponent(studentInfo?.std_info_education_plan || "")}</div>
+                    </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between">
+                        <div className="font-bold">วันเกิด</div>
+                        <div data-clarity-mask="true" className="font-medium">{studentInfo?.std_info_birthdate ? format(addYears(studentInfo?.std_info_birthdate, 543), "d MMMM yyyy", { locale: th }) : ""}</div>
+                    </div>
+
+                </div>
+
+                <ApplicationCard status={currentStatus} setIncompleteError={(set:boolean) => {
+                    setIncompleteError(set)
+                }} onSubmit={() => {
+                    setIsAgreed(false);
+                    setIsConfirmModalOpen(true);
+                }} loading={isSubmitLoading}></ApplicationCard>
+
+                <div className="hidden md:flex flex-row gap-x-10 col-span-3 row-span-1 bg-twilight-indigo-900 rounded-xl shadow-sm py-1.5 justify-center align-middle items-center overflow-hidden drop-shadow-xl drop-shadow-black/20">
+                    <Image src="https://storage.comcamp.io/web-assets/UnderConstruction.webp" height={0} width={0} sizes="100%" alt="" unoptimized
+                        className="w-full"
+                    />
+                </div>
+
+            </div>
+            <div className="grid md:hidden grid-cols-1 grid-rows-none md:grid-cols-5 md:grid-rows-2 gap-y-5 md:gap-5 order-3">
+                <ApplicationCardMD status={currentStatus} setIncompleteError={(set:boolean) => {
+                    setIncompleteError(set)
+                }} onSubmit={() => {
+                    setIsAgreed(false);
+                    setIsConfirmModalOpen(true);
+                }} loading={isSubmitLoading}></ApplicationCardMD>
+            </div>
+        </main>
+        </>
+    );
+}

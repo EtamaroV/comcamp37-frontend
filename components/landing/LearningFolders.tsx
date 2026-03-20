@@ -89,7 +89,7 @@ LearningTitle.displayName = "LearningTitle"
 
 const LearningDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
     ({ className, children, ...props }, ref) => (
-        <p ref={ref} className={cn("text-gray-800 text-2xl md:text-base leading-relaxed line-clamp-6", className)} {...props}>
+        <p ref={ref} className={cn("text-pretty text-gray-800 text-2xl md:text-base leading-relaxed line-clamp-6", className)} {...props}>
             {children}
         </p>
     )

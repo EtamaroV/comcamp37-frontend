@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, Loader2 } from "lucide-react"
+import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -27,7 +27,7 @@ export const SchoolInput = React.forwardRef<HTMLInputElement, SchoolAutocomplete
             }
             setIsLoading(true)
             try {
-                const response = await fetch(`/api/schools?q=${encodeURIComponent(query)}`)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/util/schools?q=${encodeURIComponent(query)}`)
                 const data = await response.json()
                 if (Array.isArray(data)) setSchools(data)
             } catch (error) {

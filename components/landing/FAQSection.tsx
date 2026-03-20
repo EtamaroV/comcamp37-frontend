@@ -1,7 +1,5 @@
 "use client"
 
-import Image from "next/image";
-import {motion} from "motion/react";
 import { useRouter } from 'next/navigation';
 
 
@@ -12,47 +10,14 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 
-const FAQQuestions = [
-    {
-        id: "1",
-        question: "นักเรียนระดับชั้นอะไรสามารถสมัครได้คะ ?",
-        answer: "ชั้นมัธยมศึกษาปีที่ 4 และมัธยมศึกษาปีที่ 5 ในปีการศึกษา 2568 ค่ะ",
-    },
-    {
-        id: "2",
-        question: "นักเรียนที่กำลังจะขึ้น ม.6 ในปีการศึกษาหน้า สามารถสมัครได้ไหมคะ ?",
-        answer: "สมัครได้ค่ะ โดยการรับสมัครนักเรียนชั้น ม.4 - 5 ในปีการศึกษา 2568 หมายถึง การเปิดรับสมัครนักเรียนที่กำลังจะขึ้นชั้น ม.5 - 6 ในปีการศึกษา 2569 นี้ค่ะ",
-    },
-    {
-        id: "3",
-        question: "เรียน ปวช. สามารถสมัครได้ไหมครับ ?",
-        answer: "สมัครได้ค่ะ โดยรับนักเรียน ปวช.1 - 2 ปีการศึกษา 2568 ค่ะ",
-    },
-    {
-        id: "4",
-        question: "สามารถใช้ใบเกรดในการสมัครแทนเอกสาร ปพ.1 ได้ไหมคะ ?",
-        answer: "สามารถใช้แทนได้ค่ะ แต่ต้องเป็นผลการเรียนของภาคปีการศึกษาล่าสุดเท่านั้นนะคะ",
-    },
-    {
-        id: "5",
-        question: "สามารถใช้เอกสารใบรับรองการเป็นนักเรียนจากภาคเรียนที่ 1 ได้ไหมคะ ?",
-        answer: "ใบรับรองสถานภาพการเป็นนักเรียนมีอายุ 120 วัน นับจากวันที่ออกเอกสาร หากยังอยู่ภายในระยะเวลาดังกล่าวสามารถใช้ได้ค่ะ",
-    },
-    {
-        id: "6",
-        question: "สามารถใช้เอกสาร ปพ.1 หรือ ปพ.7 เพียงอย่างใดอย่างหนึ่งในการสมัครหรือจำเป็นต้องใช้ทั้งสองฉบับคะ ?",
-        answer: "จำเป็นต้องใช้ทั้งสองฉบับค่ะ",
-    },
-    {
-        id: "7",
-        question: "หนังสือขออนุญาตผู้ปกครอง ต้องเตรียมยังไงคะ",
-        answer: "น้อง ๆ สามารถโหลดได้ที่เว็บไซต์ค่ายในวันที่เปิดรับสมัครนะคะ (ขออุ้บอิ้บไว้ก่อน><)",
-    }
-]
+import {FAQQuestions} from "@/components/faq/faq";
 
 
 function FAQSection() {
     const router = useRouter();
+
+    const faqSecQ = FAQQuestions.slice(0, 7);
+
     return (
         <div className='w-full relative overflow-hidden flex flex-row justify-center items-center'>
 
@@ -70,10 +35,10 @@ function FAQSection() {
                         defaultValue="item-1"
                         className="z-20"
                     >
-                        {FAQQuestions.map((question) => (
+                        {faqSecQ.map((question) => (
                             <AccordionItem key={question.id} value={question.id} className="z-20 border-b-2 border-black cursor-pointer">
                                 <AccordionTrigger className="text-black font-bold text-lg px-4 hover:no-underline hover:pl-6 [&>svg]:text-black cursor-pointer">{question.question}</AccordionTrigger>
-                                <AccordionContent className="text-lg z-20 pr-4 pl-8 text-black">{question.answer}</AccordionContent>
+                                <AccordionContent className="text-lg z-20 pr-4 pl-8 text-black whitespace-pre-line">{question.answer}</AccordionContent>
                             </AccordionItem>
                         ))}
                     </Accordion>
@@ -83,10 +48,10 @@ function FAQSection() {
                 </div>
             </div>
 
-            <div className="absolute top-0 left-0 w-full h-full">
-            <div className="overflow-hidden h-full flex flex-col justify-end align-middle items-center relative">
+            <div className="absolute left-0 w-full h-full">
+            <div className="flex overflow-hidden h-full flex-col justify-start align-middle items-end relative">
                 <div
-                    className="absolute w-[110dvw] h-[200dvh] rotate-13 origin-left"
+                    className="absolute w-[110dvw] h-[200dvh] rotate-13 origin-left md:origin-top-left -left-[25dvw] -top-[50dvh]"
                     style={{
                         backgroundColor: "transparent",
                         backgroundImage: `

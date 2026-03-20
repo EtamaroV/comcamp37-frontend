@@ -35,13 +35,13 @@ export function CookieModal() {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className="fixed md:right-5 bottom-0 md:bottom-5 w-[100%] md:w-auto md:max-w-[520px] md:mr-15 rounded-4xl border-3 border-theme-secondary bg-theme-primary/80 z-50 backdrop-blur-xl shadow-2xl"
                 >
-                    <div className="bg-theme-primary-darken/80 py-4 px-5 rounded-t-[calc(2rem-3px)] text-xl font-bold text-white">
+                    <div className="bg-theme-primary-darken/80 rounded-t-3xl py-4 px-5 text-xl font-bold text-white">
                         We use cookies!
                     </div>
 
                     <div className="px-5 py-6 text-white/90">
                         เว็บไซต์ ComCamp 37 มีการใช้ <b>คุกกี้ (Cookie)</b> พื้นฐานที่จำเป็นซึ่งช่วยให้
-                        สามารถเข้าใช้เว็บไซต์ได้โดยการเปิดใช้ฟังก์ชันพื้นฐานต่างๆ และการเข้าสู่
+                        สามารถเข้าใช้เว็บไซต์ได้โดยการเปิดใช้ฟังก์ชันพื้นฐานต่าง ๆ และการเข้าสู่
                         ส่วนที่ปลอดภัยของเว็บไซต์ หากไม่มีคุกกี้เหล่านี้ จะไม่สามารถทำงานได้ อย่างถูกต้อง
                     </div>
 
@@ -64,7 +64,7 @@ export function CookieModal() {
                         >
                             ยอมรับ
                             <div className="md:hidden block absolute -top-3 -right-3 pointer-events-none select-none z-10 w-10 h-auto">
-                                <svg className="origin-bottom-left drop-shadow-xl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg className="origin-bottom-left drop-shadow-xl overflow-visible" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <mask id="path-1-inside-1_698_1253" fill="white">
                                         <path d="M58.4941 0C57.9178 1.48255 57.6016 3.09495 57.6016 4.78125C57.6017 10.1408 60.7961 14.7538 65.3848 16.8213C63.5199 19.0976 62.4005 22.0084 62.4004 25.1807C62.4004 32.4708 68.3104 38.3809 75.6006 38.3809L75.6016 38.3799V38.3809C75.6016 45.671 81.5116 51.5811 88.8018 51.5811C92.9103 51.5809 96.5801 49.7031 99.001 46.7598C101.422 49.7032 105.092 51.581 109.2 51.5811C112.935 51.581 116.305 50.0289 118.706 47.5361C119.553 51.5512 120 55.7143 120 59.9814C120 93.1184 93.137 119.981 60 119.981C26.863 119.981 0.000182305 93.1184 0 59.9814C0 27.3478 26.0529 0.799144 58.4941 0Z"/>
                                     </mask>
@@ -84,7 +84,7 @@ export function CookieModal() {
 
                     {/* SVG Decor - Keeping existing svg but ensuring pointer-events-none so it doesn't block clicks */}
                     <div className="hidden md:block absolute -top-15 -right-15 pointer-events-none select-none z-10">
-                        <svg className="origin-bottom-left drop-shadow-xl" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="origin-bottom-left drop-shadow-xl overflow-visible" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <mask id="path-1-inside-1_698_1253" fill="white">
                                 <path d="M58.4941 0C57.9178 1.48255 57.6016 3.09495 57.6016 4.78125C57.6017 10.1408 60.7961 14.7538 65.3848 16.8213C63.5199 19.0976 62.4005 22.0084 62.4004 25.1807C62.4004 32.4708 68.3104 38.3809 75.6006 38.3809L75.6016 38.3799V38.3809C75.6016 45.671 81.5116 51.5811 88.8018 51.5811C92.9103 51.5809 96.5801 49.7031 99.001 46.7598C101.422 49.7032 105.092 51.581 109.2 51.5811C112.935 51.581 116.305 50.0289 118.706 47.5361C119.553 51.5512 120 55.7143 120 59.9814C120 93.1184 93.137 119.981 60 119.981C26.863 119.981 0.000182305 93.1184 0 59.9814C0 27.3478 26.0529 0.799144 58.4941 0Z"/>
                             </mask>
