@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 
 // Optional: Force edge runtime for the fastest response times
-//export const runtime = 'edge';
+export const runtime = 'edge';
 
 export function fixThaiLayout(text: string): string {
     if (!text) return '';
