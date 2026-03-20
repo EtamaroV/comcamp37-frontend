@@ -47,8 +47,8 @@ const resultState = {
         timer: false,
 
         title: 'ขอแสดงความเสียใจ',
-        bigtext: (<>คุณไม่ผ่านการ<br className="sm:hidden"/>คัดเลือก</>),
-        more: 'ขอขอบคุณที่ให้ความสนใจในโครงการ ขอให้น้องโชคดีในเส้นทางการศึกษา และหวังว่าจะได้เจอกันอีกในกิจกรรมต่อไป',
+        bigtext: (<span className="text-red-700">คุณไม่ผ่านการ<br className="sm:hidden"/>คัดเลือก</span>),
+        more: 'ทีมงานอยากบอกว่า อย่าเพิ่งเสียใจไปนะครับ! พวกเราเห็นถึงความตั้งใจของน้องๆ จากใบสมัคร และหวังเป็นอย่างยิ่งว่าเราจะได้พบกันใหม่ในกิจกรรมครั้งต่อๆ ไปของ ภาควิชาวิศวกรรมคอมพิวเตอร์ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี ครับ',
 
         stamp: 'fail',
         image: 'https://storage.comcamp.io/web-assets/result/fail.webp'
@@ -58,8 +58,8 @@ const resultState = {
         timer: false,
 
         title: 'ขอแสดงความยินดี',
-        bigtext: (<>คุณผ่านการ<br className="sm:hidden"/>คัดเลือก</>),
-        more: 'ยินดีด้วย ! คุณผ่านการคัดเลือกเข้าสู่ค่าย ComCamp 37 !',
+        bigtext: (<span className="text-[#1CAA00]">คุณผ่านการ<br className="sm:hidden"/>คัดเลือก</span>),
+        more: (<span>ขอให้น้องๆ รอติดตามประกาศการเรียกตัวสำรอง ในวันที่ 23 กุมภาพันธ์ 2569 ทางโทรศัพท์ได้เลยนะครับ</span>),
 
         stamp: 'pass',
         image: 'https://storage.comcamp.io/web-assets/result/pass.webp'
@@ -69,7 +69,7 @@ const resultState = {
         timer: true,
 
         title: 'ข่าวดี !',
-        bigtext: (<>คุณมีสิทธิ<br className="sm:hidden"/>ตัวสำรอง</>),
+        bigtext: (<span className="text-yellow-600">คุณมีสิทธิ<br className="sm:hidden"/>ตัวสำรอง</span>),
         more: (<>ขอขอบคุณที่ให้ความสนใจในโครงการ น้องมีสิทธิเป็นตัวสำรอง<br className="md:block hidden"/>หากได้รับเลือกเป็นตัวจริงจะมีการติดต่อยืนยันจากพี่ค่าย<br className="md:block hidden"/>พี่ค่ายจะทำการติดต่อน้อง<span className="font-semibold">ภายในวันที่ 23 มีนาคม 2568</span> <br className="md:block hidden"/>โปรดเตรียมรับโทรศัพท์ตามหมายเลขที่กรอกเอาไว้ในใบสมัคร</>),
 
         stamp: 'reserve',
@@ -887,7 +887,7 @@ export default function resultPage() {
                                         </div>
 
                                         { current.confirm && (
-                                            <div className="mt-3 text-center xl:py-7 flex flex-row gap-x-3">
+                                            <div className="mt-3 text-center flex flex-row gap-x-3">
                                                 <motion.button
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.95 }}
@@ -908,7 +908,7 @@ export default function resultPage() {
                                             </div>
                                         )}
 
-                                        <div className="bottom-10 xl:bottom-25 px-12 left-0 absolute flex flex-row justify-between">
+                                        <div className="bottom-10 xl:bottom-20 px-12 left-0 absolute flex flex-row justify-between">
                                             <Image src={current.image} height={0} width={0} sizes="100%" alt="" unoptimized
                                                    className="w-[38%] aspect-square border-black border-2"
                                             />
