@@ -5,6 +5,12 @@ import { NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 export function fixThaiLayout(text: string): string {
+    const allowedOrigins = ['https://comcamp.io', 'http://localhost:3000'];
+    const origin = req.headers.get('origin') ?? '';
+
+    // 2. เช็คว่า Origin ที่ส่งมาอยู่ใน Whitelist หรือไม่
+    const accessControlOrigin = allowedOrigins.includes(origin) ? origin : 'https://comcamp.io';
+    
     if (!text) return '';
 
     // สร้างคู่ประกอบร่าง: นิคหิตปกติ (\u0E4D) + วรรณยุกต์ชั้น 3 (\uF70A-\uF70D)
@@ -140,6 +146,10 @@ export async function GET(req: NextRequest) {
             ],
             headers: {
                 'Cache-Control': 'public, max-age=2592000, s-maxage=2592000, immutable',
+                // 3. ส่ง Origin ที่ผ่านการตรวจสอบกลับไป
+                'Access-Control-Allow-Origin': accessControlOrigin,
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
             },
         }
     );
